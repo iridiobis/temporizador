@@ -1,15 +1,30 @@
-package es.iridiobis.temporizador
+package es.iridiobis.temporizador.presentation.ui.main
 
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
-import android.view.View
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import es.iridiobis.kotlinexample.TasksAdapter
+import es.iridiobis.kotlinexample.toast
+import es.iridiobis.temporizador.R
+import es.iridiobis.temporizador.data.storage.ImagesStorage
+import es.iridiobis.temporizador.data.storage.TasksStorage
+import es.iridiobis.temporizador.domain.model.Task
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private fun startTask(task: Task) {
+        //TODO
+        toast("Task " + task.name)
+    }
+
+    val tasksAdapter = TasksAdapter(ImagesStorage()) { startTask(it) }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -34,10 +49,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton
+        main_tasks.adapter = tasksAdapter
+        //TODO mvp, injection
+        TasksStorage().retrieveTasks()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({ tasksAdapter.data = it })
+
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
