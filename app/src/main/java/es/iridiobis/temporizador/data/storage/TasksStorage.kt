@@ -8,7 +8,7 @@ import java.util.*
 class TasksStorage : TasksRepository {
 
     override fun retrieveTasks(): Observable<List<Task>> {
-        return Observable.just(Collections.singletonList(Task("dummy", "Dummy", 60000)))
+        return Observable.just(Collections.singletonList(Task("dummy", "Dummy", 10000)))
     }
 
 }

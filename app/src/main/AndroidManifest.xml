@@ -2,10 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="es.iridiobis.temporizador">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <application
+        android:name=".core.Temporizador"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:name=".core.Temporizador"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -19,7 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <receiver android:name=".core.alarm.AlarmReceiver"/>
+        <service android:name=".presentation.services.FireAlarmService"/>
+        <activity android:name=".presentation.ui.runningtask.RunningTaskActivity">
+        </activity>
     </application>
 
 </manifest>
