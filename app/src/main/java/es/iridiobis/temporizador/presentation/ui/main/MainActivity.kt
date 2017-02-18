@@ -7,6 +7,7 @@ import android.view.MenuItem
 import es.iridiobis.kotlinexample.TasksAdapter
 import es.iridiobis.kotlinexample.snack
 import es.iridiobis.temporizador.R
+import es.iridiobis.temporizador.core.alarm.AlarmHandler
 import es.iridiobis.temporizador.data.storage.ImagesStorage
 import es.iridiobis.temporizador.data.storage.TasksStorage
 import es.iridiobis.temporizador.domain.model.Task
@@ -18,8 +19,8 @@ import kotlinx.android.synthetic.main.content_main.*
 class MainActivity : AppCompatActivity() {
 
     private fun startTask(task: Task) {
-        //TODO
         main_tasks.snack("Starting task " + task.name)
+        AlarmHandler(this).setAlarm(task)
     }
 
     val tasksAdapter = TasksAdapter(ImagesStorage()) { startTask(it) }
