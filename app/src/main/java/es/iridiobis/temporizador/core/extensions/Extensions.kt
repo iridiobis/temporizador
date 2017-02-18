@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,12 @@ import com.squareup.picasso.Picasso
 
 fun Context.toast(message: String, length: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, length).show()
+}
+
+fun View.snack(
+        message: String,
+        length: Int = Snackbar.LENGTH_SHORT) {
+    Snackbar.make(this, message, length).show()
 }
 
 /*

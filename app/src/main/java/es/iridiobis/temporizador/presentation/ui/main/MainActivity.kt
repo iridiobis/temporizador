@@ -1,13 +1,11 @@
 package es.iridiobis.temporizador.presentation.ui.main
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import es.iridiobis.kotlinexample.TasksAdapter
-import es.iridiobis.kotlinexample.toast
+import es.iridiobis.kotlinexample.snack
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.data.storage.ImagesStorage
 import es.iridiobis.temporizador.data.storage.TasksStorage
@@ -21,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startTask(task: Task) {
         //TODO
-        toast("Task " + task.name)
+        main_tasks.snack("Starting task " + task.name)
     }
 
     val tasksAdapter = TasksAdapter(ImagesStorage()) { startTask(it) }
@@ -59,8 +57,7 @@ class MainActivity : AppCompatActivity() {
                 .subscribe({ tasksAdapter.data = it })
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            view.snack("Replace with your own action")
         }
     }
 }
