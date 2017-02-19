@@ -23,8 +23,12 @@
         </activity>
 
         <receiver android:name=".core.alarm.AlarmReceiver"/>
+
         <service android:name=".presentation.services.FireAlarmService"/>
+
         <activity android:name=".presentation.ui.runningtask.RunningTaskActivity">
+        </activity>
+        <activity android:name=".presentation.ui.finishedtask.FinishedTaskActivity">
         </activity>
     </application>
 
