@@ -24,6 +24,7 @@
 
         <receiver android:name=".core.alarm.AlarmReceiver"/>
 
+        <service android:name=".presentation.services.AlarmMediaService"/>
         <service android:name=".presentation.services.FireAlarmService"/>
 
         <activity android:name=".presentation.ui.runningtask.RunningTaskActivity">
