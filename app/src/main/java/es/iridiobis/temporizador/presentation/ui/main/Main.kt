@@ -1,0 +1,11 @@
+package es.iridiobis.temporizador.presentation.ui.main
+
+import es.iridiobis.temporizador.domain.model.Task
+
+
+interface Main {
+    interface View {
+        fun displayTasks(tasks: List<Task>)
+    }
+    interface Presenter
+}
