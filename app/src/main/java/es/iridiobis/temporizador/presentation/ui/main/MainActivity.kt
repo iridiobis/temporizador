@@ -10,6 +10,7 @@ import es.iridiobis.temporizador.core.alarm.AlarmHandler
 import es.iridiobis.temporizador.data.storage.ImagesStorage
 import es.iridiobis.temporizador.data.storage.TasksStorage
 import es.iridiobis.temporizador.domain.model.Task
+import es.iridiobis.temporizador.presentation.ui.addTask.AddTaskActivity
 import es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity(), Main.View {
         presenter.attach(this)
 
         fab.setOnClickListener { view ->
-            view.snack("Replace with your own action")
+            startActivity(Intent(this, AddTaskActivity::class.java))
         }
     }
 
