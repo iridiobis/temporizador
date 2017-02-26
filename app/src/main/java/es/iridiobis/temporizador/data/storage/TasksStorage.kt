@@ -8,6 +8,16 @@ import io.reactivex.Observable
 import io.realm.Realm
 
 class TasksStorage(val imagesStorage: ImagesStorage) : TasksRepository {
+    override fun retrieveTask(id: Long): Observable<Task> {
+        return Observable.create {
+            subscriber ->
+            val realm: Realm = Realm.getDefaultInstance()
+            val task = parseTask(realm.where(RealmTask::class.java).equalTo("id", id).findFirst())
+            subscriber.onNext(task)
+            subscriber.onComplete()
+            realm.close()
+        }
+    }
 
     override fun retrieveTasks(): Observable<List<Task>> {
         return Observable.create {

@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), Main.View {
         main_tasks.snack("Starting task " + task.name)
         AlarmHandler(this).setAlarm(task)
         startActivity(
-                Intent(this, RunningTaskActivity::class.java)
+                RunningTaskActivity.newIntent(task.id, this)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         )

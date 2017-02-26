@@ -16,7 +16,6 @@ import es.iridiobis.temporizador.presentation.dialogs.DurationDialogFragment
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
 import kotlinx.android.synthetic.main.activity_add_task.*
 import mobi.upod.timedurationpicker.TimeDurationUtil
-import android.R.attr.data
 import android.content.ContextWrapper
 import android.graphics.Bitmap
 import com.squareup.picasso.Transformation
@@ -91,15 +90,17 @@ class AddTaskActivity : AppCompatActivity(), AddTask.View, DurationDialogListene
         add_task_thumbnail.load(thumbnail) { request -> request.transform(RoundTransformation()) }
     }
 
-}
 
-class RoundTransformation : Transformation {
-    override fun key(): String {
-        return "Round"
-    }
 
-    override fun transform(source: Bitmap): Bitmap {
-        return CropImage.toOvalBitmap(source)
+    class RoundTransformation : Transformation {
+        override fun key(): String {
+            return "Round"
+        }
+
+        override fun transform(source: Bitmap): Bitmap {
+            return CropImage.toOvalBitmap(source)
+        }
+
     }
 
 }
