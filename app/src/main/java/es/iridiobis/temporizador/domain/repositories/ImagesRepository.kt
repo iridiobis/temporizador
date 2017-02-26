@@ -4,6 +4,6 @@ import android.net.Uri
 
 
 interface ImagesRepository {
-    fun getFullBackground(id : String) : Uri
-    fun getSmallBackground(id : String) : Uri
+    fun getFullBackground(id : Long) : Uri
+    fun getSmallBackground(id : Long) : Uri
 }

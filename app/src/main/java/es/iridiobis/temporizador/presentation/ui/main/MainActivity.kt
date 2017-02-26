@@ -10,13 +10,14 @@ import es.iridiobis.temporizador.core.alarm.AlarmHandler
 import es.iridiobis.temporizador.data.storage.ImagesStorage
 import es.iridiobis.temporizador.data.storage.TasksStorage
 import es.iridiobis.temporizador.domain.model.Task
+import es.iridiobis.temporizador.presentation.ui.addTask.AddTaskActivity
 import es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), Main.View {
 
-    val presenter = MainPresenter(TasksStorage())
+    val presenter : Main.Presenter = MainPresenter(TasksStorage())
     val tasksAdapter = TasksAdapter(ImagesStorage()) { startTask(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,11 +26,20 @@ class MainActivity : AppCompatActivity(), Main.View {
         setSupportActionBar(toolbar)
 
         main_tasks.adapter = tasksAdapter
-        presenter.attach(this)
 
         fab.setOnClickListener { view ->
-            view.snack("Replace with your own action")
+            startActivity(Intent(this, AddTaskActivity::class.java))
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.attach(this)
+    }
+
+    override fun onPause() {
+        presenter.detach(this)
+        super.onPause()
     }
 
     override fun displayTasks(tasks: List<Task>) {
