@@ -3,14 +3,21 @@ package es.iridiobis.temporizador.presentation.services
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.drawable.Icon
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.IBinder
 import android.os.PowerManager
+import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import es.iridiobis.temporizador.R
+import es.iridiobis.temporizador.data.storage.ImagesStorage
+import es.iridiobis.temporizador.data.storage.TasksStorage
+import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.ui.finishedtask.FinishedTaskActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import java.text.Format
 
@@ -30,7 +37,12 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        showNotification()
+        TasksStorage(ImagesStorage(applicationContext)).retrieveTask(PreferenceManager.getDefaultSharedPreferences(this).getLong("TASK", 0))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    showNotification(it)
+                })
         if (intent?.action.equals(ACTION_PLAY)) {
             initMediaPlayer()
         }
@@ -80,9 +92,9 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
         return true
     }
 
-    private fun showNotification() {
+    private fun showNotification(it: Task) {
 
-        val snooze = Intent(this, FinishedTaskActivity::class.java)
+        val snooze = FinishedTaskActivity.newIntent(it.id, this)
         //snooze.setAction(ACTION_SNOOZE_ALARM);
         val pendingSnooze = PendingIntent.getActivity (this, 0, snooze, PendingIntent.FLAG_ONE_SHOT)
 
@@ -90,7 +102,7 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
 
         val dismiss = NotificationCompat.Action(R.mipmap.ic_launcher, "Done", pendingSnooze)
 
-        val content = PendingIntent.getActivity (this, 0, Intent(this, FinishedTaskActivity::class.java), 0)
+        val content = PendingIntent.getActivity (this, 0, FinishedTaskActivity.newIntent(it.id, this), 0)
 
         val builder = NotificationCompat.Builder(this)
                 //.setSmallIcon(R.drawable.icon_nfc)

@@ -3,6 +3,7 @@ package es.iridiobis.temporizador.presentation.ui.main
 import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import es.iridiobis.kotlinexample.snack
 import es.iridiobis.temporizador.R
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity(), Main.View {
     }
 
     private fun startTask(task: Task) {
-        main_tasks.snack("Starting task " + task.name)
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putLong("TASK", task.id).apply()
         AlarmHandler(this).setAlarm(task)
         startActivity(
                 RunningTaskActivity.newIntent(task.id, this)
