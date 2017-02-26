@@ -5,11 +5,11 @@ import es.iridiobis.temporizador.domain.repositories.ImagesRepository
 
 
 class ImagesStorage : ImagesRepository {
-    override fun getFullBackground(id: String): Uri {
+    override fun getFullBackground(id: Long): Uri {
         return Uri.parse("android.resource://es.iridiobis.temporizador/mipmap/ic_launcher")
     }
 
-    override fun getSmallBackground(id: String): Uri {
+    override fun getSmallBackground(id: Long): Uri {
         return Uri.parse("android.resource://es.iridiobis.temporizador/mipmap/ic_launcher")
     }
 }

@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), Main.View {
 
-    val presenter = MainPresenter(TasksStorage())
+    val presenter : Main.Presenter = MainPresenter(TasksStorage())
     val tasksAdapter = TasksAdapter(ImagesStorage()) { startTask(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,11 +26,20 @@ class MainActivity : AppCompatActivity(), Main.View {
         setSupportActionBar(toolbar)
 
         main_tasks.adapter = tasksAdapter
-        presenter.attach(this)
 
         fab.setOnClickListener { view ->
             startActivity(Intent(this, AddTaskActivity::class.java))
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.attach(this)
+    }
+
+    override fun onPause() {
+        presenter.detach(this)
+        super.onPause()
     }
 
     override fun displayTasks(tasks: List<Task>) {

@@ -6,10 +6,11 @@ import io.realm.annotations.PrimaryKey
 
 
 open class RealmTask(
-        @PrimaryKey open var id: String? = null,
-        open var name: String? = null,
-        open var duration: Long? = 0) : RealmObject() {
+        @PrimaryKey open var id: Long = 0,
+        open var name: String = "",
+        open var duration: Long = 0) : RealmObject() {
 
     constructor(task: Task) : this(task.id, task.name, task.duration)
 
+    fun parse() = Task(id, name, duration)
 }
