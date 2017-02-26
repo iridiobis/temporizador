@@ -24,7 +24,8 @@ class AddTaskPresenter(val tasksRepository: TasksRepository) : Presenter<AddTask
     }
 
     override fun save() {
-        tasksRepository.addTask(name, duration)
+        //TODO validation
+        tasksRepository.createTask(name, duration, background!!, smallBackground!!, thumbnail!!)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({

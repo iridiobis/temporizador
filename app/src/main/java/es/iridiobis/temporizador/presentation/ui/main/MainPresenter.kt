@@ -7,22 +7,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
-class MainPresenter(tasksRepository: TasksRepository) : Presenter<Main.View>(), Main.Presenter {
-
-    var tasks: List<Task>? = null
-
-    init {
-        if (tasks == null)
-            tasksRepository.retrieveTasks()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe({
-                        tasks = it
-                        view?.displayTasks(it)
-                    })
-    }
+class MainPresenter(val tasksRepository: TasksRepository) : Presenter<Main.View>(), Main.Presenter {
 
     override fun onViewAttached() {
-        if (tasks != null) view!!.displayTasks(tasks!!)
+        tasksRepository.retrieveTasks()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    view?.displayTasks(it)
+                })
     }
 }

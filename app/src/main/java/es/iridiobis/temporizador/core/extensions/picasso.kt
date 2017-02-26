@@ -10,16 +10,24 @@ import android.widget.ImageView
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.RequestCreator
 import com.squareup.picasso.Target
-
-val Context.picasso: Picasso
-    get() = Picasso.with(this)
+import es.iridiobis.temporizador.BuildConfig.DEBUG
 
 fun ImageView.load(path: Uri, request: (RequestCreator) -> RequestCreator) {
-    request(context.picasso.load(path)).into(this)
+    val picasso = Picasso.with(context)
+    if(DEBUG) {
+        picasso.setIndicatorsEnabled(true)
+        picasso.isLoggingEnabled = true
+    }
+    request(picasso.load(path)).into(this)
 }
 
 fun View.setBackground(path: Uri, request: (RequestCreator) -> RequestCreator) {
-    request(context.picasso.load(path)).into(object : Target {
+    val picasso = Picasso.with(context)
+    if(DEBUG) {
+        picasso.setIndicatorsEnabled(true)
+        picasso.isLoggingEnabled = true
+    }
+    val target = object : Target {
         override fun onPrepareLoad(placeHolderDrawable: Drawable?) = Unit
 
         override fun onBitmapFailed(errorDrawable: Drawable?) = Unit
@@ -27,6 +35,7 @@ fun View.setBackground(path: Uri, request: (RequestCreator) -> RequestCreator) {
         override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
             this@setBackground.background = BitmapDrawable(context.resources, bitmap)
         }
-
-    })
+    }
+    tag = target
+    request(picasso.load(path)).into(target)
 }
