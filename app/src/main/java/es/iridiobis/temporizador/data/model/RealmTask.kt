@@ -12,5 +12,4 @@ open class RealmTask(
 
     constructor(task: Task) : this(task.id, task.name, task.duration)
 
-    fun parse() = Task(id, name, duration)
 }

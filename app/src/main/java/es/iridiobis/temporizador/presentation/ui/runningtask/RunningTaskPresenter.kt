@@ -1,20 +1,18 @@
-package es.iridiobis.temporizador.presentation.ui.main
+package es.iridiobis.temporizador.presentation.ui.runningtask
 
 import es.iridiobis.presenter.Presenter
-import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
-class MainPresenter(val tasksRepository: TasksRepository) : Presenter<Main.View>(), Main.Presenter {
-
+class RunningTaskPresenter(val id: Long, val tasksRepository: TasksRepository) : Presenter<RunningTask.View>(), RunningTask.Presenter {
     override fun onViewAttached() {
-        tasksRepository.retrieveTasks()
+        tasksRepository.retrieveTask(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
-                    view?.displayTasks(it)
+                    view?.displayBackground(it.background)
                 })
     }
 }

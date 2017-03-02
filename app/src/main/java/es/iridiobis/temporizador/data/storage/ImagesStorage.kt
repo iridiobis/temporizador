@@ -1,15 +1,71 @@
 package es.iridiobis.temporizador.data.storage
 
+import android.content.ContentResolver.SCHEME_CONTENT
+import android.content.Context
 import android.net.Uri
-import es.iridiobis.temporizador.domain.repositories.ImagesRepository
+import android.util.Log
+import java.io.*
 
 
-class ImagesStorage : ImagesRepository {
-    override fun getFullBackground(id: Long): Uri {
-        return Uri.parse("android.resource://es.iridiobis.temporizador/mipmap/ic_launcher")
+class ImagesStorage(val applicationContext: Context) {
+    fun getFullBackground(id: Long): Uri {
+        return Uri.fromFile(getFile(id.toString()))
     }
 
-    override fun getSmallBackground(id: Long): Uri {
-        return Uri.parse("android.resource://es.iridiobis.temporizador/mipmap/ic_launcher")
+    fun getSmallBackground(id: Long): Uri {
+        return Uri.fromFile(getFile(id.toString() + "_small"))
+    }
+
+    fun getThumbnail(id: Long): Uri {
+        return Uri.fromFile(getFile(id.toString() + "_thumbnail"))
+    }
+
+    fun setFullBackground(id: Long, background : Uri) {
+        savefile(id.toString(), background)
+    }
+
+    fun setSmallBackground(id: Long, smallBackground : Uri) {
+        savefile(id.toString() + "_small", smallBackground)
+    }
+
+    fun setThumbnail(id: Long, thumbnail : Uri) {
+        savefile(id.toString() + "_thumbnail", thumbnail)
+    }
+
+    private fun getFile(name: String) : File {
+        return File(applicationContext.filesDir, name + ".jpeg")
+
+    }
+    private fun savefile(name: String, source: Uri) {
+
+        var destination = getFile(name)
+        Log.wtf("ASDF", "Saving in " + destination.toString() + " the file from " + source.toString())
+        var bis: BufferedInputStream? = null
+        var bos: BufferedOutputStream? = null
+
+        try {
+            if (SCHEME_CONTENT == source.scheme) {
+                bis = BufferedInputStream(applicationContext.contentResolver.openInputStream(source))
+            } else {
+                bis = BufferedInputStream(FileInputStream(source.path))
+            }
+            bos = BufferedOutputStream(FileOutputStream(destination))
+            //bos = BufferedOutputStream(applicationContext.openFileOutput(name + ".jpeg", Context.MODE_PRIVATE))
+            val buf = ByteArray(1024)
+            bis.read(buf)
+            do {
+                bos.write(buf)
+            } while (bis.read(buf) !== -1)
+        } catch (e: IOException) {
+            Log.e("ASDF", e.toString())
+        } finally {
+            try {
+                bis!!.close()
+                bos!!.close()
+            } catch (e: IOException) {
+
+            }
+
+        }
     }
 }
