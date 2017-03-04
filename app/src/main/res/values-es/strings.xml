@@ -3,4 +3,6 @@
     <string name="name">Nombre</string>
     <string name="duration">Duración</string>
     <string name="save">Done</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>
