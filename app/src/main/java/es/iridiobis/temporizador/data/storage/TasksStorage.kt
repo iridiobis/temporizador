@@ -8,6 +8,18 @@ import io.reactivex.Observable
 import io.realm.Realm
 
 class TasksStorage(val imagesStorage: ImagesStorage) : TasksRepository {
+    override fun delete(task: Task): Observable<Unit> {
+        return Observable.create {
+            subscriber ->
+            val realm: Realm = Realm.getDefaultInstance()
+            realm.executeTransaction {
+                realm.where(RealmTask::class.java).equalTo("id", task.id).findAll().deleteAllFromRealm()
+            }
+            subscriber.onComplete()
+            realm.close()
+        }
+    }
+
     override fun retrieveTask(id: Long): Observable<Task> {
         return Observable.create {
             subscriber ->

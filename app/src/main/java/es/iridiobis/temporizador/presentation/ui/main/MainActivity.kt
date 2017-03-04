@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
-import es.iridiobis.kotlinexample.snack
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.alarm.AlarmHandler
 import es.iridiobis.temporizador.data.storage.ImagesStorage
@@ -19,7 +18,7 @@ import kotlinx.android.synthetic.main.content_main.*
 class MainActivity : AppCompatActivity(), Main.View {
 
     var presenter : Main.Presenter? = null
-    val tasksAdapter = TasksAdapter { startTask(it) }
+    val tasksAdapter = TasksAdapter( { startTask(it) }, { presenter!!.delete(it) })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +28,7 @@ class MainActivity : AppCompatActivity(), Main.View {
         presenter = MainPresenter(TasksStorage(ImagesStorage(ContextWrapper(applicationContext))))
         main_tasks.adapter = tasksAdapter
 
-        fab.setOnClickListener { view ->
-            startActivity(Intent(this, AddTaskActivity::class.java))
-        }
+        fab.setOnClickListener { startActivity(Intent(this, AddTaskActivity::class.java)) }
     }
 
     override fun onResume() {
@@ -57,4 +54,5 @@ class MainActivity : AppCompatActivity(), Main.View {
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         )
     }
+
 }
