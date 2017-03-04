@@ -4,6 +4,7 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.alarm.AlarmHandler
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.content_main.*
 class MainActivity : AppCompatActivity(), Main.View {
 
     var presenter : Main.Presenter? = null
-    val tasksAdapter = TasksAdapter( { startTask(it) }, { presenter!!.delete(it) })
+    val tasksAdapter = TasksAdapter( { startTask(it) }, { requestDeleteConfirmation(it) })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +54,15 @@ class MainActivity : AppCompatActivity(), Main.View {
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         )
+    }
+
+    private fun requestDeleteConfirmation(task: Task) {
+        AlertDialog.Builder(this)
+                .setTitle(R.string.delete_alert_title)
+                .setPositiveButton(R.string.delete, { _, _ -> presenter?.delete(task)})
+                .setNegativeButton(R.string.cancel, { _, _ -> })
+                .create()
+                .show()
     }
 
 }

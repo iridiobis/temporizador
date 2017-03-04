@@ -6,4 +6,6 @@
     <string name="save">Done</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="delete_alert_title">Delete task?</string>
+    <string name="cancel">Cancel</string>
 </resources>
