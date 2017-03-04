@@ -1,4 +1,4 @@
-package es.iridiobis.temporizador.presentation.ui.addTask
+package es.iridiobis.temporizador.presentation.ui.writetask
 
 import android.net.Uri
 import es.iridiobis.presenter.Presenter
@@ -7,7 +7,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
-class AddTaskPresenter(val tasksRepository: TasksRepository) : Presenter<AddTask.View>(), AddTask.Presenter {
+class WriteTaskPresenter(val tasksRepository: TasksRepository) : Presenter<WriteTask.View>(), WriteTask.Presenter {
 
     var name : String = ""
     var duration : Long = 0

@@ -20,6 +20,7 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
             return intent
         }
     }
+
     var presenter: RunningTask.Presenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -31,7 +31,7 @@
         </activity>
         <activity android:name=".presentation.ui.finishedtask.FinishedTaskActivity">
         </activity>
-        <activity android:name=".presentation.ui.addTask.AddTaskActivity">
+        <activity android:name=".presentation.ui.writetask.WriteTaskActivity">
         </activity>
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
                   android:theme="@style/Base.Theme.AppCompat"/>

@@ -1,11 +1,11 @@
-package es.iridiobis.temporizador.presentation.ui.addTask
+package es.iridiobis.temporizador.presentation.ui.writetask
 
 import android.net.Uri
 import es.iridiobis.presenter.Attachable
 import es.iridiobis.temporizador.domain.model.Task
 
 
-interface AddTask {
+interface WriteTask {
     interface View {
         fun displayBackground(background: Uri)
         fun displaySmallBackground(smallBackground: Uri)
@@ -19,6 +19,5 @@ interface AddTask {
         fun background(background: Uri)
         fun processCrop(cropImage: Uri) : Boolean
         fun save()
-
     }
 }
