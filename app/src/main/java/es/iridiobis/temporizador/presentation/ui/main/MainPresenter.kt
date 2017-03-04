@@ -8,6 +8,12 @@ import io.reactivex.schedulers.Schedulers
 
 
 class MainPresenter(val tasksRepository: TasksRepository) : Presenter<Main.View>(), Main.Presenter {
+    override fun delete(task: Task) {
+        tasksRepository.delete(task)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({}, {}, { onViewAttached() })
+    }
 
     override fun onViewAttached() {
         tasksRepository.retrieveTasks()
