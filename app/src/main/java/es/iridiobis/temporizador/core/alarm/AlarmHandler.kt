@@ -13,7 +13,7 @@ import es.iridiobis.temporizador.domain.services.AlarmService
 class AlarmHandler(val context : Context) : AlarmService {
     override fun setAlarm(task: Task) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val alarmIntent = PendingIntent.getBroadcast(context, 0, Intent(context, AlarmReceiver::class.java), 0)
+        val alarmIntent = PendingIntent.getBroadcast(context, 0, AlarmReceiver.playIntent(context), 0)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
             alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + task.duration, alarmIntent)
         else

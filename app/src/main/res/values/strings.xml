@@ -9,4 +9,5 @@
     <string name="delete_alert_title">Delete task?</string>
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
+    <string name="enough_message">Let\'s call it a day</string>
 </resources>
