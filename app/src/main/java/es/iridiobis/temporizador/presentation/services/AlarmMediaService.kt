@@ -21,13 +21,12 @@ import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import java.text.Format
 
-const val ACTION_PLAY = "com.example.adam.nfcalarm.alertservice.ACTION_PLAY"
-
 class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
         MediaPlayer.OnErrorListener {
 
     companion object {
         val ID_NOTIFICATION = 1
+        val ACTION_PLAY = "com.example.adam.nfcalarm.alertservice.ACTION_PLAY"
     }
 
     var mediaPlayer: MediaPlayer? = null
