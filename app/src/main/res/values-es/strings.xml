@@ -2,10 +2,10 @@
 <resources>
     <string name="name">Nombre</string>
     <string name="duration">Duración</string>
-    <string name="save">Done</string>
-    <string name="edit">Edit</string>
-    <string name="delete">Delete</string>
-    <string name="delete_alert_title">Delete task?</string>
-    <string name="cancel">Cancel</string>
-    <string name="done">Done</string>
+    <string name="edit">Editar</string>
+    <string name="delete">Eliminar</string>
+    <string name="delete_alert_title">¿Eliminar tarea?</string>
+    <string name="cancel">Cancelar</string>
+    <string name="done">Hecho</string>
+    <string name="background_selection">Selecciona un fondo</string>
 </resources>

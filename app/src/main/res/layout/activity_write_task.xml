@@ -71,7 +71,7 @@
             android:background="@color/colorAccent"
             android:gravity="center"
             android:padding="20dp"
-            android:text="Select a background"
+            android:text="@string/background_selection"
             android:textColor="#fff"/>
 
     </RelativeLayout>
