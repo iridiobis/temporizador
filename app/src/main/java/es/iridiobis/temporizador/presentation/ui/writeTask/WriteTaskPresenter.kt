@@ -7,50 +7,65 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
-class WriteTaskPresenter(val tasksRepository: TasksRepository) : Presenter<WriteTask.View>(), WriteTask.Presenter {
+class WriteTaskPresenter(val id: Long?, val tasksRepository: TasksRepository) : Presenter<WriteTask.View>(), WriteTask.Presenter {
 
-    var name : String = ""
-    var duration : Long = 0
-    var background : Uri? = null
-    var smallBackground: Uri? = null
-    var thumbnail: Uri? = null
+    val task = TaskModel()
+
+    init {
+        id?.let {
+            tasksRepository.retrieveTask(id)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        task.id = it.id
+                        task.name = it.name
+                        task.duration = it.duration
+                        task.background = it.background
+                        task.smallBackground = it.smallBackground
+                        task.thumbnail = it.thumbnail
+                        view?.displayTask(task)
+                    })
+        }
+    }
 
     override fun name(name: String) {
-        this.name = name
+        task.name = name
     }
 
     override fun duration(duration: Long) {
-        this.duration = duration
+        task.duration = duration
     }
 
     override fun save() {
-        //TODO validation
-        tasksRepository.createTask(name, duration, background!!, smallBackground!!, thumbnail!!)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    view?.onTaskAdded(it)
-                })
+        if (task.isValid()) {
+            tasksRepository.writeTask(task.id, task.name!!, task.duration, task.background!!, task.smallBackground!!, task.thumbnail!!)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        view?.onTaskAdded(it)
+                    })
+        } else {
+            view?.showErrorMessage()
+        }
     }
 
     override fun background(background: Uri) {
-        this.background = background
-        view?.displayBackground(background)
+        task.background = background
+        task.smallBackground = null
+        task.thumbnail = null
     }
 
     override fun processCrop(cropImage: Uri) : Boolean {
-        smallBackground?.let {
-            thumbnail = cropImage
+        task.smallBackground?.let {
+            task.thumbnail = cropImage
             return false
         } ?: let {
-            smallBackground = cropImage
+            task.smallBackground = cropImage
             return true
         }
     }
 
     override fun onViewAttached() {
-        background?.let { view?.displayBackground(background!!) }
-        smallBackground?.let { view?.displaySmallBackground(smallBackground!!) }
-        thumbnail?.let { view?.displayThumbnail(thumbnail!!) }
+        view?.displayTask(task)
     }
 }

@@ -12,15 +12,18 @@ import kotlinx.android.synthetic.main.view_task_item.view.*
 import kotlin.properties.Delegates
 
 
-class TasksAdapter(val runListener: (taskItem: Task) -> Unit, val deleteListener: (taskItem: Task) -> Unit)
-    : RecyclerView.Adapter<TasksAdapter.TaskHolder>() {
+class TasksAdapter(
+        val runListener: (taskItem: Task) -> Unit,
+        val editListener: (taskItem: Task) -> Unit,
+        val deleteListener: (taskItem: Task) -> Unit
+) : RecyclerView.Adapter<TasksAdapter.TaskHolder>() {
 
     var data: List<Task> by Delegates.observable(emptyList()) {
-        p, old, new ->
+        _, _, _ ->
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = TaskHolder(parent.inflate(R.layout.view_task_item), runListener, deleteListener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = TaskHolder(parent.inflate(R.layout.view_task_item), runListener, editListener, deleteListener)
 
     override fun onBindViewHolder(holder: TaskHolder, position: Int) = holder.bind(data[position])
 
@@ -30,6 +33,7 @@ class TasksAdapter(val runListener: (taskItem: Task) -> Unit, val deleteListener
     class TaskHolder(
             view: View,
             val runListener: (Task) -> Unit,
+            val editListener: (taskItem: Task) -> Unit,
             val deleteListener: (taskItem: Task) -> Unit
     ) : RecyclerView.ViewHolder(view) {
 
@@ -48,6 +52,7 @@ class TasksAdapter(val runListener: (taskItem: Task) -> Unit, val deleteListener
             popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.edit -> {
+                        editListener(task)
                     }
                     R.id.delete -> {
                         deleteListener(task)

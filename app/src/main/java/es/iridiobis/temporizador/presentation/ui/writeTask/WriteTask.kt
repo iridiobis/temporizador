@@ -7,9 +7,8 @@ import es.iridiobis.temporizador.domain.model.Task
 
 interface WriteTask {
     interface View {
-        fun displayBackground(background: Uri)
-        fun displaySmallBackground(smallBackground: Uri)
-        fun displayThumbnail(thumbnail: Uri)
+        fun displayTask(task: TaskModel)
+        fun showErrorMessage()
         fun onTaskAdded(task: Task)
     }
 
