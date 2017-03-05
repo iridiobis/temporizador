@@ -42,18 +42,18 @@ class TasksStorage(val imagesStorage: ImagesStorage) : TasksRepository {
         }
     }
 
-    override fun createTask(name: String, duration: Long, background: Uri, smallBackground: Uri, thumbnail: Uri): Observable<Task> {
+    override fun writeTask(id: Long?, name: String, duration: Long, background: Uri, smallBackground: Uri, thumbnail: Uri): Observable<Task> {
         return Observable.create {
             subscriber ->
             val realm: Realm = Realm.getDefaultInstance()
-            val id = System.currentTimeMillis()
-            val task = RealmTask(id, name, duration)
+            val safeId = id ?: System.currentTimeMillis()
+            val task = RealmTask(safeId, name, duration)
             realm.executeTransaction {
-                realm.copyToRealm(task)
+                realm.copyToRealmOrUpdate(task)
             }
-            imagesStorage.setFullBackground(id, background)
-            imagesStorage.setSmallBackground(id, smallBackground)
-            imagesStorage.setThumbnail(id, thumbnail)
+            imagesStorage.setFullBackground(safeId, background)
+            imagesStorage.setSmallBackground(safeId, smallBackground)
+            imagesStorage.setThumbnail(safeId, thumbnail)
             subscriber.onNext(parseTask(task))
             subscriber.onComplete()
             realm.close()

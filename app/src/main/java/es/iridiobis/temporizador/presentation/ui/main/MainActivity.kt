@@ -11,7 +11,7 @@ import es.iridiobis.temporizador.core.alarm.AlarmHandler
 import es.iridiobis.temporizador.data.storage.ImagesStorage
 import es.iridiobis.temporizador.data.storage.TasksStorage
 import es.iridiobis.temporizador.domain.model.Task
-import es.iridiobis.temporizador.presentation.ui.addTask.AddTaskActivity
+import es.iridiobis.temporizador.presentation.ui.writetask.WriteTaskActivity
 import es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -19,7 +19,10 @@ import kotlinx.android.synthetic.main.content_main.*
 class MainActivity : AppCompatActivity(), Main.View {
 
     var presenter : Main.Presenter? = null
-    val tasksAdapter = TasksAdapter( { startTask(it) }, { requestDeleteConfirmation(it) })
+    val tasksAdapter = TasksAdapter(
+            { startTask(it) },
+            { startActivity(WriteTaskActivity.editTaskIntent(it.id, this)) },
+            { requestDeleteConfirmation(it) })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +32,7 @@ class MainActivity : AppCompatActivity(), Main.View {
         presenter = MainPresenter(TasksStorage(ImagesStorage(ContextWrapper(applicationContext))))
         main_tasks.adapter = tasksAdapter
 
-        fab.setOnClickListener { startActivity(Intent(this, AddTaskActivity::class.java)) }
+        fab.setOnClickListener { startActivity(WriteTaskActivity.addTaskIntent(this)) }
     }
 
     override fun onResume() {
@@ -47,6 +50,7 @@ class MainActivity : AppCompatActivity(), Main.View {
     }
 
     private fun startTask(task: Task) {
+        //TODO move to presenter/repo
         PreferenceManager.getDefaultSharedPreferences(this).edit().putLong("TASK", task.id).apply()
         AlarmHandler(this).setAlarm(task)
         startActivity(
