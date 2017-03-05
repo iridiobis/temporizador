@@ -16,6 +16,7 @@ import es.iridiobis.temporizador.data.storage.ImagesStorage
 import es.iridiobis.temporizador.data.storage.TasksStorage
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.ui.finishedtask.FinishedTaskActivity
+import es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
@@ -26,6 +27,7 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
     companion object {
         val ID_NOTIFICATION = 1
         val ACTION_PLAY = "es.iridiobis.temporizador.presentation.services.ACTION_PLAY"
+        val ACTION_PAUSE = "es.iridiobis.temporizador.presentation.services.ACTION_PAUSE"
         val ACTION_STOP = "es.iridiobis.temporizador.presentation.services.ACTION_STOP"
     }
 
@@ -40,7 +42,7 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
-                    showNotification(it)
+                    showFinishedNotification(it)
                 })
         if (intent?.action.equals(ACTION_PLAY)) {
             initMediaPlayer()
@@ -91,11 +93,9 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
         return true
     }
 
-    private fun showNotification(it: Task) {
+    private fun showFinishedNotification(it: Task) {
 
         val pendingSnooze = PendingIntent.getBroadcast (this, 0, AlarmReceiver.stopIntent(this), PendingIntent.FLAG_CANCEL_CURRENT)
-
-        //val icon = Icon.createWithResource(this, R.drawable.ic_snooze_black_18dp);
 
         val dismiss = NotificationCompat.Action(
                 R.drawable.ic_notifications_off_black_24,
@@ -104,20 +104,24 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
 
         val content = PendingIntent.getActivity (this, 0, FinishedTaskActivity.newIntent(it.id, this), 0)
 
-        val builder = NotificationCompat.Builder(this)
+        val builder = getBaseNotificationBuilder(it)
+                .setContentText(getString(R.string.enough_message))
+                .setContentIntent(content)
+                .addAction(dismiss)
+
+        startForeground(ID_NOTIFICATION, builder.build())
+    }
+
+    private fun getBaseNotificationBuilder(it: Task) : NotificationCompat.Builder {
+        return NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_task_add_white_24)
                 .setLargeIcon(MediaStore.Images.Media.getBitmap(contentResolver, it.thumbnail))
                 .setContentTitle(it.name)
-                .setContentText(getString(R.string.enough_message))
-                .setContentIntent(content)
                 .setShowWhen(false)
                 .setAutoCancel(false)
                 .setOngoing(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .addAction(dismiss)
-
-        startForeground(ID_NOTIFICATION, builder.build())
     }
 }
