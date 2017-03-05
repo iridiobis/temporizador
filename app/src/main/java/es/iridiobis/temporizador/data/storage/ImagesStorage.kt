@@ -38,7 +38,10 @@ class ImagesStorage(val applicationContext: Context) {
     }
     private fun savefile(name: String, source: Uri) {
 
-        var destination = getFile(name)
+        val destination = getFile(name)
+        if (source.toString().contains(destination.toString())) {
+            return
+        }
         Log.wtf("ASDF", "Saving in " + destination.toString() + " the file from " + source.toString())
         var bis: BufferedInputStream? = null
         var bos: BufferedOutputStream? = null
