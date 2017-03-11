@@ -25,6 +25,11 @@ class AlarmHandler @Inject constructor(val context : Context) : AlarmService {
     }
 
     override fun setAlarm(task: Task) {
+        this.task = task
+        PreferenceManager.getDefaultSharedPreferences(context).edit()
+                .putLong("TASK", task.id)
+                .putLong("START_TIME", System.currentTimeMillis())
+                .apply()
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmIntent = PendingIntent.getBroadcast(context, 0, AlarmReceiver.playIntent(context), 0)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)

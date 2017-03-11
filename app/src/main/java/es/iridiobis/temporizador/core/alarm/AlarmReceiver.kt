@@ -22,6 +22,7 @@ class AlarmReceiver : WakefulBroadcastReceiver() {
             return intent
         }
     }
+
     override fun onReceive(context: Context?, intent: Intent?) {
         if (AlarmMediaService.ACTION_PLAY == intent?.action) {
             val mpIntent = Intent(context, AlarmMediaService::class.java)

@@ -58,8 +58,6 @@ class MainActivity : AppCompatActivity(), Main.View {
     }
 
     private fun startTask(task: Task) {
-        //TODO move to presenter/repo
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putLong("TASK", task.id).apply()
         AlarmHandler(this).setAlarm(task)
         showRunningNotification(task)
         startActivity(
