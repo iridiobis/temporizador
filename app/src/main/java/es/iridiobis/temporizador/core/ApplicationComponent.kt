@@ -1,12 +1,11 @@
 package es.iridiobis.temporizador.core
 
-import android.app.Activity
 import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
-import dagger.MembersInjector
 import es.iridiobis.temporizador.data.DataModule
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
+import es.iridiobis.temporizador.domain.services.AlarmService
 import es.iridiobis.temporizador.presentation.services.AlarmMediaService
 import es.iridiobis.temporizador.presentation.services.FireAlarmService
 import javax.inject.Singleton
@@ -20,6 +19,7 @@ interface ApplicationComponent {
     fun inject(alarmMediaService: AlarmMediaService)
 
     fun tasksRepository() : TasksRepository
+    fun provideAlarmService() : AlarmService
 
     @Component.Builder
     interface Builder {
