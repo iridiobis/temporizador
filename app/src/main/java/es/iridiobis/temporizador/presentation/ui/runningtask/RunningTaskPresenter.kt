@@ -8,11 +8,12 @@ import io.reactivex.schedulers.Schedulers
 
 class RunningTaskPresenter(val id: Long, val tasksRepository: TasksRepository) : Presenter<RunningTask.View>(), RunningTask.Presenter {
     override fun onViewAttached() {
+        //TODO Use AlarmService, no need to pass the id
         tasksRepository.retrieveTask(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
-                    view?.displayBackground(it.background)
+                    view?.displayBackground(it!!.background)
                 })
     }
 }

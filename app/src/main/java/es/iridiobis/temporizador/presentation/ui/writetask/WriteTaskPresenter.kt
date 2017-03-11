@@ -17,7 +17,7 @@ class WriteTaskPresenter(val id: Long?, val tasksRepository: TasksRepository) : 
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        task.id = it.id
+                        task.id = it!!.id
                         task.name = it.name
                         task.duration = it.duration
                         task.background = it.background

@@ -15,13 +15,15 @@ import es.iridiobis.temporizador.core.alarm.AlarmReceiver
 import es.iridiobis.temporizador.data.storage.ImagesStorage
 import es.iridiobis.temporizador.data.storage.TasksStorage
 import es.iridiobis.temporizador.domain.model.Task
+import es.iridiobis.temporizador.domain.services.AlarmService
 import es.iridiobis.temporizador.presentation.ui.finishedtask.FinishedTaskActivity
 import es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
+import javax.inject.Inject
 
-class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
+class AlarmMediaService @Inject constructor(val alarmService: AlarmService) : Service(), MediaPlayer.OnPreparedListener,
         MediaPlayer.OnErrorListener {
 
     companion object {
@@ -38,13 +40,13 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        TasksStorage(ImagesStorage(applicationContext)).retrieveTask(PreferenceManager.getDefaultSharedPreferences(this).getLong("TASK", 0))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    showFinishedNotification(it)
-                })
         if (intent?.action.equals(ACTION_PLAY)) {
+            alarmService.getRunningTask()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        showFinishedNotification(it!!)
+                    })
             initMediaPlayer()
         }
         return super.onStartCommand(intent, flags, startId);
