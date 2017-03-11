@@ -6,8 +6,9 @@ import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import io.reactivex.Observable
 import io.realm.Realm
+import javax.inject.Inject
 
-class TasksStorage(val imagesStorage: ImagesStorage) : TasksRepository {
+class TasksStorage @Inject constructor(val imagesStorage: ImagesStorage) : TasksRepository {
     override fun delete(task: Task): Observable<Unit> {
         return Observable.create {
             subscriber ->

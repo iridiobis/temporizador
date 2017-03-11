@@ -11,7 +11,9 @@ import android.preference.PreferenceManager
 import android.provider.MediaStore
 import android.support.v4.app.NotificationCompat
 import es.iridiobis.temporizador.R
+import es.iridiobis.temporizador.core.ApplicationComponent
 import es.iridiobis.temporizador.core.alarm.AlarmReceiver
+import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.data.storage.ImagesStorage
 import es.iridiobis.temporizador.data.storage.TasksStorage
 import es.iridiobis.temporizador.domain.model.Task
@@ -23,7 +25,7 @@ import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import javax.inject.Inject
 
-class AlarmMediaService @Inject constructor(val alarmService: AlarmService) : Service(), MediaPlayer.OnPreparedListener,
+class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
         MediaPlayer.OnErrorListener {
 
     companion object {
@@ -33,10 +35,17 @@ class AlarmMediaService @Inject constructor(val alarmService: AlarmService) : Se
         val ACTION_STOP = "es.iridiobis.temporizador.presentation.services.ACTION_STOP"
     }
 
+    @Inject lateinit var alarmService: AlarmService
+
     var mediaPlayer: MediaPlayer? = null
 
     override fun onBind(p0: Intent?): IBinder {
         throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        (application as ComponentProvider<ApplicationComponent>).getComponent().inject(this)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

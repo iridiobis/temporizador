@@ -3,14 +3,24 @@ package es.iridiobis.temporizador.presentation.services
 import android.app.IntentService
 import android.content.Intent
 import android.support.v4.content.WakefulBroadcastReceiver
+import es.iridiobis.temporizador.core.ApplicationComponent
+import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.domain.services.AlarmService
 import es.iridiobis.temporizador.presentation.ui.finishedtask.FinishedTaskActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class FireAlarmService @Inject constructor(val alarmService: AlarmService) : IntentService("FireAlarmService") {
+class FireAlarmService : IntentService("FireAlarmService") {
+    @Inject lateinit var alarmService: AlarmService
+
+    override fun onCreate() {
+        super.onCreate()
+        (application as ComponentProvider<ApplicationComponent>).getComponent().inject(this)
+    }
+
     override fun onHandleIntent(intent: Intent?) {
+
         alarmService.getRunningTask()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
