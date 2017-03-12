@@ -11,4 +11,5 @@
     <string name="done">Done</string>
     <string name="enough_message">Suficiente por hoy</string>
     <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
 </resources>

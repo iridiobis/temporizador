@@ -10,4 +10,5 @@
     <string name="done">Done</string>
     <string name="enough_message">Let\'s call it a day</string>
     <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
 </resources>

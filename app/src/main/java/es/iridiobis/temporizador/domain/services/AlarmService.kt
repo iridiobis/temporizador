@@ -7,4 +7,5 @@ import io.reactivex.Observable
 interface AlarmService {
     fun getRunningTask() : Observable<Task?>
     fun setAlarm(task: Task)
+    fun pauseAlarm()
 }

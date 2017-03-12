@@ -1,7 +1,6 @@
 package es.iridiobis.temporizador.core.notification
 
 import android.app.Notification
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.provider.MediaStore
@@ -19,11 +18,29 @@ class NotificationProvider @Inject constructor(val context : Context) {
 
     fun showRunningNotification(it: Task) : Notification {
 
-        val pendingPause = PendingIntent.getBroadcast(context, 0, AlarmReceiver.stopIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingPause = PendingIntent.getBroadcast(context, 0, AlarmReceiver.pauseIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
 
         val pause = NotificationCompat.Action(
                 R.drawable.ic_notifications_off_black_24,
                 context.getString(R.string.pause),
+                pendingPause)
+
+        val content = PendingIntent.getActivity(context, 0, RunningTaskActivity.newIntent(it.id, context), 0)
+
+        return getBaseNotificationBuilder(it)
+                .setContentText("Keep working")
+                .setContentIntent(content)
+                .addAction(pause)
+                .build()
+    }
+
+    fun showPausedNotification(it: Task) : Notification {
+
+        val pendingPause = PendingIntent.getBroadcast(context, 0, AlarmReceiver.resumeIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
+
+        val pause = NotificationCompat.Action(
+                R.drawable.ic_notifications_off_black_24,
+                context.getString(R.string.resume),
                 pendingPause)
 
         val content = PendingIntent.getActivity(context, 0, RunningTaskActivity.newIntent(it.id, context), 0)
@@ -68,4 +85,3 @@ class NotificationProvider @Inject constructor(val context : Context) {
     }
 
 }
-
