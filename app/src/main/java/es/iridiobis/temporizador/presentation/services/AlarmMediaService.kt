@@ -19,9 +19,8 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
         MediaPlayer.OnErrorListener {
 
     companion object {
-        val ACTION_PLAY = "es.iridiobis.temporizador.presentation.services.ACTION_PLAY"
-        val ACTION_PAUSE = "es.iridiobis.temporizador.presentation.services.ACTION_PAUSE"
-        val ACTION_STOP = "es.iridiobis.temporizador.presentation.services.ACTION_STOP"
+        val ACTION_PLAY = "AlarmMediaService.ACTION_PLAY"
+        val ACTION_STOP = "AlarmMediaService.ACTION_STOP"
     }
 
     @Inject lateinit var alarmService: AlarmService

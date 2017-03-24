@@ -8,4 +8,5 @@ interface AlarmService {
     fun getRunningTask() : Observable<Task?>
     fun setAlarm(task: Task)
     fun pauseAlarm()
+    fun resumeAlarm()
 }
