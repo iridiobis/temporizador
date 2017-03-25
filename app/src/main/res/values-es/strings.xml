@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Temporizador</string>
     <string name="name">Nombre</string>
     <string name="duration">Duración</string>
     <string name="edit">Editar</string>
@@ -8,4 +9,7 @@
     <string name="cancel">Cancelar</string>
     <string name="done">Hecho</string>
     <string name="background_selection">Selecciona un fondo</string>
+    <string name="enough_message">Suficiente por hoy</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
 </resources>

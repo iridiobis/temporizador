@@ -37,6 +37,7 @@ dependencies {
     compile "io.reactivex.rxjava2:rxandroid:$versions.rxandroid"
     compile "io.reactivex.rxjava2:rxjava:$versions.rxjava"
     compile "com.google.dagger:dagger:$rootProject.versions.dagger"
+    compile 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.iridiobis:presenter:0.1'
     compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'

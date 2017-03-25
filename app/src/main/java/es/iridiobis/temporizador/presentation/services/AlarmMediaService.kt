@@ -1,34 +1,30 @@
 package es.iridiobis.temporizador.presentation.services
 
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
-import android.content.SharedPreferences
-import android.graphics.drawable.Icon
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.IBinder
 import android.os.PowerManager
-import android.preference.PreferenceManager
-import android.support.v4.app.NotificationCompat
-import es.iridiobis.temporizador.R
-import es.iridiobis.temporizador.data.storage.ImagesStorage
-import es.iridiobis.temporizador.data.storage.TasksStorage
-import es.iridiobis.temporizador.domain.model.Task
-import es.iridiobis.temporizador.presentation.ui.finishedtask.FinishedTaskActivity
+import es.iridiobis.temporizador.core.ApplicationComponent
+import es.iridiobis.temporizador.core.di.ComponentProvider
+import es.iridiobis.temporizador.core.notification.NotificationProvider
+import es.iridiobis.temporizador.domain.services.AlarmService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
-import java.text.Format
-
-const val ACTION_PLAY = "com.example.adam.nfcalarm.alertservice.ACTION_PLAY"
+import javax.inject.Inject
 
 class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
         MediaPlayer.OnErrorListener {
 
     companion object {
-        val ID_NOTIFICATION = 1
+        val ACTION_PLAY = "AlarmMediaService.ACTION_PLAY"
+        val ACTION_STOP = "AlarmMediaService.ACTION_STOP"
     }
+
+    @Inject lateinit var alarmService: AlarmService
+    @Inject lateinit var notificationProvider: NotificationProvider
 
     var mediaPlayer: MediaPlayer? = null
 
@@ -36,14 +32,19 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
         throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        (application as ComponentProvider<ApplicationComponent>).getComponent().inject(this)
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        TasksStorage(ImagesStorage(applicationContext)).retrieveTask(PreferenceManager.getDefaultSharedPreferences(this).getLong("TASK", 0))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    showNotification(it)
-                })
         if (intent?.action.equals(ACTION_PLAY)) {
+            alarmService.getRunningTask()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        startForeground(notificationProvider.notificationId, notificationProvider.showFinishedNotification(it!!))
+                    })
             initMediaPlayer()
         }
         return super.onStartCommand(intent, flags, startId);
@@ -92,31 +93,4 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
         return true
     }
 
-    private fun showNotification(it: Task) {
-
-        val snooze = FinishedTaskActivity.newIntent(it.id, this)
-        //snooze.setAction(ACTION_SNOOZE_ALARM);
-        val pendingSnooze = PendingIntent.getActivity (this, 0, snooze, PendingIntent.FLAG_ONE_SHOT)
-
-        //val icon = Icon.createWithResource(this, R.drawable.ic_snooze_black_18dp);
-
-        val dismiss = NotificationCompat.Action(R.mipmap.ic_launcher, "Done", pendingSnooze)
-
-        val content = PendingIntent.getActivity (this, 0, FinishedTaskActivity.newIntent(it.id, this), 0)
-
-        val builder = NotificationCompat.Builder(this)
-                //.setSmallIcon(R.drawable.icon_nfc)
-                .setContentTitle("Active Alarm")
-                //.setContentText(millis)
-                .setContentIntent(content)
-                .setShowWhen(false)
-                .setAutoCancel(false)
-                .setOngoing(true)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
-                //.addAction(dismiss)
-
-        startForeground(ID_NOTIFICATION, builder.build());
-    }
 }

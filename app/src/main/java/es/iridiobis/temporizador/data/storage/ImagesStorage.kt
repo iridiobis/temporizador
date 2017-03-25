@@ -5,9 +5,10 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import java.io.*
+import javax.inject.Inject
 
 
-class ImagesStorage(val applicationContext: Context) {
+class ImagesStorage @Inject constructor(val applicationContext: Context) {
     fun getFullBackground(id: Long): Uri {
         return Uri.fromFile(getFile(id.toString()))
     }

@@ -9,6 +9,7 @@ interface Main {
         fun displayTasks(tasks: List<Task>)
     }
     interface Presenter : Attachable<View> {
+        fun runTask(task: Task)
         fun delete(task: Task)
     }
 }
