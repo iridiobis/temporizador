@@ -22,22 +22,22 @@ class ImagesStorage @Inject constructor(val applicationContext: Context) {
     }
 
     fun setFullBackground(id: Long, background : Uri) {
-        savefile(id.toString(), background)
+        saveFile(id.toString(), background)
     }
 
     fun setSmallBackground(id: Long, smallBackground : Uri) {
-        savefile(id.toString() + "_small", smallBackground)
+        saveFile(id.toString() + "_small", smallBackground)
     }
 
     fun setThumbnail(id: Long, thumbnail : Uri) {
-        savefile(id.toString() + "_thumbnail", thumbnail)
+        saveFile(id.toString() + "_thumbnail", thumbnail)
     }
 
     private fun getFile(name: String) : File {
         return File(applicationContext.filesDir, name + ".jpeg")
 
     }
-    private fun savefile(name: String, source: Uri) {
+    private fun saveFile(name: String, source: Uri) {
 
         val destination = getFile(name)
         if (source.toString().contains(destination.toString())) {
@@ -54,12 +54,11 @@ class ImagesStorage @Inject constructor(val applicationContext: Context) {
                 bis = BufferedInputStream(FileInputStream(source.path))
             }
             bos = BufferedOutputStream(FileOutputStream(destination))
-            //bos = BufferedOutputStream(applicationContext.openFileOutput(name + ".jpeg", Context.MODE_PRIVATE))
             val buf = ByteArray(1024)
             bis.read(buf)
             do {
                 bos.write(buf)
-            } while (bis.read(buf) !== -1)
+            } while (bis.read(buf) != -1)
         } catch (e: IOException) {
             Log.e("ASDF", e.toString())
         } finally {
