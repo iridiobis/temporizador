@@ -8,6 +8,7 @@ import android.content.Context
 import android.os.Build
 import android.os.SystemClock
 import android.preference.PreferenceManager
+import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.BehaviorRelay.create
 import es.iridiobis.kotlinexample.getLong
 import es.iridiobis.kotlinexample.getPreferencesEditor
@@ -20,14 +21,20 @@ import javax.inject.Inject
 
 class AlarmHandler @Inject constructor(val tasksStorage: TasksStorage, val notificationProvider: NotificationProvider, val context: Context) : AlarmService {
     var task: Task? = null
-    val statusRelay = create<Boolean>().toSerialized()
-    override fun getRunningTask(): Observable<Task?> {
+    val statusRelay : BehaviorRelay<Boolean> = create<Boolean>()
+
+    override fun hasRunningTask(): Boolean {
+        return PreferenceManager.getDefaultSharedPreferences(context).contains("TASK")
+    }
+
+    override fun getRunningTask(): Observable<Task> {
         if (task != null) {
             return Observable.just(task)
-        } else {
-            return tasksStorage.retrieveTask(PreferenceManager.getDefaultSharedPreferences(context).getLong("TASK", 0))
+        } else if (hasRunningTask()) {
+            return tasksStorage.retrieveTask(context.getLong("TASK"))
                     .map { it -> saveTask(it) }
-
+        } else {
+            return Observable.error<Task> { IllegalStateException("No running task") }
         }
     }
 

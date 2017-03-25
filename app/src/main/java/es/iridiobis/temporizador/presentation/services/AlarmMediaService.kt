@@ -6,6 +6,7 @@ import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.IBinder
 import android.os.PowerManager
+import android.util.Log
 import es.iridiobis.temporizador.core.ApplicationComponent
 import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.core.notification.NotificationProvider
@@ -44,8 +45,8 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
                     .subscribeOn(Schedulers.io())
                     .subscribe({
                         startForeground(notificationProvider.notificationId, notificationProvider.showFinishedNotification(it!!))
-                    })
-            initMediaPlayer()
+                        initMediaPlayer()
+                    }, { Log.d("AlarmMediaService", "Fired non-existent task") })
         }
         return super.onStartCommand(intent, flags, startId);
     }

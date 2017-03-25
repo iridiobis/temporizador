@@ -3,6 +3,7 @@ package es.iridiobis.temporizador.presentation.services
 import android.app.IntentService
 import android.content.Intent
 import android.support.v4.content.WakefulBroadcastReceiver
+import android.util.Log
 import es.iridiobis.temporizador.core.ApplicationComponent
 import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.domain.services.AlarmService
@@ -32,7 +33,7 @@ class FireAlarmService : IntentService("FireAlarmService") {
                     )
                     // Release the wake lock provided by the BroadcastReceiver.
                     WakefulBroadcastReceiver.completeWakefulIntent(intent)
-                })
+                }, { Log.d("AlarmMediaService", "Fired non-existent task") })
     }
 }
 
