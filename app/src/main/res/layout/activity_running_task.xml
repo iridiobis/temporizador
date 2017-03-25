@@ -12,8 +12,9 @@
     tools:context="es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity">
 
     <TextView
+        android:id="@+id/rt_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Running..."/>
+        tools:text="Running..."/>
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.content.Context
 import android.os.Build
 import android.os.SystemClock
 import android.preference.PreferenceManager
+import com.jakewharton.rxrelay2.BehaviorRelay.create
 import es.iridiobis.kotlinexample.getLong
 import es.iridiobis.kotlinexample.getPreferencesEditor
 import es.iridiobis.temporizador.core.notification.NotificationProvider
@@ -16,10 +17,10 @@ import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.services.AlarmService
 import io.reactivex.Observable
 import javax.inject.Inject
-import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
 
 class AlarmHandler @Inject constructor(val tasksStorage: TasksStorage, val notificationProvider: NotificationProvider, val context: Context) : AlarmService {
     var task: Task? = null
+    val statusRelay = create<Boolean>().toSerialized()
     override fun getRunningTask(): Observable<Task?> {
         if (task != null) {
             return Observable.just(task)
@@ -28,6 +29,10 @@ class AlarmHandler @Inject constructor(val tasksStorage: TasksStorage, val notif
                     .map { it -> saveTask(it) }
 
         }
+    }
+
+    override fun status(): Observable<Boolean> {
+        return statusRelay
     }
 
     private fun saveTask(task : Task?) : Task? {
@@ -42,6 +47,7 @@ class AlarmHandler @Inject constructor(val tasksStorage: TasksStorage, val notif
                 .putLong("START_TIME", System.currentTimeMillis())
                 .apply()
         setAlarm(task.duration)
+        statusRelay.accept(true)
     }
 
     override fun pauseAlarm() {
@@ -54,6 +60,7 @@ class AlarmHandler @Inject constructor(val tasksStorage: TasksStorage, val notif
         val alarmIntent = PendingIntent.getBroadcast(context, 0, AlarmReceiver.playIntent(context), 0)
         alarmManager.cancel(alarmIntent)
         notify(notificationProvider.showPausedNotification(task!!))
+        statusRelay.accept(false)
     }
 
     override fun resumeAlarm() {
@@ -61,6 +68,7 @@ class AlarmHandler @Inject constructor(val tasksStorage: TasksStorage, val notif
                 .putLong("START_TIME", System.currentTimeMillis())
                 .apply()
         setAlarm(task!!.duration - context.getLong("ELAPSED_TIME"))
+        statusRelay.accept(true)
     }
 
     private fun setAlarm(remaining : Long) {

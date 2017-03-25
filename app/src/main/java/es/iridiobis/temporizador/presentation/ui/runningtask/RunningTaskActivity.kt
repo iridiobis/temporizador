@@ -6,10 +6,12 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import es.iridiobis.temporizador.R
+import es.iridiobis.temporizador.core.ApplicationComponent
+import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.core.extensions.setBackground
-import es.iridiobis.temporizador.data.storage.ImagesStorage
-import es.iridiobis.temporizador.data.storage.TasksStorage
+import es.iridiobis.temporizador.presentation.ui.main.DaggerRunningTaskComponent
 import kotlinx.android.synthetic.main.activity_running_task.*
+import javax.inject.Inject
 
 class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
 
@@ -21,12 +23,15 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
         }
     }
 
-    var presenter: RunningTask.Presenter? = null
+    @Inject lateinit var presenter: RunningTask.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_running_task)
-        presenter = RunningTaskPresenter(intent.extras.getLong("TASK"), TasksStorage(ImagesStorage(applicationContext)))
+        DaggerRunningTaskComponent.builder()
+                .applicationComponent((application as ComponentProvider<ApplicationComponent>).getComponent())
+                .build()
+                .injectMembers(this)
     }
 
     override fun onResume() {
@@ -42,4 +47,9 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
     override fun displayBackground(background: Uri) {
         activity_running_task.setBackground(background) { request -> request }
     }
+
+    override fun displayStatus(status: Boolean) {
+        rt_status.text = if(status) "Running" else "Paused"
+    }
+
 }
