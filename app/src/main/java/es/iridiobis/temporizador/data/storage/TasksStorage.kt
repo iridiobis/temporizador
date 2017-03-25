@@ -6,8 +6,9 @@ import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import io.reactivex.Observable
 import io.realm.Realm
+import javax.inject.Inject
 
-class TasksStorage(val imagesStorage: ImagesStorage) : TasksRepository {
+class TasksStorage @Inject constructor(val imagesStorage: ImagesStorage) : TasksRepository {
     override fun delete(task: Task): Observable<Unit> {
         return Observable.create {
             subscriber ->
@@ -20,11 +21,12 @@ class TasksStorage(val imagesStorage: ImagesStorage) : TasksRepository {
         }
     }
 
-    override fun retrieveTask(id: Long): Observable<Task> {
+    override fun retrieveTask(id: Long): Observable<Task?> {
         return Observable.create {
             subscriber ->
             val realm: Realm = Realm.getDefaultInstance()
-            val task = parseTask(realm.where(RealmTask::class.java).equalTo("id", id).findFirst())
+            val realmTask : RealmTask? = realm.where(RealmTask::class.java).equalTo("id", id).findFirst()
+            val task = if (realmTask == null) null else parseTask(realmTask)
             subscriber.onNext(task)
             subscriber.onComplete()
             realm.close()

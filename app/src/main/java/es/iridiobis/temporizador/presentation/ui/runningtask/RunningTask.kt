@@ -8,6 +8,7 @@ import es.iridiobis.temporizador.domain.model.Task
 interface RunningTask {
     interface View {
         fun displayBackground(background: Uri)
+        fun displayStatus(status : Boolean)
     }
 
     interface Presenter : Attachable<View>

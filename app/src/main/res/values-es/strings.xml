@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Temporizador</string>
     <string name="name">Nombre</string>
     <string name="duration">Duración</string>
     <string name="save">Done</string>
@@ -8,4 +9,7 @@
     <string name="delete_alert_title">Delete task?</string>
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
+    <string name="enough_message">Suficiente por hoy</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
 </resources>
