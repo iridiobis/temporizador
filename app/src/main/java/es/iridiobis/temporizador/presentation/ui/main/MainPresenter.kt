@@ -20,7 +20,7 @@ class MainPresenter @Inject constructor(val tasksRepository: TasksRepository, va
         tasksRepository.delete(task)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe({onViewAttached()}, {})
+                .subscribe({}, {}, {onViewAttached()})
     }
 
     override fun onViewAttached() {
