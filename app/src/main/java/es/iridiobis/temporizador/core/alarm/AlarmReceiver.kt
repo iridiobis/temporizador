@@ -55,7 +55,7 @@ class AlarmReceiver : WakefulBroadcastReceiver() {
 
             val service = Intent(context, FireAlarmService::class.java)
             WakefulBroadcastReceiver.startWakefulService(context, service)
-
+            alarmService.playAlarm()
         } else if (ACTION_STOP == intent?.action) {
             context?.stopService(Intent(context, AlarmMediaService::class.java))
             context?.startActivity(

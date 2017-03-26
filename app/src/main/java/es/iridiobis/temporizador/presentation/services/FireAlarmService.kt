@@ -21,7 +21,6 @@ class FireAlarmService : IntentService("FireAlarmService") {
     }
 
     override fun onHandleIntent(intent: Intent?) {
-
         alarmService.getRunningTask()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
