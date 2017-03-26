@@ -19,11 +19,13 @@ class AlarmHandler @Inject constructor(
         val notificationManager: NotificationManager) : AlarmService {
 
     companion object {
-        private val TASK_PREFERENCE : String = "TASK"
-        private val GONE_OFF_PREFERENCE : String = "GONE_OFF"
-        private val START_TIME_PREFERENCE : String = "START_TIME"
-        private val ELLAPSED_TIME_PREFERENCE : String = "ELLAPSED_TIME"
+        private val TASK_PREFERENCE: String = "TASK"
+        private val GONE_OFF_PREFERENCE: String = "GONE_OFF"
+        private val START_TIME_PREFERENCE: String = "START_TIME"
+        private val ELAPSED_TIME_PREFERENCE: String = "ELAPSED_TIME"
+        private val RUNNING_PREFERENCE: String = "RUNNING"
     }
+
     var task: Task? = null
     val statusRelay: BehaviorRelay<Boolean> = create<Boolean>()
 
@@ -34,6 +36,7 @@ class AlarmHandler @Inject constructor(
             return tasksStorage.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
                     .map {
                         this.task = it
+                        statusRelay.accept(preferences.getBoolean(RUNNING_PREFERENCE, false))
                         true
                     }
                     .doOnError {
@@ -56,6 +59,7 @@ class AlarmHandler @Inject constructor(
             return tasksStorage.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
                     .map {
                         this.task = it
+                        statusRelay.accept(preferences.getBoolean(RUNNING_PREFERENCE, false))
                         it
                     }
         } else {
@@ -72,16 +76,18 @@ class AlarmHandler @Inject constructor(
         preferences.edit()
                 .putLong(TASK_PREFERENCE, task.id)
                 .putLong(START_TIME_PREFERENCE, System.currentTimeMillis())
+                .putBoolean(RUNNING_PREFERENCE, true)
                 .apply()
         setAlarm(task.duration)
         statusRelay.accept(true)
     }
 
     override fun pauseAlarm() {
-        val elapsetTime = preferences.getLong(ELLAPSED_TIME_PREFERENCE, 0) + System.currentTimeMillis() - preferences.getLong(START_TIME_PREFERENCE, 0)
+        val elapsetTime = preferences.getLong(ELAPSED_TIME_PREFERENCE, 0) + System.currentTimeMillis() - preferences.getLong(START_TIME_PREFERENCE, 0)
         preferences.edit()
                 .putLong(START_TIME_PREFERENCE, 0)
-                .putLong(ELLAPSED_TIME_PREFERENCE, elapsetTime)
+                .putLong(ELAPSED_TIME_PREFERENCE, elapsetTime)
+                .putBoolean(RUNNING_PREFERENCE, false)
                 .apply()
         alarmManagerProxy.cancelAlarm()
         notificationManager.notify(
@@ -94,8 +100,9 @@ class AlarmHandler @Inject constructor(
     override fun resumeAlarm() {
         preferences.edit()
                 .putLong(START_TIME_PREFERENCE, System.currentTimeMillis())
+                .putBoolean(RUNNING_PREFERENCE, true)
                 .apply()
-        setAlarm(task!!.duration - preferences.getLong(ELLAPSED_TIME_PREFERENCE, 0))
+        setAlarm(task!!.duration - preferences.getLong(ELAPSED_TIME_PREFERENCE, 0))
         statusRelay.accept(true)
     }
 
