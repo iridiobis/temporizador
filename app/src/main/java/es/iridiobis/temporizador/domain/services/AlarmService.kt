@@ -5,10 +5,13 @@ import io.reactivex.Observable
 
 
 interface AlarmService {
-    fun hasRunningTask() : Boolean
+    fun hasRunningTask() : Observable<Boolean>
+    fun hasGoneOff() : Boolean
     fun getRunningTask() : Observable<Task>
     fun status() : Observable<Boolean>
     fun setAlarm(task: Task)
     fun pauseAlarm()
     fun resumeAlarm()
+    fun playAlarm()
+    fun clearAlarm()
 }

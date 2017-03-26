@@ -9,6 +9,7 @@ import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import es.iridiobis.temporizador.domain.services.AlarmService
 import es.iridiobis.temporizador.presentation.services.AlarmMediaService
 import es.iridiobis.temporizador.presentation.services.FireAlarmService
+import es.iridiobis.temporizador.presentation.ui.splash.SplashActivity
 import javax.inject.Singleton
 
 @Singleton
@@ -19,6 +20,7 @@ interface ApplicationComponent {
     fun inject(fireAlarmService: FireAlarmService)
     fun inject(alarmMediaService: AlarmMediaService)
     fun inject(alarmReceiver: AlarmReceiver)
+    fun inject(splashActivity: SplashActivity)
 
     fun tasksRepository() : TasksRepository
     fun provideAlarmService() : AlarmService
