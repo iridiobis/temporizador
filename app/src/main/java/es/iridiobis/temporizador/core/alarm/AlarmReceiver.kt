@@ -47,6 +47,7 @@ class AlarmReceiver : WakefulBroadcastReceiver() {
     @Inject lateinit var alarmService: AlarmService
 
     override fun onReceive(context: Context?, intent: Intent?) {
+        (context?.applicationContext as ComponentProvider<ApplicationComponent>).getComponent().inject(this)
         if (ACTION_PLAY == intent?.action) {
             val mpIntent = Intent(context, AlarmMediaService::class.java)
             mpIntent.action = AlarmMediaService.ACTION_PLAY
@@ -54,6 +55,7 @@ class AlarmReceiver : WakefulBroadcastReceiver() {
 
             val service = Intent(context, FireAlarmService::class.java)
             WakefulBroadcastReceiver.startWakefulService(context, service)
+            alarmService.playAlarm()
         } else if (ACTION_STOP == intent?.action) {
             context?.stopService(Intent(context, AlarmMediaService::class.java))
             context?.startActivity(
@@ -61,6 +63,7 @@ class AlarmReceiver : WakefulBroadcastReceiver() {
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             )
+            alarmService.clearAlarm()
         } else if (ACTION_PAUSE == intent?.action) {
             (context?.applicationContext as ComponentProvider<ApplicationComponent>).getComponent().inject(this)
             alarmService.pauseAlarm()

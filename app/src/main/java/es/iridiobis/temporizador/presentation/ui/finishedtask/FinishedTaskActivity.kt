@@ -1,11 +1,13 @@
 package es.iridiobis.temporizador.presentation.ui.finishedtask
 
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import es.iridiobis.temporizador.R
+import es.iridiobis.temporizador.core.alarm.AlarmReceiver
 import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.data.storage.ImagesStorage
 import es.iridiobis.temporizador.data.storage.TasksStorage
@@ -29,12 +31,7 @@ class FinishedTaskActivity : AppCompatActivity(), FinishedTask.View {
         overridePendingTransition(R.anim.fadein, R.anim.fadeout)
         setContentView(R.layout.activity_finished_task)
         finish.setOnClickListener {
-            stopService(Intent(this, AlarmMediaService::class.java))
-            startActivity(
-                    Intent(this, MainActivity::class.java)
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            )
+            sendBroadcast(AlarmReceiver.stopIntent(this))
         }
         presenter = FinishedTaskPresenter(intent.extras.getLong("TASK"), TasksStorage(ImagesStorage(applicationContext)))
     }

@@ -23,6 +23,10 @@ fun Context.getPreferencesEditor() : SharedPreferences.Editor {
     return PreferenceManager.getDefaultSharedPreferences(this).edit()
 }
 
+fun Context.contains(key : String) : Boolean {
+    return PreferenceManager.getDefaultSharedPreferences(this).contains(key)
+}
+
 fun Context.getLong(key : String) : Long {
     return PreferenceManager.getDefaultSharedPreferences(this).getLong(key, 0)
 }

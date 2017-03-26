@@ -21,13 +21,15 @@ class TasksStorage @Inject constructor(val imagesStorage: ImagesStorage) : Tasks
         }
     }
 
-    override fun retrieveTask(id: Long): Observable<Task?> {
+    override fun retrieveTask(id: Long): Observable<Task> {
         return Observable.create {
             subscriber ->
             val realm: Realm = Realm.getDefaultInstance()
             val realmTask : RealmTask? = realm.where(RealmTask::class.java).equalTo("id", id).findFirst()
-            val task = if (realmTask == null) null else parseTask(realmTask)
-            subscriber.onNext(task)
+            if (realmTask == null)
+                subscriber.onError(IllegalStateException("No task with the given id"))
+            else
+                subscriber.onNext(parseTask(realmTask))
             subscriber.onComplete()
             realm.close()
         }
