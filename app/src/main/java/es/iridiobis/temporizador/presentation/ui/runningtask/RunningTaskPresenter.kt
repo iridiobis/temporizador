@@ -19,6 +19,7 @@ class RunningTaskPresenter @Inject constructor(val alarmService: AlarmService)
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                     view?.displayBackground(it!!.background)
+                    view?.displayName(it!!.name)
                 })
         status = alarmService.status()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -31,4 +32,14 @@ class RunningTaskPresenter @Inject constructor(val alarmService: AlarmService)
     override fun beforeViewDetached() {
         status.dispose()
     }
+
+
+    override fun pause() {
+        alarmService.pauseAlarm()
+    }
+
+    override fun resume() {
+        alarmService.resumeAlarm()
+    }
+
 }

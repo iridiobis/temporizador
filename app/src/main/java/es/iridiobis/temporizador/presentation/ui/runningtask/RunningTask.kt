@@ -7,9 +7,13 @@ import es.iridiobis.temporizador.domain.model.Task
 
 interface RunningTask {
     interface View {
+        fun displayName(name : String)
         fun displayBackground(background: Uri)
         fun displayStatus(status : Boolean)
     }
 
-    interface Presenter : Attachable<View>
+    interface Presenter : Attachable<View> {
+        fun pause()
+        fun resume()
+    }
 }
