@@ -32,4 +32,14 @@ class RunningTaskPresenter @Inject constructor(val alarmService: AlarmService)
     override fun beforeViewDetached() {
         status.dispose()
     }
+
+
+    override fun pause() {
+        alarmService.pauseAlarm()
+    }
+
+    override fun resume() {
+        alarmService.resumeAlarm()
+    }
+
 }

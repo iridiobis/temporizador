@@ -5,6 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.ApplicationComponent
 import es.iridiobis.temporizador.core.di.ComponentProvider
@@ -32,15 +34,17 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
                 .applicationComponent((application as ComponentProvider<ApplicationComponent>).getComponent())
                 .build()
                 .injectMembers(this)
+        rt_pause.setOnClickListener { presenter.pause() }
+        rt_resume.setOnClickListener { presenter.resume() }
     }
 
     override fun onResume() {
         super.onResume()
-        presenter!!.attach(this)
+        presenter.attach(this)
     }
 
     override fun onPause() {
-        presenter!!.detach(this)
+        presenter.detach(this)
         super.onPause()
     }
     override fun displayName(name: String) {
@@ -52,7 +56,8 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
     }
 
     override fun displayStatus(status: Boolean) {
-        rt_status.text = if(status) "Running" else "Paused"
+        rt_pause.visibility = if (status) VISIBLE else GONE
+        rt_resume.visibility = if (status) GONE else VISIBLE
     }
 
 }

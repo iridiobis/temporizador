@@ -12,5 +12,8 @@ interface RunningTask {
         fun displayStatus(status : Boolean)
     }
 
-    interface Presenter : Attachable<View>
+    interface Presenter : Attachable<View> {
+        fun pause()
+        fun resume()
+    }
 }
