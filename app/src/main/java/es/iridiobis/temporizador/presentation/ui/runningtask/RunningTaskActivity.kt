@@ -43,6 +43,9 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
         presenter!!.detach(this)
         super.onPause()
     }
+    override fun displayName(name: String) {
+        supportActionBar?.title = name
+    }
 
     override fun displayBackground(background: Uri) {
         activity_running_task.setBackground(background) { request -> request }
