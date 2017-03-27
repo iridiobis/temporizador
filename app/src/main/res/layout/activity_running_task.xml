@@ -8,6 +8,11 @@
     android:layout_height="match_parent"
     tools:context="es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/overlay"/>
+
     <ImageView
         android:id="@+id/rt_pause"
         android:layout_width="wrap_content"
