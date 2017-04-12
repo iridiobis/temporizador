@@ -9,41 +9,26 @@ import javax.inject.Inject
 
 
 class ImagesStorage @Inject constructor(val applicationContext: Context) {
-    fun getFullBackground(id: Long): Uri {
-        return Uri.fromFile(getFile(id.toString()))
-    }
 
-    fun getSmallBackground(id: Long): Uri {
-        return Uri.fromFile(getFile(id.toString() + "_small"))
-    }
+    fun getFullBackground(id: Long): Uri = Uri.fromFile(getFile(id.toString()))
 
-    fun getThumbnail(id: Long): Uri {
-        return Uri.fromFile(getFile(id.toString() + "_thumbnail"))
-    }
+    fun getSmallBackground(id: Long): Uri = Uri.fromFile(getFile(id.toString() + "_small"))
 
-    fun setFullBackground(id: Long, background : Uri) {
-        saveFile(id.toString(), background)
-    }
+    fun getThumbnail(id: Long): Uri = Uri.fromFile(getFile(id.toString() + "_thumbnail"))
 
-    fun setSmallBackground(id: Long, smallBackground : Uri) {
-        saveFile(id.toString() + "_small", smallBackground)
-    }
+    fun setFullBackground(id: Long, background : Uri) = saveFile(id.toString(), background)
 
-    fun setThumbnail(id: Long, thumbnail : Uri) {
-        saveFile(id.toString() + "_thumbnail", thumbnail)
-    }
+    fun setSmallBackground(id: Long, smallBackground : Uri) = saveFile(id.toString() + "_small", smallBackground)
 
-    private fun getFile(name: String) : File {
-        return File(applicationContext.filesDir, name + ".jpeg")
+    fun setThumbnail(id: Long, thumbnail : Uri) = saveFile(id.toString() + "_thumbnail", thumbnail)
 
-    }
+    private fun getFile(name: String) = File(applicationContext.filesDir, name + ".jpeg")
+
     private fun saveFile(name: String, source: Uri) {
-
         val destination = getFile(name)
         if (source.toString().contains(destination.toString())) {
             return
         }
-        Log.wtf("ASDF", "Saving in " + destination.toString() + " the file from " + source.toString())
         var bis: BufferedInputStream? = null
         var bos: BufferedOutputStream? = null
 
