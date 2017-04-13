@@ -16,7 +16,7 @@ class TaskService @Inject constructor(
         val tasksRepository: TasksRepository,
         val notificationManager: TaskNotificationManager,
         val preferences: SharedPreferences,
-        val alarmManagerProxy: AlarmManagerProxy,
+        val alarmService: AlarmService,
         val lastResort: LastResort) {
 
     companion object {
@@ -95,7 +95,7 @@ class TaskService @Inject constructor(
                 .putLong(ELAPSED_TIME_PREFERENCE, elapsedTime)
                 .putBoolean(RUNNING_PREFERENCE, false)
                 .apply()
-        alarmManagerProxy.cancelAlarm()
+        alarmService.cancelAlarm()
         notificationManager.showPausedNotification(task!!)
         statusRelay.accept(false)
     }
@@ -111,7 +111,7 @@ class TaskService @Inject constructor(
 
     fun stopTask() {
         clearTask()
-        alarmManagerProxy.cancelAlarm()
+        alarmService.cancelAlarm()
         notificationManager.cancel()
         continueRelay.accept(false)
     }
@@ -137,7 +137,7 @@ class TaskService @Inject constructor(
     }
 
     private fun setAlarm(remaining: Long) {
-        alarmManagerProxy.setAlarm(remaining)
+        alarmService.setAlarm(remaining)
         notificationManager.showRunningNotification(task!!)
     }
 

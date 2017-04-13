@@ -5,11 +5,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
 import android.os.SystemClock
+import es.iridiobis.temporizador.domain.services.AlarmService
 import javax.inject.Inject
 
 
-public class AlarmManagerProxy @Inject constructor(val context: Context) {
-    public fun setAlarm(remaining: Long) {
+class AlarmManagerProxy @Inject constructor(val context: Context) : AlarmService {
+    override fun setAlarm(remaining: Long) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmIntent = PendingIntent.getBroadcast(context, 0, AlarmReceiver.playAlarmIntent(context), 0)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
@@ -18,7 +19,7 @@ public class AlarmManagerProxy @Inject constructor(val context: Context) {
             alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + remaining, alarmIntent)
     }
 
-    public fun cancelAlarm() {
+    override fun cancelAlarm() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmIntent = PendingIntent.getBroadcast(context, 0, AlarmReceiver.playAlarmIntent(context), 0)
         alarmManager.cancel(alarmIntent)
