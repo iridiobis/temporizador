@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.content.WakefulBroadcastReceiver
 import es.iridiobis.temporizador.core.Temporizador
-import es.iridiobis.temporizador.domain.services.AlarmService
+import es.iridiobis.temporizador.domain.services.TaskService
 import javax.inject.Inject
 
 class AlarmReceiver : WakefulBroadcastReceiver() {
@@ -48,20 +48,20 @@ class AlarmReceiver : WakefulBroadcastReceiver() {
         }
     }
 
-    @Inject lateinit var alarmService: AlarmService
+    @Inject lateinit var taskService: TaskService
 
     override fun onReceive(context: Context, intent: Intent) {
         (context.applicationContext as Temporizador).getComponent().inject(this)
         if (ACTION_PLAY_ALARM == intent.action) {
-            alarmService.playAlarm()
+            taskService.playAlarm()
         } else if (ACTION_STOP_ALARM == intent.action) {
-            alarmService.stopAlarm()
+            taskService.stopAlarm()
         } else if (ACTION_PAUSE_TASK == intent.action) {
-            alarmService.pauseTask()
+            taskService.pauseTask()
         } else if (ACTION_RESUME_TASK == intent.action) {
-            alarmService.resumeTask()
+            taskService.resumeTask()
         } else if (ACTION_STOP_TASK == intent.action) {
-            alarmService.stopTask()
+            taskService.stopTask()
         }
     }
 }

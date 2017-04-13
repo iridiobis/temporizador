@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.extensions.setBackground
+import es.iridiobis.temporizador.presentation.services.AlarmMediaService
 import es.iridiobis.temporizador.presentation.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_finished_task.*
 import javax.inject.Inject
@@ -41,11 +42,21 @@ class FinishedTaskActivity : AppCompatActivity(), FinishedTask.View {
         super.onPause()
     }
 
+    override fun soundAlarm() {
+        val mpIntent = Intent(this, AlarmMediaService::class.java)
+        mpIntent.action = AlarmMediaService.ACTION_PLAY
+        startService(mpIntent)
+    }
+
     override fun displayBackground(background: Uri) {
         activity_finished_task.setBackground(background) { request -> request }
     }
 
-    override fun onAlarmFinished() {
+    override fun silenceAlarm() {
+        stopService(Intent(this, AlarmMediaService::class.java))
+    }
+
+    override fun goToMainScreen() {
         startActivity(
                 Intent(this, MainActivity::class.java)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

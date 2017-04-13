@@ -9,19 +9,20 @@ import android.support.v4.app.NotificationCompat
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.alarm.AlarmReceiver
 import es.iridiobis.temporizador.domain.model.Task
+import es.iridiobis.temporizador.domain.services.TaskNotification
 import es.iridiobis.temporizador.presentation.ui.finishedtask.FinishedTaskActivity
 import es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity
 import javax.inject.Inject
 
 class TaskNotificationManager @Inject constructor(
         val context: Context,
-        val notificationManager: NotificationManager) {
+        val notificationManager: NotificationManager) : TaskNotification {
 
     companion object {
         private val NOTIFICATION_ID = 1
     }
 
-    fun showRunningNotification(it: Task) {
+    override fun showRunningNotification(it: Task) {
 
         val pendingPause = PendingIntent.getBroadcast(context, 0, AlarmReceiver.pauseTaskIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
         val pause = NotificationCompat.Action(
@@ -41,7 +42,7 @@ class TaskNotificationManager @Inject constructor(
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
-    fun showPausedNotification(it: Task) {
+    override fun showPausedNotification(it: Task) {
 
         val pendingPause = PendingIntent.getBroadcast(context, 0, AlarmReceiver.resumeTaskIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
 
@@ -61,7 +62,6 @@ class TaskNotificationManager @Inject constructor(
 
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
-
 
     fun showFinishedNotification(it: Task, service: Service) {
 
@@ -83,7 +83,7 @@ class TaskNotificationManager @Inject constructor(
         service.startForeground(NOTIFICATION_ID, notification)
     }
 
-    fun cancel() {
+    override fun cancel() {
         notificationManager.cancel(NOTIFICATION_ID)
     }
 

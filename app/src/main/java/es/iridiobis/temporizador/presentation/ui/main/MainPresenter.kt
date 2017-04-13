@@ -1,19 +1,18 @@
 package es.iridiobis.temporizador.presentation.ui.main
 
 import es.iridiobis.presenter.Presenter
-import es.iridiobis.temporizador.core.alarm.AlarmHandler
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
-import es.iridiobis.temporizador.domain.services.AlarmService
+import es.iridiobis.temporizador.domain.services.TaskService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
-class MainPresenter @Inject constructor(val tasksRepository: TasksRepository, val alarmService: AlarmService) : Presenter<Main.View>(), Main.Presenter {
+class MainPresenter @Inject constructor(val tasksRepository: TasksRepository, val taskService: TaskService) : Presenter<Main.View>(), Main.Presenter {
 
     override fun runTask(task: Task) {
-        alarmService.startTask(task)
+        taskService.startTask(task)
     }
 
     override fun delete(task: Task) {
