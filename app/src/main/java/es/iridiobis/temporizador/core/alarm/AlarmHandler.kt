@@ -113,6 +113,7 @@ class AlarmHandler @Inject constructor(
     }
 
     override fun clearAlarm() {
+        task = null
         preferences.edit()
                 .clear()
                 .apply()
