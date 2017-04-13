@@ -12,7 +12,6 @@ import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import es.iridiobis.temporizador.domain.services.AlarmService
 import es.iridiobis.temporizador.presentation.services.AlarmMediaService
 import es.iridiobis.temporizador.presentation.services.FireAlarmService
-import es.iridiobis.temporizador.presentation.ui.main.MainActivity
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -124,10 +123,6 @@ class AlarmHandler @Inject constructor(
         preferences.edit()
                 .putBoolean(GONE_OFF_PREFERENCE, true)
                 .apply()
-        //TODO move away, remove context and presentation from this class
-        val mpIntent = Intent(context, AlarmMediaService::class.java)
-        mpIntent.action = AlarmMediaService.ACTION_PLAY
-        context.startService(mpIntent)
         if (continueRelay.hasObservers()) {
             continueRelay.accept(true)
         } else {

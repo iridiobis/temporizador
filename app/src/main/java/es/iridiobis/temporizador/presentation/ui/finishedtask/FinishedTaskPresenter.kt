@@ -13,6 +13,8 @@ class FinishedTaskPresenter @Inject constructor(val alarmService: AlarmService) 
     lateinit var nextDisposable : Disposable
 
     override fun onViewAttached() {
+        view?.soundAlarm()
+
         alarmService.getRunningTask()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -22,6 +24,7 @@ class FinishedTaskPresenter @Inject constructor(val alarmService: AlarmService) 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe { view?.onAlarmFinished() }
+
     }
 
     override fun beforeViewDetached() {
