@@ -40,7 +40,7 @@ class AlarmHandler @Inject constructor(
                         true
                     }
                     .doOnError {
-                        clearAlarm()
+                        clearTask()
                         Observable.just(false)
                     }
         } else {
@@ -71,7 +71,7 @@ class AlarmHandler @Inject constructor(
         return statusRelay
     }
 
-    override fun setAlarm(task: Task) {
+    override fun startTask(task: Task) {
         this.task = task
         preferences.edit()
                 .putLong(TASK_PREFERENCE, task.id)
@@ -82,7 +82,7 @@ class AlarmHandler @Inject constructor(
         statusRelay.accept(true)
     }
 
-    override fun pauseAlarm() {
+    override fun pauseTask() {
         val elapsetTime = preferences.getLong(ELAPSED_TIME_PREFERENCE, 0) + System.currentTimeMillis() - preferences.getLong(START_TIME_PREFERENCE, 0)
         preferences.edit()
                 .putLong(START_TIME_PREFERENCE, 0)
@@ -97,7 +97,7 @@ class AlarmHandler @Inject constructor(
         statusRelay.accept(false)
     }
 
-    override fun resumeAlarm() {
+    override fun resumeTask() {
         preferences.edit()
                 .putLong(START_TIME_PREFERENCE, System.currentTimeMillis())
                 .putBoolean(RUNNING_PREFERENCE, true)
@@ -106,23 +106,20 @@ class AlarmHandler @Inject constructor(
         statusRelay.accept(true)
     }
 
+    override fun stopTask() {
+        clearTask()
+        alarmManagerProxy.cancelAlarm()
+        notificationManager.cancel(notificationProvider.notificationId)
+    }
+
     override fun playAlarm() {
         preferences.edit()
                 .putBoolean(GONE_OFF_PREFERENCE, true)
                 .apply()
     }
 
-    override fun clearAlarm() {
-        task = null
-        preferences.edit()
-                .clear()
-                .apply()
-    }
-
     override fun stopAlarm() {
-        clearAlarm()
-        alarmManagerProxy.cancelAlarm()
-        notificationManager.cancel(notificationProvider.notificationId)
+        clearTask()
     }
 
     private fun setAlarm(remaining: Long) {
@@ -131,6 +128,13 @@ class AlarmHandler @Inject constructor(
                 notificationProvider.notificationId,
                 notificationProvider.showRunningNotification(task!!)
         )
+    }
+    
+    private fun clearTask() {
+        task = null
+        preferences.edit()
+                .clear()
+                .apply()
     }
 
 }

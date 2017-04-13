@@ -13,7 +13,7 @@ import javax.inject.Inject
 class MainPresenter @Inject constructor(val tasksRepository: TasksRepository, val alarmService: AlarmService) : Presenter<Main.View>(), Main.Presenter {
 
     override fun runTask(task: Task) {
-        alarmService.setAlarm(task)
+        alarmService.startTask(task)
     }
 
     override fun delete(task: Task) {

@@ -31,7 +31,7 @@ class FinishedTaskActivity : AppCompatActivity(), FinishedTask.View {
         overridePendingTransition(R.anim.fadein, R.anim.fadeout)
         setContentView(R.layout.activity_finished_task)
         finish.setOnClickListener {
-            sendBroadcast(AlarmReceiver.stopIntent(this))
+            sendBroadcast(AlarmReceiver.stopAlarmIntent(this))
         }
         presenter = FinishedTaskPresenter(intent.extras.getLong("TASK"), TasksStorage(ImagesStorage(applicationContext)))
     }

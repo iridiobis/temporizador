@@ -35,15 +35,15 @@ class RunningTaskPresenter @Inject constructor(val alarmService: AlarmService)
 
 
     override fun pause() {
-        alarmService.pauseAlarm()
+        alarmService.pauseTask()
     }
 
     override fun resume() {
-        alarmService.resumeAlarm()
+        alarmService.resumeTask()
     }
 
     override fun stop() {
-        alarmService.stopAlarm()
+        alarmService.stopTask()
         view?.onTaskStopped()
     }
 

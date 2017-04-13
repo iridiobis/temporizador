@@ -18,7 +18,7 @@ class NotificationProvider @Inject constructor(val context : Context) {
 
     fun showRunningNotification(it: Task) : Notification {
 
-        val pendingPause = PendingIntent.getBroadcast(context, 0, AlarmReceiver.pauseIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingPause = PendingIntent.getBroadcast(context, 0, AlarmReceiver.pauseTaskIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
 
         val pause = NotificationCompat.Action(
                 R.drawable.ic_notifications_off_black_24,
@@ -36,7 +36,7 @@ class NotificationProvider @Inject constructor(val context : Context) {
 
     fun showPausedNotification(it: Task) : Notification {
 
-        val pendingPause = PendingIntent.getBroadcast(context, 0, AlarmReceiver.resumeIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingPause = PendingIntent.getBroadcast(context, 0, AlarmReceiver.resumeTaskIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
 
         val pause = NotificationCompat.Action(
                 R.drawable.ic_notifications_off_black_24,
@@ -55,7 +55,7 @@ class NotificationProvider @Inject constructor(val context : Context) {
 
     fun showFinishedNotification(it: Task) : Notification {
 
-        val pendingSnooze = PendingIntent.getBroadcast (context, 0, AlarmReceiver.stopIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingSnooze = PendingIntent.getBroadcast (context, 0, AlarmReceiver.stopAlarmIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
 
         val dismiss = NotificationCompat.Action(
                 R.drawable.ic_notifications_off_black_24,

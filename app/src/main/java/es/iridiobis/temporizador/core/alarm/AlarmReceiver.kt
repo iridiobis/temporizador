@@ -14,62 +14,68 @@ import javax.inject.Inject
 class AlarmReceiver : WakefulBroadcastReceiver() {
 
     companion object {
-        private val ACTION_PLAY = "AlarmReceiver.ACTION_PLAY"
-        private val ACTION_PAUSE = "AlarmReceiver.ACTION_PAUSE"
-        private val ACTION_RESUME = "AlarmReceiver.ACTION_RESUME"
-        private val ACTION_STOP = "AlarmReceiver.ACTION_STOP"
+        private val ACTION_PAUSE_TASK = "AlarmReceiver.ACTION_PAUSE_TASK"
+        private val ACTION_RESUME_TASK = "AlarmReceiver.ACTION_RESUME_TASK"
+        private val ACTION_CANCEL_TASK = "AlarmReceiver.ACTION_CANCEL_TASK"
 
-        fun playIntent(context: Context) : Intent {
+        private val ACTION_PLAY_ALARM = "AlarmReceiver.ACTION_PLAY_ALARM"
+        private val ACTION_STOP_ALARM = "AlarmReceiver.ACTION_STOP_ALARM"
+
+        fun pauseTaskIntent(context: Context) : Intent {
             val intent = Intent(context, AlarmReceiver::class.java)
-            intent.action = ACTION_PLAY
+            intent.action = ACTION_PAUSE_TASK
             return intent
         }
 
-        fun pauseIntent(context: Context) : Intent {
+        fun resumeTaskIntent(context: Context) : Intent {
             val intent = Intent(context, AlarmReceiver::class.java)
-            intent.action = ACTION_PAUSE
+            intent.action = ACTION_RESUME_TASK
             return intent
         }
 
-        fun resumeIntent(context: Context) : Intent {
+        fun cancelTaskIntent(context: Context) : Intent {
             val intent = Intent(context, AlarmReceiver::class.java)
-            intent.action = ACTION_RESUME
+            intent.action = ACTION_CANCEL_TASK
             return intent
         }
 
-        fun stopIntent(context: Context) : Intent {
+        fun playAlarmIntent(context: Context) : Intent {
             val intent = Intent(context, AlarmReceiver::class.java)
-            intent.action = ACTION_STOP
+            intent.action = ACTION_PLAY_ALARM
+            return intent
+        }
+
+        fun stopAlarmIntent(context: Context) : Intent {
+            val intent = Intent(context, AlarmReceiver::class.java)
+            intent.action = ACTION_STOP_ALARM
             return intent
         }
     }
 
     @Inject lateinit var alarmService: AlarmService
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        (context?.applicationContext as ComponentProvider<ApplicationComponent>).getComponent().inject(this)
-        if (ACTION_PLAY == intent?.action) {
+    override fun onReceive(context: Context, intent: Intent) {
+        (context.applicationContext as ComponentProvider<ApplicationComponent>).getComponent().inject(this)
+        if (ACTION_PLAY_ALARM == intent.action) {
             val mpIntent = Intent(context, AlarmMediaService::class.java)
             mpIntent.action = AlarmMediaService.ACTION_PLAY
-            context?.startService(mpIntent)
+            context.startService(mpIntent)
 
             val service = Intent(context, FireAlarmService::class.java)
             WakefulBroadcastReceiver.startWakefulService(context, service)
             alarmService.playAlarm()
-        } else if (ACTION_STOP == intent?.action) {
-            context?.stopService(Intent(context, AlarmMediaService::class.java))
-            context?.startActivity(
+        } else if (ACTION_STOP_ALARM == intent.action) {
+            context.stopService(Intent(context, AlarmMediaService::class.java))
+            context.startActivity(
                     Intent(context, MainActivity::class.java)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             )
-            alarmService.clearAlarm()
-        } else if (ACTION_PAUSE == intent?.action) {
-            (context?.applicationContext as ComponentProvider<ApplicationComponent>).getComponent().inject(this)
-            alarmService.pauseAlarm()
-        } else if (ACTION_RESUME == intent?.action) {
-            (context?.applicationContext as ComponentProvider<ApplicationComponent>).getComponent().inject(this)
-            alarmService.resumeAlarm()
+            alarmService.stopAlarm()
+        } else if (ACTION_PAUSE_TASK == intent.action) {
+            alarmService.pauseTask()
+        } else if (ACTION_RESUME_TASK == intent.action) {
+            alarmService.resumeTask()
         }
     }
 }
