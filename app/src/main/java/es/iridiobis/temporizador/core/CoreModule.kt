@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
-import es.iridiobis.temporizador.core.alarm.AlarmHandler
 import es.iridiobis.temporizador.core.alarm.LastResortManager
 import es.iridiobis.temporizador.domain.services.AlarmService
 import es.iridiobis.temporizador.domain.services.LastResort
@@ -14,7 +13,6 @@ import javax.inject.Singleton
 
 @Module class CoreModule {
     @Singleton @Provides
-    fun provideAlarmService(handler: AlarmHandler) : AlarmService = handler
 
     @Singleton @Provides
     fun provideNotificationManager(context : Context) : NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

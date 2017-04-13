@@ -7,10 +7,9 @@ import android.media.RingtoneManager
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
-import es.iridiobis.temporizador.core.ApplicationComponent
-import es.iridiobis.temporizador.core.di.ComponentProvider
+import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.notification.TaskNotificationManager
-import es.iridiobis.temporizador.domain.services.AlarmService
+import es.iridiobis.temporizador.domain.services.TaskService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
@@ -24,7 +23,7 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
         val ACTION_STOP = "AlarmMediaService.ACTION_STOP"
     }
 
-    @Inject lateinit var alarmService: AlarmService
+    @Inject lateinit var taskService: TaskService
     @Inject lateinit var taskNotificationManager: TaskNotificationManager
 
     var mediaPlayer: MediaPlayer? = null
@@ -35,12 +34,12 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
 
     override fun onCreate() {
         super.onCreate()
-        (application as ComponentProvider<ApplicationComponent>).getComponent().inject(this)
+        (application as Temporizador).getComponent().inject(this)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action.equals(ACTION_PLAY)) {
-            alarmService.getRunningTask()
+            taskService.getRunningTask()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
