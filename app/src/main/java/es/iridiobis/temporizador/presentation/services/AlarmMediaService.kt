@@ -9,7 +9,7 @@ import android.os.PowerManager
 import android.util.Log
 import es.iridiobis.temporizador.core.ApplicationComponent
 import es.iridiobis.temporizador.core.di.ComponentProvider
-import es.iridiobis.temporizador.core.notification.NotificationProvider
+import es.iridiobis.temporizador.core.notification.TaskNotificationManager
 import es.iridiobis.temporizador.domain.services.AlarmService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -25,7 +25,7 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
     }
 
     @Inject lateinit var alarmService: AlarmService
-    @Inject lateinit var notificationProvider: NotificationProvider
+    @Inject lateinit var taskNotificationManager: TaskNotificationManager
 
     var mediaPlayer: MediaPlayer? = null
 
@@ -44,7 +44,7 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        startForeground(notificationProvider.notificationId, notificationProvider.showFinishedNotification(it!!))
+                        taskNotificationManager.showFinishedNotification(it!!, this)
                         initMediaPlayer()
                     }, { Log.d("AlarmMediaService", "Fired non-existent task") })
         }

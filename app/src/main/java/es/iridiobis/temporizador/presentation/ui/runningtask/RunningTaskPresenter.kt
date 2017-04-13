@@ -12,6 +12,7 @@ class RunningTaskPresenter @Inject constructor(val alarmService: AlarmService)
     : Presenter<RunningTask.View>(), RunningTask.Presenter {
 
     lateinit var status : Disposable
+    lateinit var continueDisposable : Disposable
 
     override fun onViewAttached() {
         alarmService.getRunningTask()
@@ -27,19 +28,32 @@ class RunningTaskPresenter @Inject constructor(val alarmService: AlarmService)
                 .subscribe({
                     view?.displayStatus(it)
                 })
+        continueDisposable = alarmService.next()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    if (it) view?.onAlarmGoneOff() else view?.onTaskStopped()
+                })
+
     }
 
     override fun beforeViewDetached() {
         status.dispose()
+        continueDisposable.dispose()
     }
 
 
     override fun pause() {
-        alarmService.pauseAlarm()
+        alarmService.pauseTask()
     }
 
     override fun resume() {
-        alarmService.resumeAlarm()
+        alarmService.resumeTask()
+    }
+
+    override fun stop() {
+        alarmService.stopTask()
+        view?.onTaskStopped()
     }
 
 }

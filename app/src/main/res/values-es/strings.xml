@@ -12,4 +12,8 @@
     <string name="enough_message">Suficiente por hoy</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
+    <string name="stop_alert_title">¿Parar tarea?</string>
+    <string name="stop">Parar</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
 </resources>
