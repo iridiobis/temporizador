@@ -24,7 +24,6 @@ class TaskNotificationManager @Inject constructor(
     fun showRunningNotification(it: Task) {
 
         val pendingPause = PendingIntent.getBroadcast(context, 0, AlarmReceiver.pauseTaskIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
-
         val pause = NotificationCompat.Action(
                 R.drawable.ic_notifications_off_black_24,
                 context.getString(R.string.pause),
@@ -36,6 +35,7 @@ class TaskNotificationManager @Inject constructor(
                 .setContentText("Keep working")
                 .setContentIntent(content)
                 .addAction(pause)
+                .addAction(getStopAction())
                 .build()
 
         notificationManager.notify(NOTIFICATION_ID, notification)
@@ -56,6 +56,7 @@ class TaskNotificationManager @Inject constructor(
                 .setContentText("Keep working")
                 .setContentIntent(content)
                 .addAction(pause)
+                .addAction(getStopAction())
                 .build()
 
         notificationManager.notify(NOTIFICATION_ID, notification)
@@ -97,6 +98,15 @@ class TaskNotificationManager @Inject constructor(
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
+    }
+
+    private fun getStopAction() : NotificationCompat.Action {
+        val pendingStop = PendingIntent.getBroadcast(context, 0, AlarmReceiver.stopTaskIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
+        //TODO icon
+        return NotificationCompat.Action(
+                R.drawable.ic_notifications_off_black_24,
+                context.getString(R.string.stop),
+                pendingStop)
     }
 
 }
