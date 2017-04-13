@@ -1,7 +1,8 @@
 package es.iridiobis.temporizador.core.notification
 
-import android.app.Notification
+import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.provider.MediaStore
 import android.support.v4.app.NotificationCompat
@@ -12,11 +13,15 @@ import es.iridiobis.temporizador.presentation.ui.finishedtask.FinishedTaskActivi
 import es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity
 import javax.inject.Inject
 
-class NotificationProvider @Inject constructor(val context : Context) {
+class TaskNotificationManager @Inject constructor(
+        val context: Context,
+        val notificationManager: NotificationManager) {
 
-    val notificationId = 1
+    companion object {
+        private val NOTIFICATION_ID = 1
+    }
 
-    fun showRunningNotification(it: Task) : Notification {
+    fun showRunningNotification(it: Task) {
 
         val pendingPause = PendingIntent.getBroadcast(context, 0, AlarmReceiver.pauseTaskIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
 
@@ -27,14 +32,16 @@ class NotificationProvider @Inject constructor(val context : Context) {
 
         val content = PendingIntent.getActivity(context, 0, RunningTaskActivity.newIntent(it.id, context), 0)
 
-        return getBaseNotificationBuilder(it)
+        val notification = getBaseNotificationBuilder(it)
                 .setContentText("Keep working")
                 .setContentIntent(content)
                 .addAction(pause)
                 .build()
+
+        notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
-    fun showPausedNotification(it: Task) : Notification {
+    fun showPausedNotification(it: Task) {
 
         val pendingPause = PendingIntent.getBroadcast(context, 0, AlarmReceiver.resumeTaskIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
 
@@ -45,30 +52,38 @@ class NotificationProvider @Inject constructor(val context : Context) {
 
         val content = PendingIntent.getActivity(context, 0, RunningTaskActivity.newIntent(it.id, context), 0)
 
-        return getBaseNotificationBuilder(it)
+        val notification = getBaseNotificationBuilder(it)
                 .setContentText("Keep working")
                 .setContentIntent(content)
                 .addAction(pause)
                 .build()
+
+        notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
 
-    fun showFinishedNotification(it: Task) : Notification {
+    fun showFinishedNotification(it: Task, service: Service) {
 
-        val pendingSnooze = PendingIntent.getBroadcast (context, 0, AlarmReceiver.stopAlarmIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingSnooze = PendingIntent.getBroadcast(context, 0, AlarmReceiver.stopAlarmIntent(context), PendingIntent.FLAG_CANCEL_CURRENT)
 
         val dismiss = NotificationCompat.Action(
                 R.drawable.ic_notifications_off_black_24,
                 context.getString(R.string.done),
                 pendingSnooze)
 
-        val content = PendingIntent.getActivity (context, 0, FinishedTaskActivity.newIntent(it.id, context), 0)
+        val content = PendingIntent.getActivity(context, 0, FinishedTaskActivity.newIntent(it.id, context), 0)
 
-        return getBaseNotificationBuilder(it)
+        val notification = getBaseNotificationBuilder(it)
                 .setContentText(context.getString(R.string.enough_message))
                 .setContentIntent(content)
                 .addAction(dismiss)
                 .build()
+
+        service.startForeground(NOTIFICATION_ID, notification)
+    }
+
+    fun cancel() {
+        notificationManager.cancel(NOTIFICATION_ID)
     }
 
     private fun getBaseNotificationBuilder(it: Task): NotificationCompat.Builder {

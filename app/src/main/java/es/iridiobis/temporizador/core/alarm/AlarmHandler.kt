@@ -1,10 +1,9 @@
 package es.iridiobis.temporizador.core.alarm
 
-import android.app.NotificationManager
 import android.content.SharedPreferences
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.BehaviorRelay.create
-import es.iridiobis.temporizador.core.notification.NotificationProvider
+import es.iridiobis.temporizador.core.notification.TaskNotificationManager
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import es.iridiobis.temporizador.domain.services.AlarmService
@@ -13,10 +12,9 @@ import javax.inject.Inject
 
 class AlarmHandler @Inject constructor(
         val tasksRepository: TasksRepository,
-        val notificationProvider: NotificationProvider,
+        val notificationManager: TaskNotificationManager,
         val preferences: SharedPreferences,
-        val alarmManagerProxy: AlarmManagerProxy,
-        val notificationManager: NotificationManager) : AlarmService {
+        val alarmManagerProxy: AlarmManagerProxy) : AlarmService {
 
     companion object {
         private val TASK_PREFERENCE: String = "TASK"
@@ -90,10 +88,7 @@ class AlarmHandler @Inject constructor(
                 .putBoolean(RUNNING_PREFERENCE, false)
                 .apply()
         alarmManagerProxy.cancelAlarm()
-        notificationManager.notify(
-                notificationProvider.notificationId,
-                notificationProvider.showPausedNotification(task!!)
-        )
+        notificationManager.showPausedNotification(task!!)
         statusRelay.accept(false)
     }
 
@@ -109,7 +104,7 @@ class AlarmHandler @Inject constructor(
     override fun stopTask() {
         clearTask()
         alarmManagerProxy.cancelAlarm()
-        notificationManager.cancel(notificationProvider.notificationId)
+        notificationManager.cancel()
     }
 
     override fun playAlarm() {
@@ -124,12 +119,9 @@ class AlarmHandler @Inject constructor(
 
     private fun setAlarm(remaining: Long) {
         alarmManagerProxy.setAlarm(remaining)
-        notificationManager.notify(
-                notificationProvider.notificationId,
-                notificationProvider.showRunningNotification(task!!)
-        )
+        notificationManager.showRunningNotification(task!!)
     }
-    
+
     private fun clearTask() {
         task = null
         preferences.edit()
