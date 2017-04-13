@@ -119,6 +119,12 @@ class AlarmHandler @Inject constructor(
                 .apply()
     }
 
+    override fun stopAlarm() {
+        clearAlarm()
+        alarmManagerProxy.cancelAlarm()
+        notificationManager.cancel(notificationProvider.notificationId)
+    }
+
     private fun setAlarm(remaining: Long) {
         alarmManagerProxy.setAlarm(remaining)
         notificationManager.notify(

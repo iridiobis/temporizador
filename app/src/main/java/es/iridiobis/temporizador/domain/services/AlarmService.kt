@@ -14,4 +14,5 @@ interface AlarmService {
     fun resumeAlarm()
     fun playAlarm()
     fun clearAlarm()
+    fun stopAlarm()
 }
