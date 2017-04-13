@@ -72,8 +72,8 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
     private fun requestStopConfirmation() {
         AlertDialog.Builder(this)
                 .setTitle(R.string.stop_alert_title)
-                .setPositiveButton(R.string.stop, { _, _ -> presenter.stop() })
-                .setNegativeButton(R.string.cancel, { _, _ -> })
+                .setPositiveButton(R.string.yes, { _, _ -> presenter.stop() })
+                .setNegativeButton(R.string.no, { _, _ -> })
                 .create()
                 .show()
     }
