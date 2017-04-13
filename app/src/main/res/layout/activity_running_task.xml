@@ -14,10 +14,18 @@
         android:background="@color/overlay"/>
 
     <ImageView
+        android:id="@+id/rt_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/ic_stop" />
+
+    <ImageView
         android:id="@+id/rt_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_above="@id/rt_stop"
         app:srcCompat="@drawable/ic_pause" />
 
     <ImageView
@@ -25,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_above="@id/rt_stop"
         app:srcCompat="@drawable/ic_resume" />
 
 </RelativeLayout>

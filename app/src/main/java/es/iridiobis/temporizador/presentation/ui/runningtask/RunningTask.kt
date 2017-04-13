@@ -10,10 +10,12 @@ interface RunningTask {
         fun displayName(name : String)
         fun displayBackground(background: Uri)
         fun displayStatus(status : Boolean)
+        fun onTaskStopped()
     }
 
     interface Presenter : Attachable<View> {
         fun pause()
         fun resume()
+        fun stop()
     }
 }

@@ -5,13 +5,16 @@ import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.ApplicationComponent
 import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.core.extensions.setBackground
+import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.ui.main.DaggerRunningTaskComponent
+import es.iridiobis.temporizador.presentation.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_running_task.*
 import javax.inject.Inject
 
@@ -36,6 +39,7 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
                 .injectMembers(this)
         rt_pause.setOnClickListener { presenter.pause() }
         rt_resume.setOnClickListener { presenter.resume() }
+        rt_stop.setOnClickListener { requestStopConfirmation() }
     }
 
     override fun onResume() {
@@ -58,6 +62,20 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
     override fun displayStatus(status: Boolean) {
         rt_pause.visibility = if (status) VISIBLE else GONE
         rt_resume.visibility = if (status) GONE else VISIBLE
+    }
+
+    override fun onTaskStopped() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
+    private fun requestStopConfirmation() {
+        AlertDialog.Builder(this)
+                .setTitle(R.string.stop_alert_title)
+                .setPositiveButton(R.string.stop, { _, _ -> presenter.stop() })
+                .setNegativeButton(R.string.cancel, { _, _ -> })
+                .create()
+                .show()
     }
 
 }
