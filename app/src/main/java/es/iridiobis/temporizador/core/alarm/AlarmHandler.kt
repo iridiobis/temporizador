@@ -5,14 +5,14 @@ import android.content.SharedPreferences
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.BehaviorRelay.create
 import es.iridiobis.temporizador.core.notification.NotificationProvider
-import es.iridiobis.temporizador.data.storage.TasksStorage
 import es.iridiobis.temporizador.domain.model.Task
+import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import es.iridiobis.temporizador.domain.services.AlarmService
 import io.reactivex.Observable
 import javax.inject.Inject
 
 class AlarmHandler @Inject constructor(
-        val tasksStorage: TasksStorage,
+        val tasksRepository: TasksRepository,
         val notificationProvider: NotificationProvider,
         val preferences: SharedPreferences,
         val alarmManagerProxy: AlarmManagerProxy,
@@ -33,7 +33,7 @@ class AlarmHandler @Inject constructor(
         if (task == null && !preferences.contains(TASK_PREFERENCE)) {
             return Observable.just(false)
         } else if (preferences.contains(TASK_PREFERENCE)) {
-            return tasksStorage.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
+            return tasksRepository.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
                     .map {
                         this.task = it
                         statusRelay.accept(preferences.getBoolean(RUNNING_PREFERENCE, false))
@@ -56,7 +56,7 @@ class AlarmHandler @Inject constructor(
         if (task != null) {
             return Observable.just(task)
         } else if (preferences.contains(TASK_PREFERENCE)) {
-            return tasksStorage.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
+            return tasksRepository.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
                     .map {
                         this.task = it
                         statusRelay.accept(preferences.getBoolean(RUNNING_PREFERENCE, false))
