@@ -3,8 +3,6 @@ package es.iridiobis.temporizador.domain.services
 import android.content.SharedPreferences
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
-import es.iridiobis.temporizador.core.alarm.AlarmManagerProxy
-import es.iridiobis.temporizador.core.notification.TaskNotificationManager
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import io.reactivex.Observable
@@ -14,7 +12,7 @@ import javax.inject.Singleton
 @Singleton
 class TaskService @Inject constructor(
         val tasksRepository: TasksRepository,
-        val notificationManager: TaskNotificationManager,
+        val taskNotification: TaskNotification,
         val preferences: SharedPreferences,
         val alarmService: AlarmService,
         val lastResort: LastResort) {
@@ -96,7 +94,7 @@ class TaskService @Inject constructor(
                 .putBoolean(RUNNING_PREFERENCE, false)
                 .apply()
         alarmService.cancelAlarm()
-        notificationManager.showPausedNotification(task!!)
+        taskNotification.showPausedNotification(task!!)
         statusRelay.accept(false)
     }
 
@@ -112,7 +110,7 @@ class TaskService @Inject constructor(
     fun stopTask() {
         clearTask()
         alarmService.cancelAlarm()
-        notificationManager.cancel()
+        taskNotification.cancel()
         continueRelay.accept(false)
     }
 
@@ -138,7 +136,7 @@ class TaskService @Inject constructor(
 
     private fun setAlarm(remaining: Long) {
         alarmService.setAlarm(remaining)
-        notificationManager.showRunningNotification(task!!)
+        taskNotification.showRunningNotification(task!!)
     }
 
     private fun clearTask() {
