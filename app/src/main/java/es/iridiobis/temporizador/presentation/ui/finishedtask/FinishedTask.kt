@@ -9,7 +9,8 @@ interface FinishedTask {
     interface View {
         fun displayBackground(background: Uri)
         fun soundAlarm()
-        fun onAlarmFinished()
+        fun silenceAlarm()
+        fun goToMainScreen()
     }
 
     interface Presenter : Attachable<View> {

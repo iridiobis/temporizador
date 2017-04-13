@@ -23,7 +23,10 @@ class FinishedTaskPresenter @Inject constructor(val alarmService: AlarmService) 
         nextDisposable = alarmService.next()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe { view?.onAlarmFinished() }
+                .subscribe {
+                    view?.silenceAlarm()
+                    view?.goToMainScreen()
+                }
 
     }
 

@@ -52,7 +52,11 @@ class FinishedTaskActivity : AppCompatActivity(), FinishedTask.View {
         activity_finished_task.setBackground(background) { request -> request }
     }
 
-    override fun onAlarmFinished() {
+    override fun silenceAlarm() {
+        stopService(Intent(this, AlarmMediaService::class.java))
+    }
+
+    override fun goToMainScreen() {
         startActivity(
                 Intent(this, MainActivity::class.java)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
