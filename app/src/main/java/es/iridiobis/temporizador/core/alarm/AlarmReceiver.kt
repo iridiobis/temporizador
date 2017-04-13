@@ -16,7 +16,7 @@ class AlarmReceiver : WakefulBroadcastReceiver() {
     companion object {
         private val ACTION_PAUSE_TASK = "AlarmReceiver.ACTION_PAUSE_TASK"
         private val ACTION_RESUME_TASK = "AlarmReceiver.ACTION_RESUME_TASK"
-        private val ACTION_CANCEL_TASK = "AlarmReceiver.ACTION_CANCEL_TASK"
+        private val ACTION_STOP_TASK = "AlarmReceiver.ACTION_STOP_TASK"
 
         private val ACTION_PLAY_ALARM = "AlarmReceiver.ACTION_PLAY_ALARM"
         private val ACTION_STOP_ALARM = "AlarmReceiver.ACTION_STOP_ALARM"
@@ -33,9 +33,9 @@ class AlarmReceiver : WakefulBroadcastReceiver() {
             return intent
         }
 
-        fun cancelTaskIntent(context: Context) : Intent {
+        fun stopTaskIntent(context: Context) : Intent {
             val intent = Intent(context, AlarmReceiver::class.java)
-            intent.action = ACTION_CANCEL_TASK
+            intent.action = ACTION_STOP_TASK
             return intent
         }
 
@@ -76,6 +76,8 @@ class AlarmReceiver : WakefulBroadcastReceiver() {
             alarmService.pauseTask()
         } else if (ACTION_RESUME_TASK == intent.action) {
             alarmService.resumeTask()
+        } else if (ACTION_STOP_TASK == intent.action) {
+            alarmService.stopTask()
         }
     }
 }
