@@ -5,8 +5,6 @@ import android.content.Intent
 import android.support.v4.content.WakefulBroadcastReceiver
 import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.domain.services.AlarmService
-import es.iridiobis.temporizador.presentation.services.AlarmMediaService
-import es.iridiobis.temporizador.presentation.ui.main.MainActivity
 import javax.inject.Inject
 
 class AlarmReceiver : WakefulBroadcastReceiver() {
@@ -57,12 +55,6 @@ class AlarmReceiver : WakefulBroadcastReceiver() {
         if (ACTION_PLAY_ALARM == intent.action) {
             alarmService.playAlarm()
         } else if (ACTION_STOP_ALARM == intent.action) {
-            context.stopService(Intent(context, AlarmMediaService::class.java))
-            context.startActivity(
-                    Intent(context, MainActivity::class.java)
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            )
             alarmService.stopAlarm()
         } else if (ACTION_PAUSE_TASK == intent.action) {
             alarmService.pauseTask()

@@ -8,7 +8,11 @@ import es.iridiobis.temporizador.domain.model.Task
 interface FinishedTask {
     interface View {
         fun displayBackground(background: Uri)
+        fun onAlarmFinished()
     }
 
-    interface Presenter : Attachable<View>
+    interface Presenter : Attachable<View> {
+        fun finishAlarm()
+    }
+
 }

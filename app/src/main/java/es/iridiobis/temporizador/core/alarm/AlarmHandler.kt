@@ -138,7 +138,9 @@ class AlarmHandler @Inject constructor(
     }
 
     override fun stopAlarm() {
+        context.stopService(Intent(context, AlarmMediaService::class.java))
         clearTask()
+        continueRelay.accept(true)
     }
 
     private fun setAlarm(remaining: Long) {
