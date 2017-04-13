@@ -1,17 +1,13 @@
 package es.iridiobis.temporizador.core.alarm
 
-import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v4.content.WakefulBroadcastReceiver
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
 import es.iridiobis.temporizador.core.notification.TaskNotificationManager
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import es.iridiobis.temporizador.domain.services.AlarmService
-import es.iridiobis.temporizador.presentation.services.AlarmMediaService
-import es.iridiobis.temporizador.presentation.services.FireAlarmService
+import es.iridiobis.temporizador.domain.services.LastResort
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -20,7 +16,7 @@ class AlarmHandler @Inject constructor(
         val notificationManager: TaskNotificationManager,
         val preferences: SharedPreferences,
         val alarmManagerProxy: AlarmManagerProxy,
-        val context: Context) : AlarmService {
+        val lastResort: LastResort) : AlarmService {
 
     companion object {
         private val TASK_PREFERENCE: String = "TASK"
@@ -126,16 +122,17 @@ class AlarmHandler @Inject constructor(
         if (continueRelay.hasObservers()) {
             continueRelay.accept(true)
         } else {
-            //TODO move away, remove context and presentation from this class
-            val service = Intent(context, FireAlarmService::class.java)
-            WakefulBroadcastReceiver.startWakefulService(context, service)
+            lastResort.goToFinishedScreen()
         }
     }
 
     override fun stopAlarm() {
-        context.stopService(Intent(context, AlarmMediaService::class.java))
         clearTask()
-        continueRelay.accept(true)
+        if (continueRelay.hasObservers()) {
+            continueRelay.accept(true)
+        } else {
+            lastResort.stopAlarm()
+        }
     }
 
     private fun setAlarm(remaining: Long) {
