@@ -8,6 +8,7 @@ interface AlarmService {
     fun hasGoneOff() : Boolean
     fun getRunningTask() : Observable<Task>
     fun status() : Observable<Boolean>
+    fun next() : Observable<Boolean>
     fun startTask(task: Task)
     fun pauseTask()
     fun resumeTask()

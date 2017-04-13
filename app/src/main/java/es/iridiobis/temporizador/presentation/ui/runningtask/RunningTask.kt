@@ -11,6 +11,7 @@ interface RunningTask {
         fun displayBackground(background: Uri)
         fun displayStatus(status : Boolean)
         fun onTaskStopped()
+        fun onAlarmGoneOff()
     }
 
     interface Presenter : Attachable<View> {

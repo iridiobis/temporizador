@@ -9,10 +9,9 @@ import android.support.v7.app.AlertDialog
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import es.iridiobis.temporizador.R
-import es.iridiobis.temporizador.core.ApplicationComponent
-import es.iridiobis.temporizador.core.di.ComponentProvider
+import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.extensions.setBackground
-import es.iridiobis.temporizador.domain.model.Task
+import es.iridiobis.temporizador.presentation.ui.finishedtask.FinishedTaskActivity
 import es.iridiobis.temporizador.presentation.ui.main.DaggerRunningTaskComponent
 import es.iridiobis.temporizador.presentation.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_running_task.*
@@ -22,7 +21,7 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
 
     companion object {
         fun newIntent(id : Long, context: Context) : Intent {
-            var intent = Intent(context, RunningTaskActivity::class.java)
+            val intent = Intent(context, RunningTaskActivity::class.java)
             intent.putExtra("TASK", id)
             return intent
         }
@@ -34,7 +33,7 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_running_task)
         DaggerRunningTaskComponent.builder()
-                .applicationComponent((application as ComponentProvider<ApplicationComponent>).getComponent())
+                .applicationComponent((application as Temporizador).getComponent())
                 .build()
                 .injectMembers(this)
         rt_pause.setOnClickListener { presenter.pause() }
@@ -66,6 +65,11 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
 
     override fun onTaskStopped() {
         startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
+    override fun onAlarmGoneOff() {
+        startActivity(Intent(this, FinishedTaskActivity::class.java))
         finish()
     }
 

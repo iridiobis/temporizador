@@ -1,12 +1,18 @@
 package es.iridiobis.temporizador.core.alarm
 
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.support.v4.content.WakefulBroadcastReceiver
 import com.jakewharton.rxrelay2.BehaviorRelay
-import com.jakewharton.rxrelay2.BehaviorRelay.create
+import com.jakewharton.rxrelay2.PublishRelay
 import es.iridiobis.temporizador.core.notification.TaskNotificationManager
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import es.iridiobis.temporizador.domain.services.AlarmService
+import es.iridiobis.temporizador.presentation.services.AlarmMediaService
+import es.iridiobis.temporizador.presentation.services.FireAlarmService
+import es.iridiobis.temporizador.presentation.ui.main.MainActivity
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -14,7 +20,8 @@ class AlarmHandler @Inject constructor(
         val tasksRepository: TasksRepository,
         val notificationManager: TaskNotificationManager,
         val preferences: SharedPreferences,
-        val alarmManagerProxy: AlarmManagerProxy) : AlarmService {
+        val alarmManagerProxy: AlarmManagerProxy,
+        val context: Context) : AlarmService {
 
     companion object {
         private val TASK_PREFERENCE: String = "TASK"
@@ -25,7 +32,8 @@ class AlarmHandler @Inject constructor(
     }
 
     var task: Task? = null
-    val statusRelay: BehaviorRelay<Boolean> = create<Boolean>()
+    val statusRelay: BehaviorRelay<Boolean> = BehaviorRelay.create()
+    val continueRelay : PublishRelay<Boolean> = PublishRelay.create()
 
     override fun hasRunningTask(): Observable<Boolean> {
         if (task == null && !preferences.contains(TASK_PREFERENCE)) {
@@ -69,6 +77,10 @@ class AlarmHandler @Inject constructor(
         return statusRelay
     }
 
+    override fun next(): Observable<Boolean> {
+        return continueRelay
+    }
+
     override fun startTask(task: Task) {
         this.task = task
         preferences.edit()
@@ -81,10 +93,10 @@ class AlarmHandler @Inject constructor(
     }
 
     override fun pauseTask() {
-        val elapsetTime = preferences.getLong(ELAPSED_TIME_PREFERENCE, 0) + System.currentTimeMillis() - preferences.getLong(START_TIME_PREFERENCE, 0)
+        val elapsedTime = preferences.getLong(ELAPSED_TIME_PREFERENCE, 0) + System.currentTimeMillis() - preferences.getLong(START_TIME_PREFERENCE, 0)
         preferences.edit()
                 .putLong(START_TIME_PREFERENCE, 0)
-                .putLong(ELAPSED_TIME_PREFERENCE, elapsetTime)
+                .putLong(ELAPSED_TIME_PREFERENCE, elapsedTime)
                 .putBoolean(RUNNING_PREFERENCE, false)
                 .apply()
         alarmManagerProxy.cancelAlarm()
@@ -105,12 +117,24 @@ class AlarmHandler @Inject constructor(
         clearTask()
         alarmManagerProxy.cancelAlarm()
         notificationManager.cancel()
+        continueRelay.accept(false)
     }
 
     override fun playAlarm() {
         preferences.edit()
                 .putBoolean(GONE_OFF_PREFERENCE, true)
                 .apply()
+        //TODO move away, remove context and presentation from this class
+        val mpIntent = Intent(context, AlarmMediaService::class.java)
+        mpIntent.action = AlarmMediaService.ACTION_PLAY
+        context.startService(mpIntent)
+        if (continueRelay.hasObservers()) {
+            continueRelay.accept(true)
+        } else {
+            //TODO move away, remove context and presentation from this class
+            val service = Intent(context, FireAlarmService::class.java)
+            WakefulBroadcastReceiver.startWakefulService(context, service)
+        }
     }
 
     override fun stopAlarm() {
