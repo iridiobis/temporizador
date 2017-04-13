@@ -1,7 +1,6 @@
 package es.iridiobis.temporizador.presentation.ui.writetask
 
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -15,44 +14,51 @@ import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import es.iridiobis.kotlinexample.toast
 import es.iridiobis.temporizador.R
+import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.extensions.load
 import es.iridiobis.temporizador.core.extensions.setBackground
-import es.iridiobis.temporizador.data.storage.ImagesStorage
-import es.iridiobis.temporizador.data.storage.TasksStorage
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogFragment
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
 import kotlinx.android.synthetic.main.activity_write_task.*
 import mobi.upod.timedurationpicker.TimeDurationUtil
+import javax.inject.Inject
 
 
 class WriteTaskActivity : AppCompatActivity(), WriteTask.View, DurationDialogListener {
 
     companion object {
+
+        private val TASK_ID_EXTRA = "WriteTaskActivity.TASK_ID_EXTRA"
+
         fun addTaskIntent(context: Context) : Intent {
             return Intent(context, WriteTaskActivity::class.java)
         }
 
         fun editTaskIntent(id : Long, context: Context) : Intent {
             val intent = Intent(context, WriteTaskActivity::class.java)
-            intent.putExtra("TASK", id)
+            intent.putExtra(TASK_ID_EXTRA, id)
             return intent
         }
     }
 
-    var presenter: WriteTask.Presenter? = null
+    @Inject lateinit var  presenter: WriteTask.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_write_task)
-        presenter = WriteTaskPresenter(intent.extras?.getLong("TASK"), TasksStorage(ImagesStorage(ContextWrapper(applicationContext))))
+        DaggerWriteTaskComponent.builder()
+                .applicationComponent((application as Temporizador).getComponent())
+                .writeTaskModule(WriteTaskModule(intent.extras?.getLong(TASK_ID_EXTRA)))
+                .build()
+                .injectMembers(this)
         write_task_name.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                text?.let { presenter!!.name(text.toString()) }
+                text?.let { presenter.name(text.toString()) }
             }
 
         })
@@ -62,11 +68,11 @@ class WriteTaskActivity : AppCompatActivity(), WriteTask.View, DurationDialogLis
 
     override fun onResume() {
         super.onResume()
-        presenter!!.attach(this)
+        presenter.attach(this)
     }
 
     override fun onPause() {
-        presenter!!.detach(this)
+        presenter.detach(this)
         super.onPause()
     }
 
@@ -77,7 +83,7 @@ class WriteTaskActivity : AppCompatActivity(), WriteTask.View, DurationDialogLis
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_done) {
-            presenter?.save()
+            presenter.save()
             return true
         } else {
             return super.onOptionsItemSelected(item)
@@ -87,12 +93,12 @@ class WriteTaskActivity : AppCompatActivity(), WriteTask.View, DurationDialogLis
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE) {
             val background = CropImage.getPickImageResultUri(this, data)
-            presenter!!.background(background)
+            presenter.background(background)
             CropImage.activity(background).setAspectRatio(2, 1).start(this)
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
             if (resultCode == RESULT_OK) {
-                if (presenter!!.processCrop(result.uri))
+                if (presenter.processCrop(result.uri))
                     CropImage.activity(result.uri).setCropShape(CropImageView.CropShape.OVAL).setAspectRatio(1, 1).start(this)
 
             }
@@ -100,7 +106,7 @@ class WriteTaskActivity : AppCompatActivity(), WriteTask.View, DurationDialogLis
     }
 
     override fun onTimeSet(duration: Long) {
-        presenter!!.duration(duration)
+        presenter.duration(duration)
         write_task_duration.setText(TimeDurationUtil.formatHoursMinutesSeconds(duration))
     }
 

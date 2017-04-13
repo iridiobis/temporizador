@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.ApplicationComponent
+import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity(), Main.View {
         setSupportActionBar(toolbar)
 
         DaggerMainComponent.builder()
-                .applicationComponent((application as ComponentProvider<ApplicationComponent>).getComponent())
+                .applicationComponent((application as Temporizador).getComponent())
                 .build()
                 .injectMembers(this)
         main_tasks.adapter = tasksAdapter

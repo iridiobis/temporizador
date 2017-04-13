@@ -5,9 +5,10 @@ import es.iridiobis.presenter.Presenter
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 
-class WriteTaskPresenter(val id: Long?, val tasksRepository: TasksRepository) : Presenter<WriteTask.View>(), WriteTask.Presenter {
+class WriteTaskPresenter @Inject constructor(val id: Long?, val tasksRepository: TasksRepository) : Presenter<WriteTask.View>(), WriteTask.Presenter {
 
     val task = TaskModel()
 
