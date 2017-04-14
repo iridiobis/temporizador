@@ -56,7 +56,7 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
 
     override fun displayStatus(status: Boolean) {
         rt_status_fab.setImageDrawable(ContextCompat.getDrawable(this,
-                if (status) R.drawable.ic_pause else R.drawable.ic_play_arrow_black_24dp)
+                if (status) R.drawable.ic_pause else R.drawable.ic_play_arrow)
         )
     }
 
