@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity(), Main.View {
     private fun startTask(task: Task) {
         presenter.runTask(task)
         startActivity(
-                RunningTaskActivity.newIntent(task.id, this)
+                RunningTaskActivity.newIntent(this)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         )

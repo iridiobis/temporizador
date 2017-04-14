@@ -20,11 +20,7 @@ import javax.inject.Inject
 class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
 
     companion object {
-        fun newIntent(id : Long, context: Context) : Intent {
-            val intent = Intent(context, RunningTaskActivity::class.java)
-            intent.putExtra("TASK", id)
-            return intent
-        }
+        fun newIntent(context: Context) = Intent(context, RunningTaskActivity::class.java)
     }
 
     @Inject lateinit var presenter: RunningTask.Presenter

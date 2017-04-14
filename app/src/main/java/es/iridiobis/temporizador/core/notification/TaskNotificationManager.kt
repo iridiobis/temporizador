@@ -30,7 +30,7 @@ class TaskNotificationManager @Inject constructor(
                 context.getString(R.string.pause),
                 pendingPause)
 
-        val content = PendingIntent.getActivity(context, 0, RunningTaskActivity.newIntent(it.id, context), 0)
+        val content = PendingIntent.getActivity(context, 0, RunningTaskActivity.newIntent(context), 0)
 
         val notification = getBaseNotificationBuilder(it)
                 .setContentText("Keep working")
@@ -51,7 +51,7 @@ class TaskNotificationManager @Inject constructor(
                 context.getString(R.string.resume),
                 pendingPause)
 
-        val content = PendingIntent.getActivity(context, 0, RunningTaskActivity.newIntent(it.id, context), 0)
+        val content = PendingIntent.getActivity(context, 0, RunningTaskActivity.newIntent(context), 0)
 
         val notification = getBaseNotificationBuilder(it)
                 .setContentText("Keep working")
