@@ -57,9 +57,9 @@ class AlarmReceiver : WakefulBroadcastReceiver() {
         } else if (ACTION_STOP_ALARM == intent.action) {
             taskService.stopAlarm()
         } else if (ACTION_PAUSE_TASK == intent.action) {
-            taskService.pauseTask()
+            taskService.changeStatus()
         } else if (ACTION_RESUME_TASK == intent.action) {
-            taskService.resumeTask()
+            taskService.changeStatus()
         } else if (ACTION_STOP_TASK == intent.action) {
             taskService.stopTask()
         }

@@ -43,12 +43,8 @@ class RunningTaskPresenter @Inject constructor(val taskService: TaskService)
     }
 
 
-    override fun pause() {
-        taskService.pauseTask()
-    }
-
-    override fun resume() {
-        taskService.resumeTask()
+    override fun changeStatus() {
+        taskService.changeStatus()
     }
 
     override fun stop() {

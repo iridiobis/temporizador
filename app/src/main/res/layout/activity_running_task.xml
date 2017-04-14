@@ -8,32 +8,25 @@
     android:layout_height="match_parent"
     tools:context="es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/overlay"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/rt_status_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_play_arrow_black_24dp"/>
 
-    <ImageView
+    <TextView
         android:id="@+id/rt_stop"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        app:srcCompat="@drawable/ic_stop" />
-
-    <ImageView
-        android:id="@+id/rt_pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_above="@id/rt_stop"
-        app:srcCompat="@drawable/ic_pause" />
-
-    <ImageView
-        android:id="@+id/rt_resume"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_above="@id/rt_stop"
-        app:srcCompat="@drawable/ic_resume" />
+        android:text="@string/stop"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:layout_alignBottom="@id/rt_status_fab"
+        android:layout_alignTop="@id/rt_status_fab"
+        android:layout_toLeftOf="@id/rt_status_fab"/>
 
 </RelativeLayout>
