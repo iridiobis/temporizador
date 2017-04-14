@@ -72,7 +72,7 @@ class TaskNotificationManager @Inject constructor(
                 context.getString(R.string.done),
                 pendingSnooze)
 
-        val content = PendingIntent.getActivity(context, 0, FinishedTaskActivity.newIntent(it.id, context), 0)
+        val content = PendingIntent.getActivity(context, 0, FinishedTaskActivity.newIntent(context), 0)
 
         val notification = getBaseNotificationBuilder(it)
                 .setContentText(context.getString(R.string.enough_message))

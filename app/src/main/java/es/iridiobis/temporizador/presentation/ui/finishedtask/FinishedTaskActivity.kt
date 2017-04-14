@@ -16,11 +16,7 @@ import javax.inject.Inject
 class FinishedTaskActivity : AppCompatActivity(), FinishedTask.View {
 
     companion object {
-        fun newIntent(id: Long, context: Context): Intent {
-            var intent = Intent(context, FinishedTaskActivity::class.java)
-            intent.putExtra("TASK", id)
-            return intent
-        }
+        fun newIntent(context: Context) = Intent(context, FinishedTaskActivity::class.java)
     }
 
     @Inject lateinit var presenter: FinishedTask.Presenter
