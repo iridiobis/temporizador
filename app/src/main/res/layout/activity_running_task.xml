@@ -1,39 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_running_task"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/overlay"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/rt_status_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/colorIcons"
+        app:srcCompat="@drawable/ic_pause"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-    <ImageView
+    <TextView
         android:id="@+id/rt_stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        app:srcCompat="@drawable/ic_stop" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:gravity="center"
+        android:text="@string/stop"
+        android:textAllCaps="true"
+        android:textColor="@color/colorIcons"
+        app:layout_constraintBottom_toBottomOf="@+id/rt_status_fab"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/rt_status_fab"
+        app:layout_constraintTop_toTopOf="@+id/rt_status_fab"/>
 
-    <ImageView
-        android:id="@+id/rt_pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_above="@id/rt_stop"
-        app:srcCompat="@drawable/ic_pause" />
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/scrim_semi_to_black"
+        app:layout_constraintTop_toTopOf="@+id/rt_status_fab"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <ImageView
-        android:id="@+id/rt_resume"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_above="@id/rt_stop"
-        app:srcCompat="@drawable/ic_resume" />
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

@@ -5,14 +5,11 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import es.iridiobis.temporizador.R
-import es.iridiobis.temporizador.core.ApplicationComponent
 import es.iridiobis.temporizador.core.Temporizador
-import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity
 import es.iridiobis.temporizador.presentation.ui.writetask.WriteTaskActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), Main.View {
@@ -55,7 +52,7 @@ class MainActivity : AppCompatActivity(), Main.View {
     private fun startTask(task: Task) {
         presenter.runTask(task)
         startActivity(
-                RunningTaskActivity.newIntent(task.id, this)
+                RunningTaskActivity.newIntent(this)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         )

@@ -16,11 +16,7 @@ import javax.inject.Inject
 class FinishedTaskActivity : AppCompatActivity(), FinishedTask.View {
 
     companion object {
-        fun newIntent(id: Long, context: Context): Intent {
-            var intent = Intent(context, FinishedTaskActivity::class.java)
-            intent.putExtra("TASK", id)
-            return intent
-        }
+        fun newIntent(context: Context) = Intent(context, FinishedTaskActivity::class.java)
     }
 
     @Inject lateinit var presenter: FinishedTask.Presenter
@@ -34,7 +30,7 @@ class FinishedTaskActivity : AppCompatActivity(), FinishedTask.View {
                 .build()
                 .injectMembers(this)
         presenter.attach(this)
-        finish.setOnClickListener { presenter.finishAlarm() }
+        ft_stop_fab.setOnClickListener { presenter.finishAlarm() }
     }
 
     override fun onDestroy() {
@@ -49,7 +45,7 @@ class FinishedTaskActivity : AppCompatActivity(), FinishedTask.View {
     }
 
     override fun displayBackground(background: Uri) {
-        activity_finished_task.setBackground(background) { request -> request }
+        ft_background.setBackground(background) { request -> request }
     }
 
     override fun silenceAlarm() {

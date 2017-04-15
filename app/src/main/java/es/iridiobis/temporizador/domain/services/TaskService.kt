@@ -26,8 +26,9 @@ class TaskService @Inject constructor(
     }
 
     var task: Task? = null
+    var status: Boolean = false
     val statusRelay: BehaviorRelay<Boolean> = BehaviorRelay.create()
-    val continueRelay : PublishRelay<Boolean> = PublishRelay.create()
+    val continueRelay: PublishRelay<Boolean> = PublishRelay.create()
 
     fun hasRunningTask(): Observable<Boolean> {
         if (task == null && !preferences.contains(TASK_PREFERENCE)) {
@@ -36,7 +37,8 @@ class TaskService @Inject constructor(
             return tasksRepository.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
                     .map {
                         this.task = it
-                        statusRelay.accept(preferences.getBoolean(RUNNING_PREFERENCE, false))
+                        status = preferences.getBoolean(RUNNING_PREFERENCE, false)
+                        statusRelay.accept(status)
                         true
                     }
                     .doOnError {
@@ -83,28 +85,14 @@ class TaskService @Inject constructor(
                 .putBoolean(RUNNING_PREFERENCE, true)
                 .apply()
         setAlarm(task.duration)
-        statusRelay.accept(true)
+        status = true
+        statusRelay.accept(status)
     }
 
-    fun pauseTask() {
-        val elapsedTime = preferences.getLong(ELAPSED_TIME_PREFERENCE, 0) + System.currentTimeMillis() - preferences.getLong(START_TIME_PREFERENCE, 0)
-        preferences.edit()
-                .putLong(START_TIME_PREFERENCE, 0)
-                .putLong(ELAPSED_TIME_PREFERENCE, elapsedTime)
-                .putBoolean(RUNNING_PREFERENCE, false)
-                .apply()
-        alarmService.cancelAlarm()
-        taskNotification.showPausedNotification(task!!)
-        statusRelay.accept(false)
-    }
-
-    fun resumeTask() {
-        preferences.edit()
-                .putLong(START_TIME_PREFERENCE, System.currentTimeMillis())
-                .putBoolean(RUNNING_PREFERENCE, true)
-                .apply()
-        setAlarm(task!!.duration - preferences.getLong(ELAPSED_TIME_PREFERENCE, 0))
-        statusRelay.accept(true)
+    fun changeStatus() {
+        if (status) pauseTask() else resumeTask()
+        status = !status
+        statusRelay.accept(status)
     }
 
     fun stopTask() {
@@ -139,8 +127,28 @@ class TaskService @Inject constructor(
         taskNotification.showRunningNotification(task!!)
     }
 
+    private fun pauseTask() {
+        val elapsedTime = preferences.getLong(ELAPSED_TIME_PREFERENCE, 0) + System.currentTimeMillis() - preferences.getLong(START_TIME_PREFERENCE, 0)
+        preferences.edit()
+                .putLong(START_TIME_PREFERENCE, 0)
+                .putLong(ELAPSED_TIME_PREFERENCE, elapsedTime)
+                .putBoolean(RUNNING_PREFERENCE, false)
+                .apply()
+        alarmService.cancelAlarm()
+        taskNotification.showPausedNotification(task!!)
+    }
+
+    private fun resumeTask() {
+        preferences.edit()
+                .putLong(START_TIME_PREFERENCE, System.currentTimeMillis())
+                .putBoolean(RUNNING_PREFERENCE, true)
+                .apply()
+        setAlarm(task!!.duration - preferences.getLong(ELAPSED_TIME_PREFERENCE, 0))
+    }
+
     private fun clearTask() {
         task = null
+        status = false
         preferences.edit()
                 .clear()
                 .apply()

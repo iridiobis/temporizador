@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -20,11 +21,7 @@ import javax.inject.Inject
 class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
 
     companion object {
-        fun newIntent(id : Long, context: Context) : Intent {
-            val intent = Intent(context, RunningTaskActivity::class.java)
-            intent.putExtra("TASK", id)
-            return intent
-        }
+        fun newIntent(context: Context) = Intent(context, RunningTaskActivity::class.java)
     }
 
     @Inject lateinit var presenter: RunningTask.Presenter
@@ -36,8 +33,7 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
                 .applicationComponent((application as Temporizador).getComponent())
                 .build()
                 .injectMembers(this)
-        rt_pause.setOnClickListener { presenter.pause() }
-        rt_resume.setOnClickListener { presenter.resume() }
+        rt_status_fab.setOnClickListener { presenter.changeStatus() }
         rt_stop.setOnClickListener { requestStopConfirmation() }
     }
 
@@ -59,8 +55,9 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
     }
 
     override fun displayStatus(status: Boolean) {
-        rt_pause.visibility = if (status) VISIBLE else GONE
-        rt_resume.visibility = if (status) GONE else VISIBLE
+        rt_status_fab.setImageDrawable(ContextCompat.getDrawable(this,
+                if (status) R.drawable.ic_pause else R.drawable.ic_play_arrow)
+        )
     }
 
     override fun onTaskStopped() {

@@ -25,7 +25,7 @@ class FireAlarmService : IntentService("FireAlarmService") {
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                     application.startActivity(
-                            FinishedTaskActivity.newIntent(it!!.id, this)
+                            FinishedTaskActivity.newIntent(this)
                                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     )

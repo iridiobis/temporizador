@@ -22,7 +22,13 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/main_tasks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:listitem="@layout/view_task_item"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
