@@ -30,6 +30,8 @@
         <service android:name=".presentation.services.AlarmMediaService"/>
         <service android:name=".presentation.services.FireAlarmService"/>
 
+        <activity android:name=".presentation.ui.newtask.NewTaskActivity"/>
+
         <activity android:name=".presentation.ui.runningtask.RunningTaskActivity">
         </activity>
         <activity android:name=".presentation.ui.finishedtask.FinishedTaskActivity">

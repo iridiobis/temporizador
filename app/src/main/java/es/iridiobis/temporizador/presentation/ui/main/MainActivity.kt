@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.domain.model.Task
+import es.iridiobis.temporizador.presentation.ui.newtask.NewTaskActivity
 import es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity
 import es.iridiobis.temporizador.presentation.ui.writetask.WriteTaskActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity(), Main.View {
                 .injectMembers(this)
         main_tasks.adapter = tasksAdapter
 
-        fab.setOnClickListener { startActivity(WriteTaskActivity.addTaskIntent(this)) }
+        fab.setOnClickListener { startActivity(Intent(this, NewTaskActivity::class.java)) }
     }
 
     override fun onResume() {

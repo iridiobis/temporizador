@@ -16,4 +16,6 @@
     <string name="stop">Stop</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="continueLiteral">Continue</string>
+    <string name="background_description">Select a background image to represent the task you are creating.</string>
 </resources>
