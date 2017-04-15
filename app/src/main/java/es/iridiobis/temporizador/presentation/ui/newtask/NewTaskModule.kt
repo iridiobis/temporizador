@@ -9,5 +9,5 @@ class NewTaskModule {
 
     @Provides
     @ActivityScope
-    fun provideTask(task: TaskModel) : TaskModel = TaskModel()
+    fun provideTask() : TaskModel = TaskModel()
 }

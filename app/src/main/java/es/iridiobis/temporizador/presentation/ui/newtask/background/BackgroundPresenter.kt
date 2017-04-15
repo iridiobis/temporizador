@@ -8,9 +8,10 @@ import javax.inject.Inject
 class BackgroundPresenter @Inject constructor(val task : TaskModel) : Presenter<Background.View>(), Background.Presenter {
     override fun background(background: Uri) {
         task.background = background
+        view?.showBackground(background)
     }
 
     override fun onViewAttached() {
-        task.background ?: view?.showBackground(task.background!!)
+        if (task.background != null) view?.showBackground(task.background!!)
     }
 }
