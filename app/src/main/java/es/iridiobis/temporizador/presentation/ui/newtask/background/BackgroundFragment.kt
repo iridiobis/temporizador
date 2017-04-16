@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
+import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.di.ComponentProvider
@@ -59,8 +60,8 @@ class BackgroundFragment : Fragment(), Background.View {
         super.onPause()
     }
 
-    override fun showBackground(background: Uri) {
-        ntb_background.setBackground(background) { request -> request }
+    override fun showBackground(background: Uri, invalid : Boolean) {
+        ntb_background.setBackground(background, invalid) { request -> request }
         ntb_continue.isEnabled = true
         ntb_description.visibility = GONE
     }

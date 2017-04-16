@@ -9,8 +9,13 @@ import javax.inject.Inject
 class BackgroundPresenter @Inject constructor(val task : TaskModel, val navigator: NewTask.Navigator)
     : Presenter<Background.View>(), Background.Presenter {
 
+    var invalid = false
+
     override fun onViewAttached() {
-        if (task.background != null) view?.showBackground(task.background!!)
+        if (task.background != null) {
+            view?.showBackground(task.background!!, invalid)
+            invalid = false
+        }
     }
 
     override fun pickImage() {
@@ -23,7 +28,11 @@ class BackgroundPresenter @Inject constructor(val task : TaskModel, val navigato
 
     override fun background(background: Uri) {
         task.background = background
-        view?.showBackground(background)
+        if (hasView()) {
+            view!!.showBackground(background, true)
+        } else {
+            invalid = true
+        }
     }
 
     override fun next() {

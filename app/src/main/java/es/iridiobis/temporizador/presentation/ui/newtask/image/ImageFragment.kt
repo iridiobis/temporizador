@@ -13,6 +13,7 @@ import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.di.ComponentProvider
+import es.iridiobis.temporizador.core.extensions.load
 import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.presentation.ui.newtask.NewTaskComponent
 import kotlinx.android.synthetic.main.fragment_new_task_image.*
@@ -27,8 +28,8 @@ class ImageFragment : Fragment(), Image.View {
         nti_background.setBackground(background) { request -> request }
     }
 
-    override fun showImage(image: Uri) {
-        nti_image.setBackground(image) { request -> request }
+    override fun showImage(image: Uri, invalid : Boolean) {
+        nti_image.load(image, invalid) { request -> request }
         nti_continue.isEnabled = true
         nti_description.visibility = GONE
     }

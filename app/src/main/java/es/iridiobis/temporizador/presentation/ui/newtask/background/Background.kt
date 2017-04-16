@@ -7,7 +7,7 @@ import es.iridiobis.temporizador.presentation.ui.newtask.ImagePicker
 interface Background {
 
     interface View {
-        fun showBackground(background: Uri)
+        fun showBackground(background: Uri, invalid : Boolean)
     }
 
     interface Presenter : Attachable<View>, ImagePicker {

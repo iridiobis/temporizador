@@ -1,6 +1,5 @@
 package es.iridiobis.temporizador.core.extensions
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -12,18 +11,24 @@ import com.squareup.picasso.RequestCreator
 import com.squareup.picasso.Target
 import es.iridiobis.temporizador.BuildConfig.DEBUG
 
-fun ImageView.load(path: Uri, request: (RequestCreator) -> RequestCreator) {
+fun ImageView.load(path: Uri, invalid: Boolean, request: (RequestCreator) -> RequestCreator) {
     val picasso = Picasso.with(context)
-    if(DEBUG) {
+    if (invalid) picasso.invalidate(path)
+    if (DEBUG) {
         picasso.setIndicatorsEnabled(true)
         picasso.isLoggingEnabled = true
     }
     request(picasso.load(path)).into(this)
 }
 
-fun View.setBackground(path: Uri, request: (RequestCreator) -> RequestCreator) {
+fun ImageView.load(path: Uri, request: (RequestCreator) -> RequestCreator) {
+    load(path, false, request)
+}
+
+fun View.setBackground(path: Uri, invalid: Boolean, request: (RequestCreator) -> RequestCreator) {
     val picasso = Picasso.with(context)
-    if(DEBUG) {
+    if (invalid) picasso.invalidate(path)
+    if (DEBUG) {
         picasso.setIndicatorsEnabled(true)
         picasso.isLoggingEnabled = true
     }
@@ -38,4 +43,8 @@ fun View.setBackground(path: Uri, request: (RequestCreator) -> RequestCreator) {
     }
     tag = target
     request(picasso.load(path)).into(target)
+}
+
+fun View.setBackground(path: Uri, request: (RequestCreator) -> RequestCreator) {
+    setBackground(path, false, request)
 }

@@ -8,7 +8,7 @@ interface Image {
 
     interface View {
         fun showBackground(background: Uri)
-        fun showImage(image: Uri)
+        fun showImage(image: Uri, invalid : Boolean)
     }
 
     interface Presenter : Attachable<View> {
