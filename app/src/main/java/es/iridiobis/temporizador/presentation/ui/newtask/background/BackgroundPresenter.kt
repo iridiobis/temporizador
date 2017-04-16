@@ -13,6 +13,14 @@ class BackgroundPresenter @Inject constructor(val task : TaskModel, val navigato
         if (task.background != null) view?.showBackground(task.background!!)
     }
 
+    override fun pickImage() {
+        navigator.pickImage()
+    }
+
+    override fun cropBackground(origin: Uri) {
+        navigator.cropBackground(origin)
+    }
+
     override fun background(background: Uri) {
         task.background = background
         view?.showBackground(background)
