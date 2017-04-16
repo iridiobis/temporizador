@@ -7,10 +7,14 @@ import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.presentation.ui.newtask.background.BackgroundFragment
+import es.iridiobis.temporizador.presentation.ui.newtask.image.ImageFragment
+import javax.inject.Inject
 
-class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent> {
+class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>, NewTask.NavigationExecutor {
 
-    private lateinit var component : NewTaskComponent
+    @Inject lateinit var navigator: NewTask.Navigator
+
+    private lateinit var component: NewTaskComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +22,14 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
         component = DaggerNewTaskComponent.builder()
                 .applicationComponent((application as Temporizador).getComponent())
                 .build()
+        component.injectMembers(this)
+        navigator.attach(this)
         supportFragmentManager.beginTransaction().add(R.id.container, BackgroundFragment()).commit()
+    }
+
+    override fun onDestroy() {
+        navigator.detach(this)
+        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -26,5 +37,12 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
     }
 
     override fun getComponent(): NewTaskComponent = component
+
+    override fun goToImageSelection() {
+        supportFragmentManager.beginTransaction()
+                .add(R.id.container, ImageFragment())
+                .addToBackStack(null)
+                .commit()
+    }
 
 }

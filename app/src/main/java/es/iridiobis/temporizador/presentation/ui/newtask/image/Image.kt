@@ -1,17 +1,18 @@
-package es.iridiobis.temporizador.presentation.ui.newtask.background
+package es.iridiobis.temporizador.presentation.ui.newtask.image
 
 import android.net.Uri
 import es.iridiobis.presenter.Attachable
 
-interface Background {
+
+interface Image {
 
     interface View {
         fun showBackground(background: Uri)
+        fun showImage(image: Uri)
     }
 
     interface Presenter : Attachable<View> {
-        fun background(background: Uri)
-        fun next()
+        fun image(image: Uri)
     }
 
 }

@@ -10,4 +10,8 @@ class NewTaskModule {
     @Provides
     @ActivityScope
     fun provideTask() : TaskModel = TaskModel()
+
+    @Provides
+    @ActivityScope
+    fun provideNavigator(navigator: NewTaskNavigator) : NewTask.Navigator = navigator
 }

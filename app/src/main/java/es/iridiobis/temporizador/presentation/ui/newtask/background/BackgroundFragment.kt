@@ -39,6 +39,7 @@ class BackgroundFragment : Fragment(), Background.View {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ntb_select_background.setOnClickListener { CropImage.startPickImageActivity(activity) }
+        ntb_continue.setOnClickListener { presenter.next() }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
