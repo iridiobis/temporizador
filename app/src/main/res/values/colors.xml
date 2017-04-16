@@ -11,4 +11,5 @@
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="overlay">#66455A64</color>
+    <color name="whiteOverlay">#6fff</color>
 </resources>
