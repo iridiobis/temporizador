@@ -13,6 +13,8 @@ interface Image {
 
     interface Presenter : Attachable<View> {
         fun image(image: Uri)
+        fun cropBackground()
+        fun cropBackground(origin : Uri)
     }
 
 }

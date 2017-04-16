@@ -60,4 +60,11 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
                 .start(this)
     }
 
+    override fun goToCropBackgroundForImage(background: Uri) {
+        CropImage.activity(background)
+                .setOutputUri(Uri.fromFile(File(externalCacheDir.path, "image.jpeg")))
+                .setAspectRatio(2, 1)
+                .start(this)
+    }
+
 }
