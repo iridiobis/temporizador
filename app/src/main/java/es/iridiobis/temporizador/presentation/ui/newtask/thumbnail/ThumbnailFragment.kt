@@ -1,6 +1,7 @@
-package es.iridiobis.temporizador.presentation.ui.newtask.image
+package es.iridiobis.temporizador.presentation.ui.newtask.thumbnail
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
+import com.squareup.picasso.Transformation
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import es.iridiobis.temporizador.R
@@ -16,28 +18,31 @@ import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.core.extensions.load
 import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.presentation.ui.newtask.NewTaskComponent
+import es.iridiobis.temporizador.presentation.ui.newtask.image.DaggerImageComponent
+import es.iridiobis.temporizador.presentation.ui.newtask.image.Image
 import kotlinx.android.synthetic.main.fragment_new_task_image.*
+import kotlinx.android.synthetic.main.fragment_new_task_thumbnail.*
 import javax.inject.Inject
 
 
-class ImageFragment : Fragment(), Image.View {
+class ThumbnailFragment : Fragment(), Thumbnail.View {
 
-    @Inject lateinit var presenter: Image.Presenter
+    @Inject lateinit var presenter: Thumbnail.Presenter
 
     override fun showBackground(background: Uri) {
-        nti_background.setBackground(background) { request -> request }
+        ntt_background.setBackground(background) { request -> request }
     }
 
-    override fun showImage(image: Uri, invalid : Boolean) {
-        nti_image.load(image, invalid) { request -> request }
-        nti_continue.isEnabled = true
-        nti_description.visibility = GONE
+    override fun showThumbnail(thumbnail: Uri, invalid : Boolean) {
+        ntt_thumbnail.load(thumbnail, invalid) { request -> request.transform(RoundTransformation()) }
+        ntt_continue.isEnabled = true
+        ntt_description.visibility = GONE
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_new_task_image, container, false)
-        DaggerImageComponent.builder()
+        val rootView = inflater.inflate(R.layout.fragment_new_task_thumbnail, container, false)
+        DaggerThumbnailComponent.builder()
                 .newTaskComponent((activity as ComponentProvider<NewTaskComponent>).getComponent())
                 .build()
                 .injectMembers(this)
@@ -46,19 +51,18 @@ class ImageFragment : Fragment(), Image.View {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        nti_select_image.setOnClickListener { CropImage.startPickImageActivity(activity) }
-        nti_crop_background.setOnClickListener { presenter.cropBackground() }
-        nti_continue.setOnClickListener { presenter.next() }
+        ntt_select_thumbnail.setOnClickListener { presenter.pickImage() }
+        ntt_crop_background.setOnClickListener { presenter.cropBackground() }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE) {
             val origin = CropImage.getPickImageResultUri(context, data)
-            presenter.cropBackground(origin)
+            presenter.crop(origin)
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
             if (resultCode == AppCompatActivity.RESULT_OK) {
-                presenter.image(result.uri)
+                presenter.thumbnail(result.uri)
             }
         }
     }
@@ -71,6 +75,17 @@ class ImageFragment : Fragment(), Image.View {
     override fun onPause() {
         presenter.detach(this)
         super.onPause()
+    }
+
+    class RoundTransformation : Transformation {
+        override fun key(): String {
+            return "Round"
+        }
+
+        override fun transform(source: Bitmap): Bitmap {
+            return CropImage.toOvalBitmap(source)
+        }
+
     }
 
 }

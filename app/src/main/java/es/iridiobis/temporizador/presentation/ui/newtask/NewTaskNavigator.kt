@@ -38,11 +38,27 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
         }
     }
 
+    override fun showThumbnailSelection() {
+        if (hasView()) {
+            view!!.goToThumbnailSelection()
+        } else {
+            navigation = Runnable { view!!.goToThumbnailSelection() }
+        }
+    }
+
     override fun cropBackgroundForImage(background: Uri) {
         if (hasView()) {
             view!!.goToCropBackgroundForImage(background)
         } else {
             navigation = Runnable { view!!.goToCropBackgroundForImage(background) }
+        }
+    }
+
+    override fun cropForThumbnail(origin: Uri) {
+        if (hasView()) {
+            view!!.goToCropForThumbnail(origin)
+        } else {
+            navigation = Runnable { view!!.goToCropForThumbnail(origin) }
         }
     }
 

@@ -15,6 +15,7 @@ interface Image {
         fun image(image: Uri)
         fun cropBackground()
         fun cropBackground(origin : Uri)
+        fun next()
     }
 
 }

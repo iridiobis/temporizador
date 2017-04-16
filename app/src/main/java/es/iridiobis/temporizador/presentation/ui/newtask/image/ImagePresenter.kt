@@ -36,4 +36,8 @@ class ImagePresenter @Inject constructor(val task : TaskModel, val navigator: Ne
         navigator.cropBackgroundForImage(origin)
     }
 
+    override fun next() {
+        navigator.showThumbnailSelection()
+    }
+
 }
