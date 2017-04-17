@@ -29,7 +29,7 @@ class ThumbnailPresenter @Inject constructor(val task : TaskModel, val navigator
     }
 
     override fun pickImage() {
-        navigator.showImageSelection()
+        navigator.pickImage()
     }
 
     override fun cropBackground() {
