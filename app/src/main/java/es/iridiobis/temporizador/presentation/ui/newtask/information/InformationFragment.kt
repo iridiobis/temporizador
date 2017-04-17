@@ -47,7 +47,11 @@ class InformationFragment : Fragment(), Information.View, DurationDialogListener
             }
 
         })
-        nt_info_duration.setOnClickListener{ DurationDialogFragment().show(fragmentManager, "") }
+        nt_info_duration.setOnClickListener{
+            val dialog = DurationDialogFragment()
+            dialog.setTargetFragment(this, 0)
+            dialog.show(fragmentManager, "")
+        }
         nt_info_save.setOnClickListener { presenter.save() }
     }
 
