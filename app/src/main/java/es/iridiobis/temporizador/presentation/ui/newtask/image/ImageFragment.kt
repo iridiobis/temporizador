@@ -1,16 +1,15 @@
 package es.iridiobis.temporizador.presentation.ui.newtask.image
 
+import android.app.Activity.RESULT_OK
+import android.app.Fragment
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.core.extensions.load
@@ -18,7 +17,6 @@ import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.presentation.ui.newtask.NewTaskComponent
 import kotlinx.android.synthetic.main.fragment_new_task_image.*
 import javax.inject.Inject
-
 
 class ImageFragment : Fragment(), Image.View {
 
@@ -57,7 +55,7 @@ class ImageFragment : Fragment(), Image.View {
             presenter.cropBackground(origin)
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
-            if (resultCode == AppCompatActivity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 presenter.image(result.uri)
             }
         }

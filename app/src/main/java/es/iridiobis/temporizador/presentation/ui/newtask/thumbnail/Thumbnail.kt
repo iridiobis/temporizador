@@ -16,6 +16,7 @@ interface Thumbnail {
         fun thumbnail(thumbnail: Uri)
         fun cropBackground()
         fun crop(origin : Uri)
+        fun next()
     }
 
 }

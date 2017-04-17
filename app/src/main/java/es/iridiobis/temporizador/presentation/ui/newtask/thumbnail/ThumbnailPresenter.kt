@@ -40,4 +40,8 @@ class ThumbnailPresenter @Inject constructor(val task : TaskModel, val navigator
         navigator.cropForThumbnail(origin)
     }
 
+    override fun next() {
+        navigator.showInformationInput()
+    }
+
 }

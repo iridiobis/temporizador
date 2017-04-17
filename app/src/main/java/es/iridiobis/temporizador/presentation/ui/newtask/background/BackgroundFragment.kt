@@ -1,15 +1,14 @@
 package es.iridiobis.temporizador.presentation.ui.newtask.background
 
+import android.app.Activity.RESULT_OK
+import android.app.Fragment
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
-import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.di.ComponentProvider
@@ -43,7 +42,7 @@ class BackgroundFragment : Fragment(), Background.View {
             val origin = CropImage.getPickImageResultUri(context, data)
             presenter.cropBackground(origin)
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == AppCompatActivity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 val result = CropImage.getActivityResult(data)
                 presenter.background(result.uri)
             }

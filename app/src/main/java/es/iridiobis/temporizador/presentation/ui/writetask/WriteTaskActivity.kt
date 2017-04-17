@@ -9,7 +9,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
-import com.squareup.picasso.Transformation
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import es.iridiobis.kotlinexample.toast
@@ -20,10 +19,10 @@ import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogFragment
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
+import es.iridiobis.temporizador.presentation.transformations.RoundTransformation
 import kotlinx.android.synthetic.main.activity_write_task.*
 import mobi.upod.timedurationpicker.TimeDurationUtil
 import javax.inject.Inject
-
 
 class WriteTaskActivity : AppCompatActivity(), WriteTask.View, DurationDialogListener {
 
@@ -123,16 +122,5 @@ class WriteTaskActivity : AppCompatActivity(), WriteTask.View, DurationDialogLis
     }
 
     override fun onTaskAdded(task: Task) = finish()
-
-    class RoundTransformation : Transformation {
-        override fun key(): String {
-            return "Round"
-        }
-
-        override fun transform(source: Bitmap): Bitmap {
-            return CropImage.toOvalBitmap(source)
-        }
-
-    }
 
 }

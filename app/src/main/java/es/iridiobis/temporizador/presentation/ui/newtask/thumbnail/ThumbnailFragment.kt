@@ -1,29 +1,23 @@
 package es.iridiobis.temporizador.presentation.ui.newtask.thumbnail
 
+import android.app.Activity.RESULT_OK
+import android.app.Fragment
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
-import com.squareup.picasso.Transformation
 import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.core.extensions.load
 import es.iridiobis.temporizador.core.extensions.setBackground
+import es.iridiobis.temporizador.presentation.transformations.RoundTransformation
 import es.iridiobis.temporizador.presentation.ui.newtask.NewTaskComponent
-import es.iridiobis.temporizador.presentation.ui.newtask.image.DaggerImageComponent
-import es.iridiobis.temporizador.presentation.ui.newtask.image.Image
-import kotlinx.android.synthetic.main.fragment_new_task_image.*
 import kotlinx.android.synthetic.main.fragment_new_task_thumbnail.*
 import javax.inject.Inject
-
 
 class ThumbnailFragment : Fragment(), Thumbnail.View {
 
@@ -33,7 +27,7 @@ class ThumbnailFragment : Fragment(), Thumbnail.View {
         ntt_background.setBackground(background) { request -> request }
     }
 
-    override fun showThumbnail(thumbnail: Uri, invalid : Boolean) {
+    override fun showThumbnail(thumbnail: Uri, invalid: Boolean) {
         ntt_thumbnail.load(thumbnail, invalid) { request -> request.transform(RoundTransformation()) }
         ntt_continue.isEnabled = true
         ntt_description.visibility = GONE
@@ -53,6 +47,7 @@ class ThumbnailFragment : Fragment(), Thumbnail.View {
         super.onViewCreated(view, savedInstanceState)
         ntt_select_thumbnail.setOnClickListener { presenter.pickImage() }
         ntt_crop_background.setOnClickListener { presenter.cropBackground() }
+        ntt_continue.setOnClickListener { presenter.next() }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -61,7 +56,7 @@ class ThumbnailFragment : Fragment(), Thumbnail.View {
             presenter.crop(origin)
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
-            if (resultCode == AppCompatActivity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 presenter.thumbnail(result.uri)
             }
         }
@@ -75,17 +70,6 @@ class ThumbnailFragment : Fragment(), Thumbnail.View {
     override fun onPause() {
         presenter.detach(this)
         super.onPause()
-    }
-
-    class RoundTransformation : Transformation {
-        override fun key(): String {
-            return "Round"
-        }
-
-        override fun transform(source: Bitmap): Bitmap {
-            return CropImage.toOvalBitmap(source)
-        }
-
     }
 
 }

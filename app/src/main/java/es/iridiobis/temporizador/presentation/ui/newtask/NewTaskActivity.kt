@@ -11,14 +11,16 @@ import com.theartofdev.edmodo.cropper.CropImageView
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.di.ComponentProvider
+import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
 import es.iridiobis.temporizador.presentation.ui.newtask.background.BackgroundFragment
 import es.iridiobis.temporizador.presentation.ui.newtask.image.ImageFragment
+import es.iridiobis.temporizador.presentation.ui.newtask.information.InformationFragment
 import es.iridiobis.temporizador.presentation.ui.newtask.thumbnail.ThumbnailFragment
 import java.io.File
 import javax.inject.Inject
 
 
-class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>, NewTask.NavigationExecutor {
+class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>, NewTask.NavigationExecutor, DurationDialogListener {
 
     @Inject lateinit var navigator: NewTask.Navigator
 
@@ -33,7 +35,7 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
                 .build()
         component.injectMembers(this)
         navigator.attach(this)
-        supportFragmentManager.beginTransaction().add(R.id.container, BackgroundFragment()).commit()
+        fragmentManager.beginTransaction().add(R.id.container, BackgroundFragment()).commit()
     }
 
     override fun onDestroy() {
@@ -42,21 +44,28 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        supportFragmentManager.findFragmentById(R.id.container).onActivityResult(requestCode, resultCode, data)
+        fragmentManager.findFragmentById(R.id.container).onActivityResult(requestCode, resultCode, data)
     }
 
     override fun getComponent(): NewTaskComponent = component
 
     override fun goToImageSelection() {
-        supportFragmentManager.beginTransaction()
+        fragmentManager.beginTransaction()
                 .add(R.id.container, ImageFragment())
                 .addToBackStack(null)
                 .commit()
     }
 
     override fun goToThumbnailSelection() {
-        supportFragmentManager.beginTransaction()
+        fragmentManager.beginTransaction()
                 .add(R.id.container, ThumbnailFragment())
+                .addToBackStack(null)
+                .commit()
+    }
+
+    override fun goToInformationInput() {
+        fragmentManager.beginTransaction()
+                .add(R.id.container, InformationFragment())
                 .addToBackStack(null)
                 .commit()
     }
@@ -85,6 +94,10 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
                 cropImage = null
             }
         }
+    }
+
+    override fun onTimeSet(duration: Long) {
+        fragmentManager.findFragmentById(R.id.container)
     }
 
     private fun crop(origin: Uri, name: String, aspectRatio: Pair<Int, Int>, shape: CropImageView.CropShape = CropImageView.CropShape.RECTANGLE) {

@@ -4,7 +4,6 @@ import android.net.Uri
 import es.iridiobis.presenter.Presenter
 import javax.inject.Inject
 
-
 class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecutor>(), NewTask.Navigator {
 
     var navigation : Runnable? = null
@@ -12,22 +11,6 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
     override fun onViewAttached() {
         navigation?.run()
         navigation = null
-    }
-
-    override fun pickImage() {
-        if (hasView()) {
-            view!!.goToImagePicker()
-        } else {
-            navigation = Runnable { view!!.goToImagePicker() }
-        }
-    }
-
-    override fun cropBackground(origin: Uri) {
-        if (hasView()) {
-            view!!.goToCropBackground(origin)
-        } else {
-            navigation = Runnable { view!!.goToCropBackground(origin) }
-        }
     }
 
     override fun showImageSelection() {
@@ -46,6 +29,30 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
         }
     }
 
+    override fun showInformationInput() {
+        if (hasView()) {
+            view!!.goToInformationInput()
+        } else {
+            navigation = Runnable { view!!.goToInformationInput() }
+        }
+    }
+
+    override fun pickImage() {
+        if (hasView()) {
+            view!!.goToImagePicker()
+        } else {
+            navigation = Runnable { view!!.goToImagePicker() }
+        }
+    }
+
+    override fun cropBackground(origin: Uri) {
+        if (hasView()) {
+            view!!.goToCropBackground(origin)
+        } else {
+            navigation = Runnable { view!!.goToCropBackground(origin) }
+        }
+    }
+
     override fun cropBackgroundForImage(background: Uri) {
         if (hasView()) {
             view!!.goToCropBackgroundForImage(background)
@@ -59,6 +66,14 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
             view!!.goToCropForThumbnail(origin)
         } else {
             navigation = Runnable { view!!.goToCropForThumbnail(origin) }
+        }
+    }
+
+    override fun finish() {
+        if (hasView()) {
+            view!!.finish()
+        } else {
+            navigation = Runnable { view!!.finish() }
         }
     }
 
