@@ -2,6 +2,7 @@ package es.iridiobis.temporizador.presentation.services
 
 import android.app.Service
 import android.content.Intent
+import android.media.AudioManager.STREAM_ALARM
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.IBinder
@@ -62,6 +63,7 @@ class AlarmMediaService : Service(), MediaPlayer.OnPreparedListener,
             e.printStackTrace();
         }
 
+        mediaPlayer!!.setAudioStreamType(STREAM_ALARM)
         mediaPlayer!!.setOnPreparedListener(this)
         mediaPlayer!!.setOnErrorListener(this)
         mediaPlayer!!.prepareAsync()
