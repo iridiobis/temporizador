@@ -46,6 +46,7 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
         presenter.detach(this)
         super.onPause()
     }
+
     override fun displayName(name: String) {
         supportActionBar?.title = name
     }

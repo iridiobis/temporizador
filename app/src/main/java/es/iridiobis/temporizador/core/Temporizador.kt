@@ -16,7 +16,6 @@ class Temporizador : Application(), ComponentProvider<ApplicationComponent> {
                 .context(this)
                 .dataModule(DataModule())
                 .build()
-        component.inject(this)
     }
 
     override fun getComponent(): ApplicationComponent = component

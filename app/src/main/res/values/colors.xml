@@ -4,9 +4,12 @@
     <color name="colorPrimaryDark">#455A64</color>
     <color name="colorPrimaryLight">#CFD8DC</color>
     <color name="colorAccent">#9E9E9E</color>
+    <color name="colorAccentDark">#616161</color>
+    <color name="colorAccentLight">#F5F5F5</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="overlay">#66455A64</color>
+    <color name="whiteOverlay">#6fff</color>
 </resources>
