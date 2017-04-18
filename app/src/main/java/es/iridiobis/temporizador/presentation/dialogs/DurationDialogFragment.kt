@@ -19,9 +19,11 @@ class DurationDialogFragment(var initial : Long = 0) : TimeDurationPickerDialogF
         super.onSaveInstanceState(outState)
         outState.putLong("duration", initial)
     }
+
     override fun getInitialDuration(): Long {
         return initial
     }
+
     override fun onDurationSet(view: TimeDurationPicker?, duration: Long) {
         if (targetFragment == null) {
             (activity as DurationDialogListener).onTimeSet(duration)

@@ -30,18 +30,26 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_container)
-        component = DaggerNewTaskComponent.builder()
-                .applicationComponent((application as Temporizador).getComponent())
-                .build()
+        if (lastCustomNonConfigurationInstance == null) {
+            component = DaggerNewTaskComponent.builder()
+                    .applicationComponent((application as Temporizador).getComponent())
+                    .build()
+        } else {
+            component = lastCustomNonConfigurationInstance as NewTaskComponent
+        }
         component.injectMembers(this)
         navigator.attach(this)
-        fragmentManager.beginTransaction().add(R.id.container, BackgroundFragment()).commit()
+        if (savedInstanceState == null) {
+            fragmentManager.beginTransaction().add(R.id.container, BackgroundFragment()).commit()
+        }
     }
 
     override fun onDestroy() {
         navigator.detach(this)
         super.onDestroy()
     }
+
+    override fun onRetainCustomNonConfigurationInstance(): Any = component
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         fragmentManager.findFragmentById(R.id.container).onActivityResult(requestCode, resultCode, data)
