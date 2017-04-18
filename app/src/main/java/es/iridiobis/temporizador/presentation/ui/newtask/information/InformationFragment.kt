@@ -47,11 +47,7 @@ class InformationFragment : Fragment(), Information.View, DurationDialogListener
             }
 
         })
-        nt_info_duration.setOnClickListener{
-            val dialog = DurationDialogFragment()
-            dialog.setTargetFragment(this, 0)
-            dialog.show(fragmentManager, "")
-        }
+        nt_info_duration.setOnClickListener{ presenter.selectDuration() }
         nt_info_save.setOnClickListener { presenter.save() }
     }
 
@@ -71,6 +67,12 @@ class InformationFragment : Fragment(), Information.View, DurationDialogListener
         nt_info_background.setBackground(task.background!!) { request -> request }
         nt_info_image.load(task.smallBackground!!) { request -> request }
         nt_info_thumbnail.load(task.thumbnail!!) { request -> request.transform(RoundTransformation()) }
+    }
+
+    override fun showDurationSelection(duration: Long) {
+        val dialog = DurationDialogFragment(duration)
+        dialog.setTargetFragment(this, 0)
+        dialog.show(fragmentManager, "")
     }
 
     override fun enableSave(enabled: Boolean) {

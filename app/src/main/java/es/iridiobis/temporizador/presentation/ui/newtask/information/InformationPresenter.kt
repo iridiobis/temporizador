@@ -24,6 +24,10 @@ class InformationPresenter @Inject constructor(
         view?.enableSave(task.isValid())
     }
 
+    override fun selectDuration() {
+        view?.showDurationSelection(task.duration)
+    }
+
     override fun duration(duration: Long) {
         task.duration = duration
         view?.enableSave(task.isValid())
