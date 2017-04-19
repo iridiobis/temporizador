@@ -9,7 +9,7 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
-class WriteTaskPresenter @Inject constructor(val id: Long?, val tasksRepository: TasksRepository) : Presenter<WriteTask.View>(), WriteTask.Presenter {
+class EditTaskPresenter @Inject constructor(val id: Long?, val tasksRepository: TasksRepository) : Presenter<EditTask.View>(), EditTask.Presenter {
 
     val task = TaskModel()
 

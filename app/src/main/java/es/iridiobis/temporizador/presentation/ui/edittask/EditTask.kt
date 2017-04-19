@@ -6,7 +6,7 @@ import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 
 
-interface WriteTask {
+interface EditTask {
     interface View {
         fun displayTask(task: TaskModel)
         fun showErrorMessage()

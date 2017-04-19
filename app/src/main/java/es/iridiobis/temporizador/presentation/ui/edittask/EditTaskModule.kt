@@ -5,7 +5,7 @@ import dagger.Provides
 import es.iridiobis.temporizador.core.di.ActivityScope
 
 @Module
-class WriteTaskModule(val taskId : Long?) {
+class EditTaskModule(val taskId : Long?) {
 
     @Provides
     @ActivityScope
@@ -13,5 +13,5 @@ class WriteTaskModule(val taskId : Long?) {
 
     @Provides
     @ActivityScope
-    fun providePresenter(presenter: WriteTaskPresenter) : WriteTask.Presenter = presenter
+    fun providePresenter(presenter: EditTaskPresenter) : EditTask.Presenter = presenter
 }

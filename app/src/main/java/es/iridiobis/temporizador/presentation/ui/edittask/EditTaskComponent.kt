@@ -6,5 +6,5 @@ import es.iridiobis.temporizador.core.ApplicationComponent
 import es.iridiobis.temporizador.core.di.ActivityScope
 
 @ActivityScope
-@Component(dependencies = arrayOf(ApplicationComponent::class), modules = arrayOf(WriteTaskModule::class))
-interface WriteTaskComponent : MembersInjector<WriteTaskActivity>
+@Component(dependencies = arrayOf(ApplicationComponent::class), modules = arrayOf(EditTaskModule::class))
+interface EditTaskComponent : MembersInjector<EditTaskActivity>

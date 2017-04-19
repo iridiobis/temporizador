@@ -2,7 +2,6 @@ package es.iridiobis.temporizador.presentation.ui.edittask
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
@@ -21,35 +20,35 @@ import es.iridiobis.temporizador.presentation.dialogs.DurationDialogFragment
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
 import es.iridiobis.temporizador.presentation.transformations.RoundTransformation
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
-import kotlinx.android.synthetic.main.activity_write_task.*
+import kotlinx.android.synthetic.main.activity_edit_task.*
 import mobi.upod.timedurationpicker.TimeDurationUtil
 import javax.inject.Inject
 
-class WriteTaskActivity : AppCompatActivity(), WriteTask.View, DurationDialogListener {
+class EditTaskActivity : AppCompatActivity(), EditTask.View, DurationDialogListener {
 
     companion object {
 
-        private val TASK_ID_EXTRA = "WriteTaskActivity.TASK_ID_EXTRA"
+        private val TASK_ID_EXTRA = "EditTaskActivity.TASK_ID_EXTRA"
 
         fun addTaskIntent(context: Context) : Intent {
-            return Intent(context, WriteTaskActivity::class.java)
+            return Intent(context, EditTaskActivity::class.java)
         }
 
         fun editTaskIntent(id : Long, context: Context) : Intent {
-            val intent = Intent(context, WriteTaskActivity::class.java)
+            val intent = Intent(context, EditTaskActivity::class.java)
             intent.putExtra(TASK_ID_EXTRA, id)
             return intent
         }
     }
 
-    @Inject lateinit var  presenter: WriteTask.Presenter
+    @Inject lateinit var  presenter: EditTask.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_write_task)
-        DaggerWriteTaskComponent.builder()
+        setContentView(R.layout.activity_edit_task)
+        DaggerEditTaskComponent.builder()
                 .applicationComponent((application as Temporizador).getComponent())
-                .writeTaskModule(WriteTaskModule(intent.extras?.getLong(TASK_ID_EXTRA)))
+                .editTaskModule(EditTaskModule(intent.extras?.getLong(TASK_ID_EXTRA)))
                 .build()
                 .injectMembers(this)
         write_task_name.addTextChangedListener(object : TextWatcher {
