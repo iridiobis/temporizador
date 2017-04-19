@@ -1,4 +1,4 @@
-package es.iridiobis.temporizador.presentation.ui.writetask
+package es.iridiobis.temporizador.presentation.ui.edittask
 
 import android.net.Uri
 import android.text.TextUtils

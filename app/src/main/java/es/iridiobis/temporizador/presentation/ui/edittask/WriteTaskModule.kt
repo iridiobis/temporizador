@@ -1,4 +1,4 @@
-package es.iridiobis.temporizador.presentation.ui.writetask
+package es.iridiobis.temporizador.presentation.ui.edittask
 
 import dagger.Module
 import dagger.Provides

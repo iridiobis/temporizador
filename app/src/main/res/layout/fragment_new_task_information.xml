@@ -6,7 +6,7 @@
     android:id="@+id/nt_info_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="es.iridiobis.temporizador.presentation.ui.writetask.WriteTaskActivity">
+    tools:context="es.iridiobis.temporizador.presentation.ui.edittask.WriteTaskActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
