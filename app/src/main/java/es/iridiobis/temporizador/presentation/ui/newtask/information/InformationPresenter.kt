@@ -2,8 +2,8 @@ package es.iridiobis.temporizador.presentation.ui.newtask.information
 
 import es.iridiobis.presenter.Presenter
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
+import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 import es.iridiobis.temporizador.presentation.ui.newtask.NewTask
-import es.iridiobis.temporizador.presentation.ui.newtask.TaskModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

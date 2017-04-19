@@ -14,8 +14,8 @@ import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogFragment
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
 import es.iridiobis.temporizador.presentation.transformations.RoundTransformation
+import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 import es.iridiobis.temporizador.presentation.ui.newtask.NewTaskComponent
-import es.iridiobis.temporizador.presentation.ui.newtask.TaskModel
 import kotlinx.android.synthetic.main.fragment_new_task_information.*
 import mobi.upod.timedurationpicker.TimeDurationUtil
 import javax.inject.Inject

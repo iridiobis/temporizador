@@ -1,8 +1,7 @@
 package es.iridiobis.temporizador.presentation.ui.newtask.information
 
 import es.iridiobis.presenter.Attachable
-import es.iridiobis.temporizador.presentation.ui.newtask.TaskModel
-
+import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 
 interface Information {
 

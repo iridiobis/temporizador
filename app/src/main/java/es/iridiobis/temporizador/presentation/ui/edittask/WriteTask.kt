@@ -3,6 +3,7 @@ package es.iridiobis.temporizador.presentation.ui.edittask
 import android.net.Uri
 import es.iridiobis.presenter.Attachable
 import es.iridiobis.temporizador.domain.model.Task
+import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 
 
 interface WriteTask {

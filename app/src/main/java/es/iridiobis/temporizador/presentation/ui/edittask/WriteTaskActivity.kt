@@ -20,6 +20,7 @@ import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogFragment
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
 import es.iridiobis.temporizador.presentation.transformations.RoundTransformation
+import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 import kotlinx.android.synthetic.main.activity_write_task.*
 import mobi.upod.timedurationpicker.TimeDurationUtil
 import javax.inject.Inject

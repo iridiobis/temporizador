@@ -2,8 +2,8 @@ package es.iridiobis.temporizador.presentation.ui.newtask.thumbnail
 
 import android.net.Uri
 import es.iridiobis.presenter.Presenter
+import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 import es.iridiobis.temporizador.presentation.ui.newtask.NewTask
-import es.iridiobis.temporizador.presentation.ui.newtask.TaskModel
 import javax.inject.Inject
 
 class ThumbnailPresenter @Inject constructor(val task : TaskModel, val navigator: NewTask.Navigator)
