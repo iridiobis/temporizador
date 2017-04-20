@@ -2,6 +2,7 @@ package es.iridiobis.temporizador.presentation.ui.newtask
 
 import android.net.Uri
 import es.iridiobis.presenter.Attachable
+import es.iridiobis.temporizador.presentation.ui.images.ImagePicker
 
 
 interface NewTask {

@@ -12,10 +12,10 @@ import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
-import es.iridiobis.temporizador.presentation.ui.newtask.background.BackgroundFragment
-import es.iridiobis.temporizador.presentation.ui.newtask.image.ImageFragment
+import es.iridiobis.temporizador.presentation.ui.images.background.BackgroundFragment
+import es.iridiobis.temporizador.presentation.ui.images.image.ImageFragment
+import es.iridiobis.temporizador.presentation.ui.images.thumbnail.ThumbnailFragment
 import es.iridiobis.temporizador.presentation.ui.newtask.information.InformationFragment
-import es.iridiobis.temporizador.presentation.ui.newtask.thumbnail.ThumbnailFragment
 import java.io.File
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package es.iridiobis.temporizador.presentation.ui.newtask.image
+package es.iridiobis.temporizador.presentation.ui.images.image
 
 import android.net.Uri
 import es.iridiobis.presenter.Presenter

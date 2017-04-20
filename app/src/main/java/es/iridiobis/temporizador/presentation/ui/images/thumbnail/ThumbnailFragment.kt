@@ -1,4 +1,4 @@
-package es.iridiobis.temporizador.presentation.ui.newtask.thumbnail
+package es.iridiobis.temporizador.presentation.ui.images.thumbnail
 
 import android.app.Activity.RESULT_OK
 import android.app.Fragment

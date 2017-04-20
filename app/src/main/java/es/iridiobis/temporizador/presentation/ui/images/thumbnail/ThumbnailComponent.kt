@@ -1,4 +1,4 @@
-package es.iridiobis.temporizador.presentation.ui.newtask.thumbnail
+package es.iridiobis.temporizador.presentation.ui.images.thumbnail
 
 import dagger.Component
 import dagger.MembersInjector

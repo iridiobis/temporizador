@@ -1,8 +1,8 @@
-package es.iridiobis.temporizador.presentation.ui.newtask.background
+package es.iridiobis.temporizador.presentation.ui.images.background
 
 import android.net.Uri
 import es.iridiobis.presenter.Attachable
-import es.iridiobis.temporizador.presentation.ui.newtask.ImagePicker
+import es.iridiobis.temporizador.presentation.ui.images.ImagePicker
 
 interface Background {
 
