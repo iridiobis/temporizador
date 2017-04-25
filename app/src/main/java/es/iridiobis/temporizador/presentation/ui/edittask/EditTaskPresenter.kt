@@ -52,6 +52,10 @@ class EditTaskPresenter @Inject constructor(
         task.thumbnail = thumbnail
     }
 
+    override fun selectThumbnail() {
+        navigator.showThumbnailSelection()
+    }
+
     override fun onViewAttached() = view!!.displayTask(task)
 
 }

@@ -126,8 +126,8 @@ class EditTaskActivity : AppCompatActivity(), ComponentProvider<EditTaskComponen
         fragmentManager.findFragmentById(R.id.container)
     }
 
-    override fun finish() {
-        super.finish()
+    override fun goBack() {
+        fragmentManager.popBackStackImmediate()
     }
 
     private fun crop(origin: Uri, name: String, aspectRatio: Pair<Int, Int>, shape: CropImageView.CropShape = CropImageView.CropShape.RECTANGLE) {

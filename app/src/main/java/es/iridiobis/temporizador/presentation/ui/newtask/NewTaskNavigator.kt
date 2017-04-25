@@ -29,7 +29,7 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
         }
     }
 
-    override fun showInformationInput() {
+    override fun thumbnailSelected() {
         if (hasView()) {
             view!!.goToInformationInput()
         } else {

@@ -71,6 +71,14 @@ class EditTaskNavigator @Inject constructor() : Presenter<EditTask.NavigationExe
         }
     }
 
+    override fun thumbnailSelected() {
+        if (hasView()) {
+            view!!.goBack()
+        } else {
+            navigation = Runnable { view!!.goBack() }
+        }
+    }
+
     override fun finish() {
         if (hasView()) {
             view!!.finish()

@@ -19,4 +19,9 @@ interface Thumbnail {
         fun next()
     }
 
+    interface Navigator : ImagePicker {
+        fun cropForThumbnail(origin: Uri)
+        fun thumbnailSelected()
+    }
+
 }

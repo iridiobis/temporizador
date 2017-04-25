@@ -4,6 +4,7 @@ import android.net.Uri
 import es.iridiobis.presenter.Attachable
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.ui.images.ImagePicker
+import es.iridiobis.temporizador.presentation.ui.images.thumbnail.Thumbnail
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 
 
@@ -22,17 +23,17 @@ interface EditTask {
         fun image(image: Uri)
         fun thumbnail(thumbnail: Uri)
         fun save()
+        fun selectThumbnail()
         fun selectDuration()
     }
 
-    interface Navigator : Attachable<NavigationExecutor>, ImagePicker {
+    interface Navigator : Attachable<NavigationExecutor>, Thumbnail.Navigator {
         fun showBackgroundSelection()
         fun showImageSelection()
         fun showThumbnailSelection()
 
         fun cropBackground(origin: Uri)
         fun cropBackgroundForImage(background: Uri)
-        fun cropForThumbnail(origin: Uri)
 
         fun finish()
     }
@@ -47,6 +48,7 @@ interface EditTask {
         fun goToCropBackgroundForImage(background: Uri)
         fun goToCropForThumbnail(origin: Uri)
 
+        fun goBack()
         fun finish()
     }
 }

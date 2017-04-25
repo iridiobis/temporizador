@@ -47,6 +47,7 @@ class EditTaskFragment : Fragment(), EditTask.View, DurationDialogListener {
             }
 
         })
+        et_thumbnail.setOnClickListener { presenter.selectThumbnail() }
         et_duration.setOnClickListener{ presenter.selectDuration() }
         et_save.setOnClickListener { presenter.save() }
     }

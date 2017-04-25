@@ -3,10 +3,9 @@ package es.iridiobis.temporizador.presentation.ui.images.thumbnail
 import android.net.Uri
 import es.iridiobis.presenter.Presenter
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
-import es.iridiobis.temporizador.presentation.ui.newtask.NewTask
 import javax.inject.Inject
 
-class ThumbnailPresenter @Inject constructor(val task : TaskModel, val navigator: NewTask.Navigator)
+class ThumbnailPresenter @Inject constructor(val task : TaskModel, val navigator: Thumbnail.Navigator)
     : Presenter<Thumbnail.View>(), Thumbnail.Presenter {
 
     private var invalid = false
@@ -41,7 +40,7 @@ class ThumbnailPresenter @Inject constructor(val task : TaskModel, val navigator
     }
 
     override fun next() {
-        navigator.showInformationInput()
+        navigator.thumbnailSelected()
     }
 
 }

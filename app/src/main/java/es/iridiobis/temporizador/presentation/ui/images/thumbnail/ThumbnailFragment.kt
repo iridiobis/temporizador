@@ -15,7 +15,7 @@ import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.core.extensions.load
 import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.presentation.transformations.RoundTransformation
-import es.iridiobis.temporizador.presentation.ui.newtask.NewTaskComponent
+import es.iridiobis.temporizador.presentation.ui.images.ImagesComponent
 import kotlinx.android.synthetic.main.fragment_new_task_thumbnail.*
 import javax.inject.Inject
 
@@ -37,7 +37,7 @@ class ThumbnailFragment : Fragment(), Thumbnail.View {
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_new_task_thumbnail, container, false)
         DaggerThumbnailComponent.builder()
-                .newTaskComponent((activity as ComponentProvider<NewTaskComponent>).getComponent())
+                .imagesComponent((activity as ComponentProvider<ImagesComponent>).getComponent())
                 .build()
                 .injectMembers(this)
         return rootView
