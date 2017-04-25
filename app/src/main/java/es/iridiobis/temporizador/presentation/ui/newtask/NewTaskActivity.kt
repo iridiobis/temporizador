@@ -19,7 +19,6 @@ import es.iridiobis.temporizador.presentation.ui.newtask.information.Information
 import java.io.File
 import javax.inject.Inject
 
-
 class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>, NewTask.NavigationExecutor, DurationDialogListener {
 
     @Inject lateinit var navigator: NewTask.Navigator

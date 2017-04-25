@@ -1,126 +1,149 @@
 package es.iridiobis.temporizador.presentation.ui.edittask
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.Menu
-import android.view.MenuItem
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
-import es.iridiobis.kotlinexample.toast
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.Temporizador
-import es.iridiobis.temporizador.core.extensions.load
-import es.iridiobis.temporizador.core.extensions.setBackground
+import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.domain.model.Task
-import es.iridiobis.temporizador.presentation.dialogs.DurationDialogFragment
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
-import es.iridiobis.temporizador.presentation.transformations.RoundTransformation
+import es.iridiobis.temporizador.presentation.ui.images.background.BackgroundFragment
+import es.iridiobis.temporizador.presentation.ui.images.image.ImageFragment
+import es.iridiobis.temporizador.presentation.ui.images.thumbnail.ThumbnailFragment
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
-import kotlinx.android.synthetic.main.activity_edit_task.*
-import mobi.upod.timedurationpicker.TimeDurationUtil
+import java.io.File
 import javax.inject.Inject
 
-class EditTaskActivity : AppCompatActivity(), EditTask.View, DurationDialogListener {
+class EditTaskActivity : AppCompatActivity(), ComponentProvider<EditTaskComponent>, EditTask.NavigationExecutor, DurationDialogListener {
 
     companion object {
 
-        private val TASK_ID_EXTRA = "EditTaskActivity.TASK_ID_EXTRA"
+        private val TASK_MODEL_EXTRA = "EditTaskActivity.TASK_MODEL_EXTRA"
 
-        fun addTaskIntent(context: Context) : Intent {
-            return Intent(context, EditTaskActivity::class.java)
-        }
-
-        fun editTaskIntent(id : Long, context: Context) : Intent {
+        fun editTaskIntent(task: Task, context: Context): Intent {
             val intent = Intent(context, EditTaskActivity::class.java)
-            intent.putExtra(TASK_ID_EXTRA, id)
+            val model = TaskModel(task.id,
+                    task.name,
+                    task.duration,
+                    task.background,
+                    task.smallBackground,
+                    task.thumbnail)
+            intent.putExtra(TASK_MODEL_EXTRA, model)
             return intent
         }
     }
 
-    @Inject lateinit var  presenter: EditTask.Presenter
+    @Inject lateinit var navigator: EditTask.Navigator
+    private lateinit var component: EditTaskComponent
+    private var cropImage: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_task)
-        DaggerEditTaskComponent.builder()
-                .applicationComponent((application as Temporizador).getComponent())
-                .editTaskModule(EditTaskModule(intent.extras?.getLong(TASK_ID_EXTRA)))
-                .build()
-                .injectMembers(this)
-        write_task_name.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {}
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                text?.let { presenter.name(text.toString()) }
-            }
-
-        })
-        write_task_duration.setOnClickListener { DurationDialogFragment().show(fragmentManager, "") }
-        write_task_background.setOnClickListener { CropImage.startPickImageActivity(this) }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.attach(this)
-    }
-
-    override fun onPause() {
-        presenter.detach(this)
-        super.onPause()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_write_task, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.action_done) {
-            presenter.save()
-            return true
+        setContentView(R.layout.activity_container)
+        if (lastCustomNonConfigurationInstance == null) {
+            component = DaggerEditTaskComponent.builder()
+                    .applicationComponent((application as Temporizador).getComponent())
+                    .editTaskModule(EditTaskModule(intent.extras.getParcelable<TaskModel>(TASK_MODEL_EXTRA)))
+                    .build()
         } else {
-            return super.onOptionsItemSelected(item)
+            component = lastCustomNonConfigurationInstance as EditTaskComponent
+        }
+        component.injectMembers(this)
+        navigator.attach(this)
+        if (savedInstanceState == null) {
+            fragmentManager.beginTransaction().add(R.id.container, EditTaskFragment()).commit()
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE) {
-            val background = CropImage.getPickImageResultUri(this, data)
-            presenter.background(background)
-            CropImage.activity(background).setAspectRatio(2, 1).start(this)
-        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            val result = CropImage.getActivityResult(data)
-            if (resultCode == RESULT_OK) {
-                if (presenter.processCrop(result.uri))
-                    CropImage.activity(result.uri).setCropShape(CropImageView.CropShape.OVAL).setAspectRatio(1, 1).start(this)
+    override fun onDestroy() {
+        navigator.detach(this)
+        super.onDestroy()
+    }
 
+    override fun onRetainCustomNonConfigurationInstance(): Any = component
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        fragmentManager.findFragmentById(R.id.container).onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun getComponent(): EditTaskComponent = component
+
+    override fun goToBackgroundSelection() {
+        fragmentManager.beginTransaction()
+                .add(R.id.container, BackgroundFragment())
+                .addToBackStack(null)
+                .commit()
+    }
+
+    override fun goToImageSelection() {
+        fragmentManager.beginTransaction()
+                .add(R.id.container, ImageFragment())
+                .addToBackStack(null)
+                .commit()
+    }
+
+    override fun goToThumbnailSelection() {
+        fragmentManager.beginTransaction()
+                .add(R.id.container, ThumbnailFragment())
+                .addToBackStack(null)
+                .commit()
+    }
+
+    override fun goToImagePicker() {
+        CropImage.startPickImageActivity(this)
+    }
+
+    override fun goToCropBackground(origin: Uri) {
+        val metrics = resources.displayMetrics
+        crop(origin, "background.jpeg", Pair(metrics.widthPixels, metrics.heightPixels))
+    }
+
+    override fun goToCropBackgroundForImage(background: Uri) {
+        crop(background, "image.jpeg", Pair(2, 1))
+    }
+
+    override fun goToCropForThumbnail(origin: Uri) {
+        crop(origin, "thumbnail.jpeg", Pair(1, 1), CropImageView.CropShape.OVAL)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                cropImage?.run()
+                cropImage = null
             }
         }
     }
 
     override fun onTimeSet(duration: Long) {
-        presenter.duration(duration)
-        write_task_duration.setText(TimeDurationUtil.formatHoursMinutesSeconds(duration))
+        fragmentManager.findFragmentById(R.id.container)
     }
 
-    override fun displayTask(task: TaskModel) {
-        write_task_name.setText(task.name)
-        write_task_duration.setText(TimeDurationUtil.formatHoursMinutesSeconds(task.duration))
-        task.background?.let { activity_write_task.setBackground(task.background!!) { request -> request } }
-        task.smallBackground?.let { write_task_small_background.load(task.smallBackground!!) { request -> request } }
-        task.thumbnail?.let { write_task_thumbnail.load(task.thumbnail!!) { request -> request.transform(RoundTransformation()) } }
+    override fun finish() {
+        super.finish()
     }
 
-    override fun showErrorMessage() {
-        toast("Finish it")
+    private fun crop(origin: Uri, name: String, aspectRatio: Pair<Int, Int>, shape: CropImageView.CropShape = CropImageView.CropShape.RECTANGLE) {
+        val crop = Runnable {
+            CropImage.activity(origin)
+                    .setOutputUri(Uri.fromFile(File(externalCacheDir.path, name)))
+                    .setCropShape(shape)
+                    .setAspectRatio(aspectRatio.first, aspectRatio.second)
+                    .start(this)
+        }
+        if (CropImage.isReadExternalStoragePermissionsRequired(this, origin)) {
+            cropImage = crop
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE)
+        } else {
+            crop.run()
+        }
     }
-
-    override fun onTaskAdded(task: Task) = finish()
 
 }

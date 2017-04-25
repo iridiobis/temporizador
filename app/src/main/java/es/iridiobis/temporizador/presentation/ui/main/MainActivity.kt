@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(), Main.View {
 
     val tasksAdapter = TasksAdapter(
             { startTask(it) },
-            { startActivity(EditTaskActivity.editTaskIntent(it.id, this)) },
+            { startActivity(EditTaskActivity.editTaskIntent(it, this)) },
             { requestDeleteConfirmation(it) })
 
     override fun onCreate(savedInstanceState: Bundle?) {

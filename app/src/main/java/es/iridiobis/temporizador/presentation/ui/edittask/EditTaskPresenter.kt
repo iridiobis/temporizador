@@ -9,33 +9,22 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
-class EditTaskPresenter @Inject constructor(val id: Long?, val tasksRepository: TasksRepository) : Presenter<EditTask.View>(), EditTask.Presenter {
-
-    val task = TaskModel()
-
-    init {
-        id?.let {
-            tasksRepository.retrieveTask(id)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe({
-                        task.id = it!!.id
-                        task.name = it.name
-                        task.duration = it.duration
-                        task.background = it.background
-                        task.smallBackground = it.smallBackground
-                        task.thumbnail = it.thumbnail
-                        view?.displayTask(task)
-                    })
-        }
-    }
+class EditTaskPresenter @Inject constructor(
+        val task: TaskModel,
+        val tasksRepository: TasksRepository,
+        val navigator: EditTask.Navigator) : Presenter<EditTask.View>(), EditTask.Presenter {
 
     override fun name(name: String) {
         task.name = name
+        view?.enableSave(task.isValid())
     }
+
+    override fun selectDuration() = view!!.showDurationSelection(task.duration)
 
     override fun duration(duration: Long) {
         task.duration = duration
+        view?.displayTask(task)
+        view?.enableSave(task.isValid())
     }
 
     override fun save() {
@@ -44,7 +33,7 @@ class EditTaskPresenter @Inject constructor(val id: Long?, val tasksRepository: 
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        view?.onTaskAdded(it)
+                        navigator.finish()
                     })
         } else {
             view?.showErrorMessage()
@@ -53,21 +42,16 @@ class EditTaskPresenter @Inject constructor(val id: Long?, val tasksRepository: 
 
     override fun background(background: Uri) {
         task.background = background
-        task.smallBackground = null
-        task.thumbnail = null
     }
 
-    override fun processCrop(cropImage: Uri) : Boolean {
-        task.smallBackground?.let {
-            task.thumbnail = cropImage
-            return false
-        } ?: let {
-            task.smallBackground = cropImage
-            return true
-        }
+    override fun image(image: Uri) {
+        task.smallBackground = image
     }
 
-    override fun onViewAttached() {
-        view?.displayTask(task)
+    override fun thumbnail(thumbnail: Uri) {
+        task.thumbnail = thumbnail
     }
+
+    override fun onViewAttached() = view!!.displayTask(task)
+
 }

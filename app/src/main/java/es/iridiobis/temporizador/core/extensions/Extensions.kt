@@ -1,4 +1,4 @@
-package es.iridiobis.kotlinexample
+package es.iridiobis.temporizador.core.extensions
 
 import android.app.Activity
 import android.content.Context
