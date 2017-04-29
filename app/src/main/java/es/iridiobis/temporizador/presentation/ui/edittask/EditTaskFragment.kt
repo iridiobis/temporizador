@@ -51,6 +51,7 @@ class EditTaskFragment : Fragment(), EditTask.View, DurationDialogFragment.Durat
 
         })
         et_thumbnail.setOnClickListener { presenter.selectThumbnail() }
+        et_image.setOnClickListener { presenter.selectImage() }
         et_duration.setOnClickListener { presenter.selectDuration() }
         et_edit_background.setOnClickListener { presenter.selectBackground() }
     }

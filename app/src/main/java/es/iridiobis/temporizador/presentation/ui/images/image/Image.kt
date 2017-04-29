@@ -9,9 +9,10 @@ interface Image {
     interface View {
         fun showBackground(background: Uri)
         fun showImage(image: Uri, invalid : Boolean)
+        fun showError(message : String)
     }
 
-    interface Presenter : Attachable<View> {
+    interface Presenter : Attachable<View>, ImagePicker {
         fun image(image: Uri)
         fun cropBackground()
         fun cropBackground(origin : Uri)

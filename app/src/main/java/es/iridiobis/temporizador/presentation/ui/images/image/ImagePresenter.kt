@@ -2,10 +2,15 @@ package es.iridiobis.temporizador.presentation.ui.images.image
 
 import android.net.Uri
 import es.iridiobis.presenter.Presenter
+import es.iridiobis.temporizador.R
+import es.iridiobis.temporizador.domain.repositories.StringsRepository
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 import javax.inject.Inject
 
-class ImagePresenter @Inject constructor(val task : TaskModel, val navigator: Image.Navigator)
+class ImagePresenter @Inject constructor(
+        val task : TaskModel,
+        val navigator: Image.Navigator,
+        val stringsRepository: StringsRepository)
     : Presenter<Image.View>(), Image.Presenter {
 
     private var invalid = false
@@ -27,6 +32,10 @@ class ImagePresenter @Inject constructor(val task : TaskModel, val navigator: Im
         }
     }
 
+    override fun pickImage() {
+        navigator.pickImage()
+    }
+
     override fun cropBackground() {
         cropBackground(task.background!!)
     }
@@ -36,7 +45,11 @@ class ImagePresenter @Inject constructor(val task : TaskModel, val navigator: Im
     }
 
     override fun next() {
-        navigator.imageSelected()
+        if (task.smallBackground == null) {
+            view?.showError(stringsRepository.getString(R.string.image_mandatory))
+        } else {
+            navigator.imageSelected()
+        }
     }
 
 }

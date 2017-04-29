@@ -25,6 +25,7 @@ interface EditTask {
         fun thumbnail(thumbnail: Uri)
         fun save()
         fun selectBackground()
+        fun selectImage()
         fun selectThumbnail()
         fun selectDuration()
     }

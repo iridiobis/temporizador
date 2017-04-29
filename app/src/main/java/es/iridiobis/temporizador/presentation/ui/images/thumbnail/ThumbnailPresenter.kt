@@ -47,8 +47,9 @@ class ThumbnailPresenter @Inject constructor(
     override fun next() {
         if (task.thumbnail == null) {
             view?.showError(stringsRepository.getString(R.string.image_mandatory))
+        } else {
+            navigator.thumbnailSelected()
         }
-        navigator.thumbnailSelected()
     }
 
 }

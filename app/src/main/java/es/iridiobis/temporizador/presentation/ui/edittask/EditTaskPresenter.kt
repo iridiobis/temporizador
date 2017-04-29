@@ -49,6 +49,10 @@ class EditTaskPresenter @Inject constructor(
         task.smallBackground = image
     }
 
+    override fun selectImage() {
+        navigator.showImageSelection()
+    }
+
     override fun thumbnail(thumbnail: Uri) {
         task.thumbnail = thumbnail
     }
