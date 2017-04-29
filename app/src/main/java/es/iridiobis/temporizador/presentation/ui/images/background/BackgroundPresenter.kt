@@ -2,10 +2,15 @@ package es.iridiobis.temporizador.presentation.ui.images.background
 
 import android.net.Uri
 import es.iridiobis.presenter.Presenter
+import es.iridiobis.temporizador.R
+import es.iridiobis.temporizador.domain.repositories.StringsRepository
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 import javax.inject.Inject
 
-class BackgroundPresenter @Inject constructor(val task : TaskModel, val navigator: Background.Navigator)
+class BackgroundPresenter @Inject constructor(
+        val task : TaskModel,
+        val navigator: Background.Navigator,
+        val stringsRepository: StringsRepository)
     : Presenter<Background.View>(), Background.Presenter {
 
     var invalid = false
@@ -35,7 +40,11 @@ class BackgroundPresenter @Inject constructor(val task : TaskModel, val navigato
     }
 
     override fun next() {
-        navigator.backgroundSelected()
+        if (task.background == null) {
+            view?.showError(stringsRepository.getString(R.string.background_mandatory))
+        } else {
+            navigator.backgroundSelected()
+        }
     }
 
 }

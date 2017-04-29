@@ -12,6 +12,7 @@ import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.core.extensions.consume
 import es.iridiobis.temporizador.core.extensions.setBackground
+import es.iridiobis.temporizador.core.extensions.toast
 import es.iridiobis.temporizador.presentation.ui.images.ImagesComponent
 import kotlinx.android.synthetic.main.fragment_new_task_background.*
 import javax.inject.Inject
@@ -73,5 +74,7 @@ class BackgroundFragment : Fragment(), Background.View {
         ntb_background.setBackground(background, invalid) { request -> request }
         ntb_description.visibility = GONE
     }
+
+    override fun showError(message: String) = context.toast(message)
 
 }

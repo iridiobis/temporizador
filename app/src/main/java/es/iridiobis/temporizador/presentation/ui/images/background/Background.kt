@@ -8,6 +8,7 @@ interface Background {
 
     interface View {
         fun showBackground(background: Uri, invalid : Boolean)
+        fun showError(message : String)
     }
 
     interface Presenter : Attachable<View>, ImagePicker {
