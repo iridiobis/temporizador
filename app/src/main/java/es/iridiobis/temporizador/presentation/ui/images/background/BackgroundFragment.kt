@@ -5,13 +5,12 @@ import android.app.Fragment
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
 import android.view.View.GONE
-import android.view.ViewGroup
 import com.theartofdev.edmodo.cropper.CropImage
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.di.ComponentProvider
+import es.iridiobis.temporizador.core.extensions.consume
 import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.presentation.ui.images.ImagesComponent
 import kotlinx.android.synthetic.main.fragment_new_task_background.*
@@ -20,6 +19,11 @@ import javax.inject.Inject
 class BackgroundFragment : Fragment(), Background.View {
 
     @Inject lateinit var presenter: Background.Presenter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -31,10 +35,16 @@ class BackgroundFragment : Fragment(), Background.View {
         return rootView
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        ntb_select_background.setOnClickListener { presenter.pickImage() }
-        ntb_continue.setOnClickListener { presenter.next() }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu.clear()
+        inflater.inflate(R.menu.menu_background_selection, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.bs_action_done -> consume { presenter.next() }
+        R.id.bs_action_select -> consume { presenter.pickImage() }
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -61,7 +71,6 @@ class BackgroundFragment : Fragment(), Background.View {
 
     override fun showBackground(background: Uri, invalid : Boolean) {
         ntb_background.setBackground(background, invalid) { request -> request }
-        ntb_continue.isEnabled = true
         ntb_description.visibility = GONE
     }
 
