@@ -5,6 +5,7 @@ import dagger.BindsInstance
 import dagger.Component
 import es.iridiobis.temporizador.core.alarm.AlarmReceiver
 import es.iridiobis.temporizador.data.DataModule
+import es.iridiobis.temporizador.domain.repositories.StringsRepository
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import es.iridiobis.temporizador.domain.services.TaskService
 import es.iridiobis.temporizador.presentation.services.AlarmMediaService
@@ -22,8 +23,9 @@ interface ApplicationComponent {
     fun inject(alarmReceiver: AlarmReceiver)
     fun inject(splashActivity: SplashActivity)
 
-    fun tasksRepository() : TasksRepository
-    fun taskService() : TaskService
+    fun provideTasksRepository() : TasksRepository
+    fun provideTaskService() : TaskService
+    fun provideStringsRepository() : StringsRepository
 
     @Component.Builder
     interface Builder {
