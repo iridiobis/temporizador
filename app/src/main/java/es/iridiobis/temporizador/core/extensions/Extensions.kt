@@ -58,3 +58,8 @@ inline fun <reified T : Activity> Context.startActivity2(vararg params: Pair<Str
     startActivity(intent)
 }
 
+inline fun consume(f: () -> Unit): Boolean {
+    f()
+    return true
+}
+

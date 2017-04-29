@@ -11,7 +11,6 @@ import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 interface EditTask {
     interface View {
         fun displayTask(task: TaskModel)
-        fun enableSave(enabled : Boolean)
         fun showErrorMessage()
         fun showDurationSelection(duration: Long)
     }

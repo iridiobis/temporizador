@@ -8,7 +8,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-
 class EditTaskPresenter @Inject constructor(
         val task: TaskModel,
         val tasksRepository: TasksRepository,
@@ -16,7 +15,6 @@ class EditTaskPresenter @Inject constructor(
 
     override fun name(name: String) {
         task.name = name
-        view?.enableSave(task.isValid())
     }
 
     override fun selectDuration() = view!!.showDurationSelection(task.duration)
@@ -24,7 +22,6 @@ class EditTaskPresenter @Inject constructor(
     override fun duration(duration: Long) {
         task.duration = duration
         view?.displayTask(task)
-        view?.enableSave(task.isValid())
     }
 
     override fun save() {

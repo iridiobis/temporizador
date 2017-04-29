@@ -4,11 +4,10 @@ import android.app.Fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.di.ComponentProvider
+import es.iridiobis.temporizador.core.extensions.consume
 import es.iridiobis.temporizador.core.extensions.load
 import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.core.extensions.toast
@@ -24,6 +23,11 @@ class EditTaskFragment : Fragment(), EditTask.View, DurationDialogListener {
 
 
     @Inject lateinit var presenter: EditTask.Presenter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -48,8 +52,17 @@ class EditTaskFragment : Fragment(), EditTask.View, DurationDialogListener {
 
         })
         et_thumbnail.setOnClickListener { presenter.selectThumbnail() }
-        et_duration.setOnClickListener{ presenter.selectDuration() }
-        et_save.setOnClickListener { presenter.save() }
+        et_duration.setOnClickListener { presenter.selectDuration() }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_write_task, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_done -> consume { presenter.save() }
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun displayTask(task: TaskModel) {
@@ -62,7 +75,6 @@ class EditTaskFragment : Fragment(), EditTask.View, DurationDialogListener {
 
     override fun showErrorMessage() = context.toast("finish it!")
 
-
     override fun showDurationSelection(duration: Long) {
         val dialog = DurationDialogFragment(duration)
         dialog.setTargetFragment(this, 0)
@@ -72,10 +84,6 @@ class EditTaskFragment : Fragment(), EditTask.View, DurationDialogListener {
     override fun onTimeSet(duration: Long) {
         presenter.duration(duration)
         et_duration.setText(TimeDurationUtil.formatHoursMinutesSeconds(duration))
-    }
-
-    override fun enableSave(enabled: Boolean) {
-        et_save.isEnabled = enabled
     }
 
     override fun onResume() {
