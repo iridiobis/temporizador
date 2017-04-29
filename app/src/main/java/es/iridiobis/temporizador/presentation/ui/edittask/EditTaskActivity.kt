@@ -100,12 +100,12 @@ class EditTaskActivity : AppCompatActivity(), ComponentProvider<EditTaskComponen
         CropImage.startPickImageActivity(this)
     }
 
-    override fun goToCropBackground(origin: Uri) {
+    override fun goToCropForBackground(origin: Uri) {
         crop(origin, "background.jpeg", Pair(container.width, container.height ))
     }
 
-    override fun goToCropBackgroundForImage(background: Uri) {
-        crop(background, "image.jpeg", Pair(2, 1))
+    override fun goToCropForImage(origin: Uri) {
+        crop(origin, "image.jpeg", Pair(2, 1))
     }
 
     override fun goToCropForThumbnail(origin: Uri) {

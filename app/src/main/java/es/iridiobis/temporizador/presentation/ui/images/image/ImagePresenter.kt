@@ -3,10 +3,9 @@ package es.iridiobis.temporizador.presentation.ui.images.image
 import android.net.Uri
 import es.iridiobis.presenter.Presenter
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
-import es.iridiobis.temporizador.presentation.ui.newtask.NewTask
 import javax.inject.Inject
 
-class ImagePresenter @Inject constructor(val task : TaskModel, val navigator: NewTask.Navigator)
+class ImagePresenter @Inject constructor(val task : TaskModel, val navigator: Image.Navigator)
     : Presenter<Image.View>(), Image.Presenter {
 
     private var invalid = false
@@ -33,11 +32,11 @@ class ImagePresenter @Inject constructor(val task : TaskModel, val navigator: Ne
     }
 
     override fun cropBackground(origin: Uri) {
-        navigator.cropBackgroundForImage(origin)
+        navigator.cropForImage(origin)
     }
 
     override fun next() {
-        navigator.showThumbnailSelection()
+        navigator.imageSelected()
     }
 
 }

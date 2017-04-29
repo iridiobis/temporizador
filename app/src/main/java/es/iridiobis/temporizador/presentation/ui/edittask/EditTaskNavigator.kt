@@ -49,9 +49,9 @@ class EditTaskNavigator @Inject constructor() : Presenter<EditTask.NavigationExe
 
     override fun cropForBackground(origin: Uri) {
         if (hasView()) {
-            view!!.goToCropBackground(origin)
+            view!!.goToCropForBackground(origin)
         } else {
-            navigation = Runnable { view!!.goToCropBackground(origin) }
+            navigation = Runnable { view!!.goToCropForBackground(origin) }
         }
     }
 
@@ -63,11 +63,19 @@ class EditTaskNavigator @Inject constructor() : Presenter<EditTask.NavigationExe
         }
     }
 
-    override fun cropBackgroundForImage(background: Uri) {
+    override fun cropForImage(origin: Uri) {
         if (hasView()) {
-            view!!.goToCropBackgroundForImage(background)
+            view!!.goToCropForImage(origin)
         } else {
-            navigation = Runnable { view!!.goToCropBackgroundForImage(background) }
+            navigation = Runnable { view!!.goToCropForImage(origin) }
+        }
+    }
+
+    override fun imageSelected() {
+        if (hasView()) {
+            view!!.goBack()
+        } else {
+            navigation = Runnable { view!!.goBack() }
         }
     }
 

@@ -5,6 +5,7 @@ import es.iridiobis.presenter.Attachable
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.ui.images.ImagePicker
 import es.iridiobis.temporizador.presentation.ui.images.background.Background
+import es.iridiobis.temporizador.presentation.ui.images.image.Image
 import es.iridiobis.temporizador.presentation.ui.images.thumbnail.Thumbnail
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 
@@ -28,13 +29,10 @@ interface EditTask {
         fun selectDuration()
     }
 
-    interface Navigator : Attachable<NavigationExecutor>, Background.Navigator, Thumbnail.Navigator {
+    interface Navigator : Attachable<NavigationExecutor>, Background.Navigator, Image.Navigator, Thumbnail.Navigator {
         fun showBackgroundSelection()
         fun showImageSelection()
         fun showThumbnailSelection()
-
-        fun cropBackgroundForImage(background: Uri)
-
         fun finish()
     }
 
@@ -44,8 +42,8 @@ interface EditTask {
         fun goToThumbnailSelection()
 
         fun goToImagePicker()
-        fun goToCropBackground(origin: Uri)
-        fun goToCropBackgroundForImage(background: Uri)
+        fun goToCropForBackground(origin: Uri)
+        fun goToCropForImage(origin: Uri)
         fun goToCropForThumbnail(origin: Uri)
 
         fun goBack()

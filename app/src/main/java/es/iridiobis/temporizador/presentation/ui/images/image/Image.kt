@@ -2,7 +2,7 @@ package es.iridiobis.temporizador.presentation.ui.images.image
 
 import android.net.Uri
 import es.iridiobis.presenter.Attachable
-
+import es.iridiobis.temporizador.presentation.ui.images.ImagePicker
 
 interface Image {
 
@@ -16,6 +16,11 @@ interface Image {
         fun cropBackground()
         fun cropBackground(origin : Uri)
         fun next()
+    }
+
+    interface Navigator : ImagePicker {
+        fun cropForImage(origin: Uri)
+        fun imageSelected()
     }
 
 }

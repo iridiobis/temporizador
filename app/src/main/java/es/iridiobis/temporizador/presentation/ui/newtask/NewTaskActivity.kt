@@ -85,8 +85,8 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
         crop(origin, "background.jpeg", Pair(container.width, container.height ))
     }
 
-    override fun goToCropBackgroundForImage(background: Uri) {
-        crop(background, "image.jpeg", Pair(2, 1))
+    override fun goToCropForImage(origin: Uri) {
+        crop(origin, "image.jpeg", Pair(2, 1))
     }
 
     override fun goToCropForThumbnail(origin: Uri) {

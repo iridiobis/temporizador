@@ -53,11 +53,19 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
         }
     }
 
-    override fun cropBackgroundForImage(background: Uri) {
+    override fun cropForImage(origin: Uri) {
         if (hasView()) {
-            view!!.goToCropBackgroundForImage(background)
+            view!!.goToCropForImage(origin)
         } else {
-            navigation = Runnable { view!!.goToCropBackgroundForImage(background) }
+            navigation = Runnable { view!!.goToCropForImage(origin) }
+        }
+    }
+
+    override fun imageSelected() {
+        if (hasView()) {
+            view!!.goToThumbnailSelection()
+        } else {
+            navigation = Runnable { view!!.goToThumbnailSelection() }
         }
     }
 
