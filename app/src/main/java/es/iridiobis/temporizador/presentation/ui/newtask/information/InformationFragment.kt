@@ -12,7 +12,6 @@ import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.core.extensions.load
 import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogFragment
-import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
 import es.iridiobis.temporizador.presentation.transformations.RoundTransformation
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 import es.iridiobis.temporizador.presentation.ui.newtask.NewTaskComponent
@@ -21,7 +20,7 @@ import mobi.upod.timedurationpicker.TimeDurationUtil
 import javax.inject.Inject
 
 
-class InformationFragment : Fragment(), Information.View, DurationDialogListener {
+class InformationFragment : Fragment(), Information.View, DurationDialogFragment.DurationDialogListener {
 
     @Inject lateinit var presenter: Information.Presenter
 

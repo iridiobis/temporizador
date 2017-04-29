@@ -13,7 +13,6 @@ import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.domain.model.Task
-import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
 import es.iridiobis.temporizador.presentation.ui.images.background.BackgroundFragment
 import es.iridiobis.temporizador.presentation.ui.images.image.ImageFragment
 import es.iridiobis.temporizador.presentation.ui.images.thumbnail.ThumbnailFragment
@@ -22,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_container.*
 import java.io.File
 import javax.inject.Inject
 
-class EditTaskActivity : AppCompatActivity(), ComponentProvider<EditTaskComponent>, EditTask.NavigationExecutor, DurationDialogListener {
+class EditTaskActivity : AppCompatActivity(), ComponentProvider<EditTaskComponent>, EditTask.NavigationExecutor {
 
     companion object {
 
@@ -120,10 +119,6 @@ class EditTaskActivity : AppCompatActivity(), ComponentProvider<EditTaskComponen
                 cropImage = null
             }
         }
-    }
-
-    override fun onTimeSet(duration: Long) {
-        fragmentManager.findFragmentById(R.id.container)
     }
 
     override fun goBack() {

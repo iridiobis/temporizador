@@ -12,14 +12,13 @@ import es.iridiobis.temporizador.core.extensions.load
 import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.core.extensions.toast
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogFragment
-import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
 import es.iridiobis.temporizador.presentation.transformations.RoundTransformation
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 import kotlinx.android.synthetic.main.fragment_edit_task.*
 import mobi.upod.timedurationpicker.TimeDurationUtil
 import javax.inject.Inject
 
-class EditTaskFragment : Fragment(), EditTask.View, DurationDialogListener {
+class EditTaskFragment : Fragment(), EditTask.View, DurationDialogFragment.DurationDialogListener {
 
 
     @Inject lateinit var presenter: EditTask.Presenter

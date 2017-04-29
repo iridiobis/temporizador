@@ -11,7 +11,6 @@ import com.theartofdev.edmodo.cropper.CropImageView
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.di.ComponentProvider
-import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
 import es.iridiobis.temporizador.presentation.ui.images.background.BackgroundFragment
 import es.iridiobis.temporizador.presentation.ui.images.image.ImageFragment
 import es.iridiobis.temporizador.presentation.ui.images.thumbnail.ThumbnailFragment
@@ -20,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_container.*
 import java.io.File
 import javax.inject.Inject
 
-class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>, NewTask.NavigationExecutor, DurationDialogListener {
+class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>, NewTask.NavigationExecutor {
 
     @Inject lateinit var navigator: NewTask.Navigator
 
@@ -101,10 +100,6 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
                 cropImage = null
             }
         }
-    }
-
-    override fun onTimeSet(duration: Long) {
-        fragmentManager.findFragmentById(R.id.container)
     }
 
     private fun crop(origin: Uri, name: String, aspectRatio: Pair<Int, Int>, shape: CropImageView.CropShape = CropImageView.CropShape.RECTANGLE) {
