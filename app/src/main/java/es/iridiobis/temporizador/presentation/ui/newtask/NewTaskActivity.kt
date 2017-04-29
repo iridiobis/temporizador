@@ -16,6 +16,7 @@ import es.iridiobis.temporizador.presentation.ui.images.background.BackgroundFra
 import es.iridiobis.temporizador.presentation.ui.images.image.ImageFragment
 import es.iridiobis.temporizador.presentation.ui.images.thumbnail.ThumbnailFragment
 import es.iridiobis.temporizador.presentation.ui.newtask.information.InformationFragment
+import kotlinx.android.synthetic.main.activity_container.*
 import java.io.File
 import javax.inject.Inject
 
@@ -82,8 +83,7 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
     }
 
     override fun goToCropBackground(origin: Uri) {
-        val metrics = resources.displayMetrics
-        crop(origin, "background.jpeg", Pair(metrics.widthPixels, metrics.heightPixels))
+        crop(origin, "background.jpeg", Pair(container.width, container.height ))
     }
 
     override fun goToCropBackgroundForImage(background: Uri) {
