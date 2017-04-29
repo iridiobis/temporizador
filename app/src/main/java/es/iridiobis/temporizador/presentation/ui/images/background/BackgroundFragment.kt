@@ -13,7 +13,7 @@ import com.theartofdev.edmodo.cropper.CropImage
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.di.ComponentProvider
 import es.iridiobis.temporizador.core.extensions.setBackground
-import es.iridiobis.temporizador.presentation.ui.newtask.NewTaskComponent
+import es.iridiobis.temporizador.presentation.ui.images.ImagesComponent
 import kotlinx.android.synthetic.main.fragment_new_task_background.*
 import javax.inject.Inject
 
@@ -25,7 +25,7 @@ class BackgroundFragment : Fragment(), Background.View {
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_new_task_background, container, false)
         DaggerBackgroundComponent.builder()
-                .newTaskComponent((activity as ComponentProvider<NewTaskComponent>).getComponent())
+                .imagesComponent((activity as ComponentProvider<ImagesComponent>).getComponent())
                 .build()
                 .injectMembers(this)
         return rootView

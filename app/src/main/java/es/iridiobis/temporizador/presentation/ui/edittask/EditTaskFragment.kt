@@ -53,6 +53,7 @@ class EditTaskFragment : Fragment(), EditTask.View, DurationDialogListener {
         })
         et_thumbnail.setOnClickListener { presenter.selectThumbnail() }
         et_duration.setOnClickListener { presenter.selectDuration() }
+        et_edit_background.setOnClickListener { presenter.selectBackground() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

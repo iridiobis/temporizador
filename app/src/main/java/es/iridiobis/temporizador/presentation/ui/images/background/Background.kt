@@ -16,4 +16,9 @@ interface Background {
         fun cropBackground(origin: Uri)
     }
 
+    interface Navigator : ImagePicker {
+        fun cropForBackground(origin: Uri)
+        fun backgroundSelected()
+    }
+
 }

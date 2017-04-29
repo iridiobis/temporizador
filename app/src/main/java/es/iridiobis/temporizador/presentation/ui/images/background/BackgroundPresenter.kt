@@ -3,10 +3,9 @@ package es.iridiobis.temporizador.presentation.ui.images.background
 import android.net.Uri
 import es.iridiobis.presenter.Presenter
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
-import es.iridiobis.temporizador.presentation.ui.newtask.NewTask
 import javax.inject.Inject
 
-class BackgroundPresenter @Inject constructor(val task : TaskModel, val navigator: NewTask.Navigator)
+class BackgroundPresenter @Inject constructor(val task : TaskModel, val navigator: Background.Navigator)
     : Presenter<Background.View>(), Background.Presenter {
 
     var invalid = false
@@ -23,7 +22,7 @@ class BackgroundPresenter @Inject constructor(val task : TaskModel, val navigato
     }
 
     override fun cropBackground(origin: Uri) {
-        navigator.cropBackground(origin)
+        navigator.cropForBackground(origin)
     }
 
     override fun background(background: Uri) {
@@ -36,7 +35,7 @@ class BackgroundPresenter @Inject constructor(val task : TaskModel, val navigato
     }
 
     override fun next() {
-        navigator.showImageSelection()
+        navigator.backgroundSelected()
     }
 
 }

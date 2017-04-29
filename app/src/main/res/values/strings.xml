@@ -23,4 +23,5 @@
     <string name="crop_background">Crop background</string>
     <string name="thumbnail_description">And now the last image, the thumbnail. It will be used in notifications and in other features to come.</string>
     <string name="save">Save</string>
+    <string name="modify_background">Modify background</string>
 </resources>

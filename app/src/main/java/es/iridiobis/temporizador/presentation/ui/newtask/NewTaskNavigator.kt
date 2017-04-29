@@ -29,14 +29,6 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
         }
     }
 
-    override fun thumbnailSelected() {
-        if (hasView()) {
-            view!!.goToInformationInput()
-        } else {
-            navigation = Runnable { view!!.goToInformationInput() }
-        }
-    }
-
     override fun pickImage() {
         if (hasView()) {
             view!!.goToImagePicker()
@@ -45,11 +37,19 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
         }
     }
 
-    override fun cropBackground(origin: Uri) {
+    override fun cropForBackground(origin: Uri) {
         if (hasView()) {
             view!!.goToCropBackground(origin)
         } else {
             navigation = Runnable { view!!.goToCropBackground(origin) }
+        }
+    }
+
+    override fun backgroundSelected() {
+        if (hasView()) {
+            view!!.goToImageSelection()
+        } else {
+            navigation = Runnable { view!!.goToImageSelection() }
         }
     }
 
@@ -66,6 +66,14 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
             view!!.goToCropForThumbnail(origin)
         } else {
             navigation = Runnable { view!!.goToCropForThumbnail(origin) }
+        }
+    }
+
+    override fun thumbnailSelected() {
+        if (hasView()) {
+            view!!.goToInformationInput()
+        } else {
+            navigation = Runnable { view!!.goToInformationInput() }
         }
     }
 

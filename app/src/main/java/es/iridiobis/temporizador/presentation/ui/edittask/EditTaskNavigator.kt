@@ -47,11 +47,19 @@ class EditTaskNavigator @Inject constructor() : Presenter<EditTask.NavigationExe
         }
     }
 
-    override fun cropBackground(origin: Uri) {
+    override fun cropForBackground(origin: Uri) {
         if (hasView()) {
             view!!.goToCropBackground(origin)
         } else {
             navigation = Runnable { view!!.goToCropBackground(origin) }
+        }
+    }
+
+    override fun backgroundSelected() {
+        if (hasView()) {
+            view!!.goBack()
+        } else {
+            navigation = Runnable { view!!.goBack() }
         }
     }
 
