@@ -41,7 +41,7 @@ class BackgroundPresenter @Inject constructor(
 
     override fun next() {
         if (task.background == null) {
-            view?.showError(stringsRepository.getString(R.string.background_mandatory))
+            view?.showError(stringsRepository.getString(R.string.image_mandatory))
         } else {
             navigator.backgroundSelected()
         }

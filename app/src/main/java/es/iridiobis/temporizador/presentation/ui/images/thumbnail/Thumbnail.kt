@@ -9,6 +9,7 @@ interface Thumbnail {
     interface View {
         fun showBackground(background: Uri)
         fun showThumbnail(thumbnail: Uri, invalid: Boolean)
+        fun showError(message : String)
     }
 
     interface Presenter : Attachable<View>, ImagePicker {
