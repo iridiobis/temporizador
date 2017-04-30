@@ -16,12 +16,10 @@ class InformationPresenter @Inject constructor(
 
     override fun onViewAttached() {
         view?.displayTask(task)
-        view?.enableSave(task.isValid())
     }
 
     override fun name(name: String) {
         task.name = name
-        view?.enableSave(task.isValid())
     }
 
     override fun selectDuration() {
@@ -30,16 +28,19 @@ class InformationPresenter @Inject constructor(
 
     override fun duration(duration: Long) {
         task.duration = duration
-        view?.enableSave(task.isValid())
     }
 
     override fun save() {
-        tasksRepository.writeTask(task.id, task.name!!, task.duration, task.background!!, task.smallBackground!!, task.thumbnail!!)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    navigator.finish()
-                })
+        if (task.isValid()) {
+            tasksRepository.writeTask(task.id, task.name!!, task.duration, task.background!!, task.smallBackground!!, task.thumbnail!!)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        navigator.finish()
+                    })
+        } else {
+            view?.showErrorMessage()
+        }
     }
 
 }

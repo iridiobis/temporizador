@@ -58,21 +58,21 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
 
     override fun goToImageSelection() {
         fragmentManager.beginTransaction()
-                .add(R.id.container, ImageFragment())
+                .replace(R.id.container, ImageFragment())
                 .addToBackStack(null)
                 .commit()
     }
 
     override fun goToThumbnailSelection() {
         fragmentManager.beginTransaction()
-                .add(R.id.container, ThumbnailFragment())
+                .replace(R.id.container, ThumbnailFragment())
                 .addToBackStack(null)
                 .commit()
     }
 
     override fun goToInformationInput() {
         fragmentManager.beginTransaction()
-                .add(R.id.container, InformationFragment())
+                .replace(R.id.container, InformationFragment())
                 .addToBackStack(null)
                 .commit()
     }

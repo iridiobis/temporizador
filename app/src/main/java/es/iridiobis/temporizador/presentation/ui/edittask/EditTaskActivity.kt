@@ -77,21 +77,21 @@ class EditTaskActivity : AppCompatActivity(), ComponentProvider<EditTaskComponen
 
     override fun goToBackgroundSelection() {
         fragmentManager.beginTransaction()
-                .add(R.id.container, BackgroundFragment())
+                .replace(R.id.container, BackgroundFragment())
                 .addToBackStack(null)
                 .commit()
     }
 
     override fun goToImageSelection() {
         fragmentManager.beginTransaction()
-                .add(R.id.container, ImageFragment())
+                .replace(R.id.container, ImageFragment())
                 .addToBackStack(null)
                 .commit()
     }
 
     override fun goToThumbnailSelection() {
         fragmentManager.beginTransaction()
-                .add(R.id.container, ThumbnailFragment())
+                .replace(R.id.container, ThumbnailFragment())
                 .addToBackStack(null)
                 .commit()
     }

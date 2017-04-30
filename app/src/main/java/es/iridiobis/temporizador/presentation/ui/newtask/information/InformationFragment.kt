@@ -4,13 +4,13 @@ import android.app.Fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.di.ComponentProvider
+import es.iridiobis.temporizador.core.extensions.consume
 import es.iridiobis.temporizador.core.extensions.load
 import es.iridiobis.temporizador.core.extensions.setBackground
+import es.iridiobis.temporizador.core.extensions.toast
 import es.iridiobis.temporizador.presentation.dialogs.DurationDialogFragment
 import es.iridiobis.temporizador.presentation.transformations.RoundTransformation
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
@@ -23,6 +23,11 @@ import javax.inject.Inject
 class InformationFragment : Fragment(), Information.View, DurationDialogFragment.DurationDialogListener {
 
     @Inject lateinit var presenter: Information.Presenter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -47,7 +52,16 @@ class InformationFragment : Fragment(), Information.View, DurationDialogFragment
 
         })
         nt_info_duration.setOnClickListener{ presenter.selectDuration() }
-        nt_info_save.setOnClickListener { presenter.save() }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_write_task, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_done -> consume { presenter.save() }
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onResume() {
@@ -74,13 +88,11 @@ class InformationFragment : Fragment(), Information.View, DurationDialogFragment
         dialog.show(fragmentManager, "")
     }
 
-    override fun enableSave(enabled: Boolean) {
-        nt_info_save.isEnabled = enabled
-    }
-
     override fun onTimeSet(duration: Long) {
         presenter.duration(duration)
         nt_info_duration.setText(TimeDurationUtil.formatHoursMinutesSeconds(duration))
     }
+
+    override fun showErrorMessage() = context.toast("finish it!")
 
 }
