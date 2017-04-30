@@ -1,16 +1,26 @@
-package es.iridiobis.temporizador.presentation.ui.newtask
+package es.iridiobis.temporizador.presentation.ui.edittask
 
 import android.net.Uri
 import es.iridiobis.presenter.Presenter
+import es.iridiobis.temporizador.core.di.ActivityScope
 import javax.inject.Inject
 
-class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecutor>(), NewTask.Navigator {
+@ActivityScope
+class EditTaskNavigator @Inject constructor() : Presenter<EditTask.NavigationExecutor>(), EditTask.Navigator {
 
     var navigation : Runnable? = null
 
     override fun onViewAttached() {
         navigation?.run()
         navigation = null
+    }
+
+    override fun showBackgroundSelection() {
+        if (hasView()) {
+            view!!.goToBackgroundSelection()
+        } else {
+            navigation = Runnable { view!!.goToBackgroundSelection() }
+        }
     }
 
     override fun showImageSelection() {
@@ -39,17 +49,17 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
 
     override fun cropForBackground(origin: Uri) {
         if (hasView()) {
-            view!!.goToCropBackground(origin)
+            view!!.goToCropForBackground(origin)
         } else {
-            navigation = Runnable { view!!.goToCropBackground(origin) }
+            navigation = Runnable { view!!.goToCropForBackground(origin) }
         }
     }
 
     override fun backgroundSelected() {
         if (hasView()) {
-            view!!.goToImageSelection()
+            view!!.goBack()
         } else {
-            navigation = Runnable { view!!.goToImageSelection() }
+            navigation = Runnable { view!!.goBack() }
         }
     }
 
@@ -63,9 +73,9 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
 
     override fun imageSelected() {
         if (hasView()) {
-            view!!.goToThumbnailSelection()
+            view!!.goBack()
         } else {
-            navigation = Runnable { view!!.goToThumbnailSelection() }
+            navigation = Runnable { view!!.goBack() }
         }
     }
 
@@ -79,9 +89,9 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
 
     override fun thumbnailSelected() {
         if (hasView()) {
-            view!!.goToInformationInput()
+            view!!.goBack()
         } else {
-            navigation = Runnable { view!!.goToInformationInput() }
+            navigation = Runnable { view!!.goBack() }
         }
     }
 

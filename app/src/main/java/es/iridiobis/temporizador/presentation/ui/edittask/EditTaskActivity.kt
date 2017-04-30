@@ -1,6 +1,7 @@
-package es.iridiobis.temporizador.presentation.ui.newtask
+package es.iridiobis.temporizador.presentation.ui.edittask
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -11,35 +12,53 @@ import com.theartofdev.edmodo.cropper.CropImageView
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.di.ComponentProvider
+import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.ui.images.background.BackgroundFragment
 import es.iridiobis.temporizador.presentation.ui.images.image.ImageFragment
 import es.iridiobis.temporizador.presentation.ui.images.thumbnail.ThumbnailFragment
-import es.iridiobis.temporizador.presentation.ui.newtask.information.InformationFragment
+import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 import kotlinx.android.synthetic.main.activity_container.*
 import java.io.File
 import javax.inject.Inject
 
-class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>, NewTask.NavigationExecutor {
+class EditTaskActivity : AppCompatActivity(), ComponentProvider<EditTaskComponent>, EditTask.NavigationExecutor {
 
-    @Inject lateinit var navigator: NewTask.Navigator
+    companion object {
 
-    private lateinit var component: NewTaskComponent
+        private val TASK_MODEL_EXTRA = "EditTaskActivity.TASK_MODEL_EXTRA"
+
+        fun editTaskIntent(task: Task, context: Context): Intent {
+            val intent = Intent(context, EditTaskActivity::class.java)
+            val model = TaskModel(task.id,
+                    task.name,
+                    task.duration,
+                    task.background,
+                    task.smallBackground,
+                    task.thumbnail)
+            intent.putExtra(TASK_MODEL_EXTRA, model)
+            return intent
+        }
+    }
+
+    @Inject lateinit var navigator: EditTask.Navigator
+    private lateinit var component: EditTaskComponent
     private var cropImage: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_container)
         if (lastCustomNonConfigurationInstance == null) {
-            component = DaggerNewTaskComponent.builder()
+            component = DaggerEditTaskComponent.builder()
                     .applicationComponent((application as Temporizador).getComponent())
+                    .editTaskModule(EditTaskModule(intent.extras.getParcelable<TaskModel>(TASK_MODEL_EXTRA)))
                     .build()
         } else {
-            component = lastCustomNonConfigurationInstance as NewTaskComponent
+            component = lastCustomNonConfigurationInstance as EditTaskComponent
         }
         component.injectMembers(this)
         navigator.attach(this)
         if (savedInstanceState == null) {
-            fragmentManager.beginTransaction().add(R.id.container, BackgroundFragment()).commit()
+            fragmentManager.beginTransaction().add(R.id.container, EditTaskFragment()).commit()
         }
     }
 
@@ -54,7 +73,14 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
         fragmentManager.findFragmentById(R.id.container).onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun getComponent(): NewTaskComponent = component
+    override fun getComponent(): EditTaskComponent = component
+
+    override fun goToBackgroundSelection() {
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, BackgroundFragment())
+                .addToBackStack(null)
+                .commit()
+    }
 
     override fun goToImageSelection() {
         fragmentManager.beginTransaction()
@@ -70,18 +96,11 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
                 .commit()
     }
 
-    override fun goToInformationInput() {
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, InformationFragment())
-                .addToBackStack(null)
-                .commit()
-    }
-
     override fun goToImagePicker() {
         CropImage.startPickImageActivity(this)
     }
 
-    override fun goToCropBackground(origin: Uri) {
+    override fun goToCropForBackground(origin: Uri) {
         crop(origin, "background.jpeg", Pair(container.width, container.height ))
     }
 
@@ -100,6 +119,10 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
                 cropImage = null
             }
         }
+    }
+
+    override fun goBack() {
+        fragmentManager.popBackStackImmediate()
     }
 
     private fun crop(origin: Uri, name: String, aspectRatio: Pair<Int, Int>, shape: CropImageView.CropShape = CropImageView.CropShape.RECTANGLE) {

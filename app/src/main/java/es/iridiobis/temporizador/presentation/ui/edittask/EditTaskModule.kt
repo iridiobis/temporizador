@@ -1,4 +1,4 @@
-package es.iridiobis.temporizador.presentation.ui.newtask
+package es.iridiobis.temporizador.presentation.ui.edittask
 
 import dagger.Module
 import dagger.Provides
@@ -9,25 +9,25 @@ import es.iridiobis.temporizador.presentation.ui.images.thumbnail.Thumbnail
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 
 @Module
-class NewTaskModule {
+class EditTaskModule(val taskModel : TaskModel) {
 
     @Provides
     @ActivityScope
-    fun provideTask() : TaskModel = TaskModel()
+    fun provideTaskModel() : TaskModel = taskModel
 
     @Provides
     @ActivityScope
-    fun provideNavigator(navigator: NewTaskNavigator) : NewTask.Navigator = navigator
+    fun provideNavigator(navigator: EditTaskNavigator) : EditTask.Navigator = navigator
 
     @Provides
     @ActivityScope
-    fun provideBackgroundNavigator(navigator: NewTask.Navigator) : Background.Navigator = navigator
+    fun provideBackgroundNavigator(navigator: EditTask.Navigator) : Background.Navigator = navigator
 
     @Provides
     @ActivityScope
-    fun provideImageNavigator(navigator: NewTask.Navigator) : Image.Navigator = navigator
+    fun provideImageNavigator(navigator: EditTask.Navigator) : Image.Navigator = navigator
 
     @Provides
     @ActivityScope
-    fun provideThumbnailNavigator(navigator: NewTask.Navigator) : Thumbnail.Navigator = navigator
+    fun provideThumbnailNavigator(navigator: EditTask.Navigator) : Thumbnail.Navigator = navigator
 }

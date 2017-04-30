@@ -1,4 +1,4 @@
-package es.iridiobis.kotlinexample
+package es.iridiobis.temporizador.core.extensions
 
 import android.app.Activity
 import android.content.Context
@@ -56,5 +56,10 @@ inline fun <reified T : Activity> Context.startActivity2(vararg params: Pair<Str
     val intent = Intent(this, T::class.java)
     params.forEach { intent.putExtra(it.first, it.second) }
     startActivity(intent)
+}
+
+inline fun consume(f: () -> Unit): Boolean {
+    f()
+    return true
 }
 

@@ -9,7 +9,7 @@ import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.presentation.ui.newtask.NewTaskActivity
 import es.iridiobis.temporizador.presentation.ui.runningtask.RunningTaskActivity
-import es.iridiobis.temporizador.presentation.ui.writetask.WriteTaskActivity
+import es.iridiobis.temporizador.presentation.ui.edittask.EditTaskActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(), Main.View {
 
     val tasksAdapter = TasksAdapter(
             { startTask(it) },
-            { startActivity(WriteTaskActivity.editTaskIntent(it.id, this)) },
+            { startActivity(EditTaskActivity.editTaskIntent(it, this)) },
             { requestDeleteConfirmation(it) })
 
     override fun onCreate(savedInstanceState: Bundle?) {

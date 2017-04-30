@@ -4,7 +4,7 @@ import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import es.iridiobis.kotlinexample.inflate
+import es.iridiobis.temporizador.core.extensions.inflate
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.domain.model.Task

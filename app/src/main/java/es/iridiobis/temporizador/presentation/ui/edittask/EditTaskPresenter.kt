@@ -1,33 +1,27 @@
-package es.iridiobis.temporizador.presentation.ui.newtask.information
+package es.iridiobis.temporizador.presentation.ui.edittask
 
+import android.net.Uri
 import es.iridiobis.presenter.Presenter
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
-import es.iridiobis.temporizador.presentation.ui.newtask.NewTask
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class InformationPresenter @Inject constructor(
-        val task : TaskModel,
+class EditTaskPresenter @Inject constructor(
+        val task: TaskModel,
         val tasksRepository: TasksRepository,
-        val navigator: NewTask.Navigator)
-    : Presenter<Information.View>(), Information.Presenter {
-
-    override fun onViewAttached() {
-        view?.displayTask(task)
-    }
+        val navigator: EditTask.Navigator) : Presenter<EditTask.View>(), EditTask.Presenter {
 
     override fun name(name: String) {
         task.name = name
     }
 
-    override fun selectDuration() {
-        view?.showDurationSelection(task.duration)
-    }
+    override fun selectDuration() = view!!.showDurationSelection(task.duration)
 
     override fun duration(duration: Long) {
         task.duration = duration
+        view?.displayTask(task)
     }
 
     override fun save() {
@@ -42,5 +36,31 @@ class InformationPresenter @Inject constructor(
             view?.showErrorMessage()
         }
     }
+
+    override fun background(background: Uri) {
+        task.background = background
+    }
+
+    override fun selectBackground() {
+        navigator.showBackgroundSelection()
+    }
+
+    override fun image(image: Uri) {
+        task.smallBackground = image
+    }
+
+    override fun selectImage() {
+        navigator.showImageSelection()
+    }
+
+    override fun thumbnail(thumbnail: Uri) {
+        task.thumbnail = thumbnail
+    }
+
+    override fun selectThumbnail() {
+        navigator.showThumbnailSelection()
+    }
+
+    override fun onViewAttached() = view!!.displayTask(task)
 
 }

@@ -1,4 +1,4 @@
-package es.iridiobis.temporizador.presentation.ui.newtask
+package es.iridiobis.temporizador.presentation.ui.edittask
 
 import dagger.Component
 import dagger.MembersInjector
@@ -9,8 +9,8 @@ import es.iridiobis.temporizador.presentation.ui.images.ImagesComponent
 import es.iridiobis.temporizador.presentation.ui.model.TaskModel
 
 @ActivityScope
-@Component(dependencies = arrayOf(ApplicationComponent::class), modules = arrayOf(NewTaskModule::class))
-interface NewTaskComponent : MembersInjector<NewTaskActivity>, ImagesComponent {
-    fun provideNavigator(): NewTask.Navigator
+@Component(dependencies = arrayOf(ApplicationComponent::class), modules = arrayOf(EditTaskModule::class))
+interface EditTaskComponent : MembersInjector<EditTaskActivity>, ImagesComponent {
+    fun provideNavigator(): EditTask.Navigator
     fun provideTasksRepository() : TasksRepository
 }
