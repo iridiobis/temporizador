@@ -15,8 +15,10 @@ class AlarmManagerProxy @Inject constructor(val context: Context) : AlarmService
         val alarmIntent = PendingIntent.getBroadcast(context, 0, AlarmReceiver.playAlarmIntent(context), 0)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
             alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + remaining, alarmIntent)
-        else
+        else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + remaining, alarmIntent)
+        else
+            alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + remaining, alarmIntent)
     }
 
     override fun cancelAlarm() {
