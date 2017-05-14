@@ -4,34 +4,36 @@ import android.net.Uri
 import es.iridiobis.temporizador.data.model.RealmTask
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
+import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.realm.Realm
 import javax.inject.Inject
 
 class TasksStorage @Inject constructor(val imagesStorage: ImagesStorage) : TasksRepository {
-    override fun delete(task: Task): Observable<Unit> {
-        return Observable.create {
+    override fun delete(task: Task): Completable {
+        return Completable.create {
             subscriber ->
             val realm: Realm = Realm.getDefaultInstance()
             realm.executeTransaction {
                 realm.where(RealmTask::class.java).equalTo("id", task.id).findAll().deleteAllFromRealm()
             }
-            subscriber.onComplete()
+            imagesStorage.deleteImage(task.background)
+            imagesStorage.deleteImage(task.smallBackground)
+            imagesStorage.deleteImage(task.thumbnail)
             realm.close()
+            subscriber.onComplete()
         }
     }
 
-    override fun retrieveTask(id: Long): Observable<Task> {
-        return Observable.create {
+    override fun retrieveTask(id: Long): Single<Task> {
+        return Single.create {
             subscriber ->
             val realm: Realm = Realm.getDefaultInstance()
-            val realmTask : RealmTask? = realm.where(RealmTask::class.java).equalTo("id", id).findFirst()
-            if (realmTask == null)
-                subscriber.onError(IllegalStateException("No task with the given id"))
-            else
-                subscriber.onNext(parseTask(realmTask))
-            subscriber.onComplete()
+            val realmTask: RealmTask = realm.where(RealmTask::class.java).equalTo("id", id).findFirst()
+            val task = parseTask(realmTask)
             realm.close()
+            subscriber.onSuccess(task)
         }
     }
 
@@ -46,21 +48,46 @@ class TasksStorage @Inject constructor(val imagesStorage: ImagesStorage) : Tasks
         }
     }
 
-    override fun writeTask(id: Long?, name: String, duration: Long, background: Uri, smallBackground: Uri, thumbnail: Uri): Observable<Task> {
-        return Observable.create {
+    override fun createTask(name: String, duration: Long, background: Uri, smallBackground: Uri, thumbnail: Uri): Completable {
+        return Completable.create {
             subscriber ->
             val realm: Realm = Realm.getDefaultInstance()
-            val safeId = id ?: System.currentTimeMillis()
-            val task = RealmTask(safeId, name, duration)
+            val safeId = System.currentTimeMillis()
+            val task = RealmTask(
+                    safeId,
+                    name,
+                    duration,
+                    imagesStorage.setBackground(safeId, background),
+                    imagesStorage.setImage(safeId, smallBackground),
+                    imagesStorage.setThumbnail(safeId, thumbnail)
+            )
             realm.executeTransaction {
                 realm.copyToRealmOrUpdate(task)
             }
-            imagesStorage.setFullBackground(safeId, background)
-            imagesStorage.setSmallBackground(safeId, smallBackground)
-            imagesStorage.setThumbnail(safeId, thumbnail)
-            subscriber.onNext(parseTask(task))
             subscriber.onComplete()
             realm.close()
+        }
+
+    }
+
+    override fun editTask(task: Task): Completable {
+        return Completable.create {
+            subscriber ->
+            val realm: Realm = Realm.getDefaultInstance()
+            val oldRealmTask: RealmTask = realm.where(RealmTask::class.java).equalTo("id", task.id).findFirst()
+            val realmTask = RealmTask(
+                    task.id,
+                    task.name,
+                    task.duration,
+                    imagesStorage.setBackground(task.id, task.background, oldRealmTask.background),
+                    imagesStorage.setImage(task.id, task.smallBackground, oldRealmTask.image),
+                    imagesStorage.setThumbnail(task.id, task.thumbnail, oldRealmTask.thumbnail)
+            )
+            realm.executeTransaction {
+                realm.copyToRealmOrUpdate(realmTask)
+            }
+            realm.close()
+            subscriber.onComplete()
         }
 
     }
@@ -69,9 +96,9 @@ class TasksStorage @Inject constructor(val imagesStorage: ImagesStorage) : Tasks
         return Task(realmTask.id,
                 realmTask.name,
                 realmTask.duration,
-                imagesStorage.getFullBackground(realmTask.id),
-                imagesStorage.getSmallBackground(realmTask.id),
-                imagesStorage.getThumbnail(realmTask.id))
+                imagesStorage.getUri(realmTask.background),
+                imagesStorage.getUri(realmTask.image),
+                imagesStorage.getUri(realmTask.thumbnail))
     }
 
 }

@@ -6,6 +6,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import io.reactivex.Observable
+import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,9 +31,9 @@ class TaskService @Inject constructor(
     val statusRelay: BehaviorRelay<Boolean> = BehaviorRelay.create()
     val continueRelay: PublishRelay<Boolean> = PublishRelay.create()
 
-    fun hasRunningTask(): Observable<Boolean> {
+    fun hasRunningTask(): Single<Boolean> {
         if (task == null && !preferences.contains(TASK_PREFERENCE)) {
-            return Observable.just(false)
+            return Single.just(false)
         } else if (preferences.contains(TASK_PREFERENCE)) {
             return tasksRepository.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
                     .map {
@@ -46,7 +47,7 @@ class TaskService @Inject constructor(
                         Observable.just(false)
                     }
         } else {
-            return Observable.just(true)
+            return Single.just(true)
         }
     }
 
@@ -54,9 +55,9 @@ class TaskService @Inject constructor(
         return task != null && preferences.contains(GONE_OFF_PREFERENCE)
     }
 
-    fun getRunningTask(): Observable<Task> {
+    fun getRunningTask(): Single<Task> {
         if (task != null) {
-            return Observable.just(task)
+            return Single.just(task)
         } else if (preferences.contains(TASK_PREFERENCE)) {
             return tasksRepository.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
                     .map {
@@ -65,7 +66,7 @@ class TaskService @Inject constructor(
                         it
                     }
         } else {
-            return Observable.error<Task> { IllegalStateException("No running task") }
+            return Single.error<Task> { IllegalStateException("No running task") }
         }
     }
 
