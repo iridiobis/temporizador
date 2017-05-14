@@ -7,8 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.extensions.setBackground
@@ -16,6 +14,7 @@ import es.iridiobis.temporizador.presentation.ui.finishedtask.FinishedTaskActivi
 import es.iridiobis.temporizador.presentation.ui.main.DaggerRunningTaskComponent
 import es.iridiobis.temporizador.presentation.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_running_task.*
+import mobi.upod.timedurationpicker.TimeDurationUtil
 import javax.inject.Inject
 
 class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
@@ -59,6 +58,10 @@ class RunningTaskActivity : AppCompatActivity(), RunningTask.View {
         rt_status_fab.setImageDrawable(ContextCompat.getDrawable(this,
                 if (status) R.drawable.ic_pause else R.drawable.ic_play_arrow)
         )
+    }
+
+    override fun displayRemainingTime(remaining: Long) {
+        rt_remaining.text = TimeDurationUtil.formatHoursMinutesSeconds(remaining)
     }
 
     override fun onTaskStopped() {

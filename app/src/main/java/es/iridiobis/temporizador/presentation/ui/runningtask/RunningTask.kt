@@ -10,6 +10,7 @@ interface RunningTask {
         fun displayName(name : String)
         fun displayBackground(background: Uri)
         fun displayStatus(status : Boolean)
+        fun displayRemainingTime(remaining : Long)
         fun onTaskStopped()
         fun onAlarmGoneOff()
     }

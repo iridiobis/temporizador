@@ -7,6 +7,9 @@ import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,7 +30,8 @@ class TaskService @Inject constructor(
     }
 
     var task: Task? = null
-    var status: Boolean = false
+    var endMillis = 0L
+    val status = AtomicBoolean()
     val statusRelay: BehaviorRelay<Boolean> = BehaviorRelay.create()
     val continueRelay: PublishRelay<Boolean> = PublishRelay.create()
 
@@ -37,9 +41,7 @@ class TaskService @Inject constructor(
         } else if (preferences.contains(TASK_PREFERENCE)) {
             return tasksRepository.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
                     .map {
-                        this.task = it
-                        status = preferences.getBoolean(RUNNING_PREFERENCE, false)
-                        statusRelay.accept(status)
+                        initializeTask(it)
                         true
                     }
                     .doOnError {
@@ -61,8 +63,7 @@ class TaskService @Inject constructor(
         } else if (preferences.contains(TASK_PREFERENCE)) {
             return tasksRepository.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
                     .map {
-                        this.task = it
-                        statusRelay.accept(preferences.getBoolean(RUNNING_PREFERENCE, false))
+                        initializeTask(it)
                         it
                     }
         } else {
@@ -70,8 +71,29 @@ class TaskService @Inject constructor(
         }
     }
 
+    private fun initializeTask(task: Task) {
+        this.task = task
+        endMillis = task.duration - preferences.getLong(ELAPSED_TIME_PREFERENCE, 0) + preferences.getLong(START_TIME_PREFERENCE, 0)
+        status.set(preferences.getBoolean(RUNNING_PREFERENCE, false))
+        statusRelay.accept(status.get())
+    }
+
     fun status(): Observable<Boolean> {
         return statusRelay
+    }
+
+    fun remaining(): Observable<Long> {
+        return Observable.concat(
+                Observable.just(
+                        if (status.get())
+                            endMillis - System.currentTimeMillis()
+                        else
+                            task!!.duration - preferences.getLong(ELAPSED_TIME_PREFERENCE, 0)
+                ),
+                Observable.interval(1, 1, TimeUnit.SECONDS, Schedulers.io())
+                        .filter { status.get() }
+                        .map { endMillis - System.currentTimeMillis() }
+        )
     }
 
     fun next(): Observable<Boolean> {
@@ -80,20 +102,23 @@ class TaskService @Inject constructor(
 
     fun startTask(task: Task) {
         this.task = task
+        val remaining = task.duration
+        val currentTime = System.currentTimeMillis()
+        endMillis = remaining + currentTime
         preferences.edit()
                 .putLong(TASK_PREFERENCE, task.id)
-                .putLong(START_TIME_PREFERENCE, System.currentTimeMillis())
+                .putLong(START_TIME_PREFERENCE, currentTime)
                 .putBoolean(RUNNING_PREFERENCE, true)
                 .apply()
         setAlarm(task.duration)
-        status = true
-        statusRelay.accept(status)
+        status.set(true)
+        statusRelay.accept(status.get())
     }
 
     fun changeStatus() {
-        if (status) pauseTask() else resumeTask()
-        status = !status
-        statusRelay.accept(status)
+        if (status.get()) pauseTask() else resumeTask()
+        status.set(!status.get())
+        statusRelay.accept(status.get())
     }
 
     fun stopTask() {
@@ -140,16 +165,19 @@ class TaskService @Inject constructor(
     }
 
     private fun resumeTask() {
+        val remaining = task!!.duration - preferences.getLong(ELAPSED_TIME_PREFERENCE, 0)
+        val currentTime = System.currentTimeMillis()
+        endMillis = remaining + currentTime
+        setAlarm(remaining)
         preferences.edit()
-                .putLong(START_TIME_PREFERENCE, System.currentTimeMillis())
+                .putLong(START_TIME_PREFERENCE, currentTime)
                 .putBoolean(RUNNING_PREFERENCE, true)
                 .apply()
-        setAlarm(task!!.duration - preferences.getLong(ELAPSED_TIME_PREFERENCE, 0))
     }
 
     private fun clearTask() {
         task = null
-        status = false
+        status.set(false)
         preferences.edit()
                 .clear()
                 .apply()
