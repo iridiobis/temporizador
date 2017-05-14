@@ -4,13 +4,15 @@ import android.net.Uri
 import es.iridiobis.temporizador.data.model.RealmTask
 import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.repositories.TasksRepository
+import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.realm.Realm
 import javax.inject.Inject
 
 class TasksStorage @Inject constructor(val imagesStorage: ImagesStorage) : TasksRepository {
-    override fun delete(task: Task): Observable<Unit> {
-        return Observable.create {
+    override fun delete(task: Task): Completable {
+        return Completable.create {
             subscriber ->
             val realm: Realm = Realm.getDefaultInstance()
             realm.executeTransaction {
@@ -21,17 +23,14 @@ class TasksStorage @Inject constructor(val imagesStorage: ImagesStorage) : Tasks
         }
     }
 
-    override fun retrieveTask(id: Long): Observable<Task> {
-        return Observable.create {
+    override fun retrieveTask(id: Long): Single<Task> {
+        return Single.create {
             subscriber ->
             val realm: Realm = Realm.getDefaultInstance()
-            val realmTask : RealmTask? = realm.where(RealmTask::class.java).equalTo("id", id).findFirst()
-            if (realmTask == null)
-                subscriber.onError(IllegalStateException("No task with the given id"))
-            else
-                subscriber.onNext(parseTask(realmTask))
-            subscriber.onComplete()
+            val realmTask: RealmTask = realm.where(RealmTask::class.java).equalTo("id", id).findFirst()
+            val task = parseTask(realmTask)
             realm.close()
+            subscriber.onSuccess(task)
         }
     }
 

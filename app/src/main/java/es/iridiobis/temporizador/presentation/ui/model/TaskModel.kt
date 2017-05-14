@@ -12,6 +12,7 @@ data class TaskModel(
         var background: Uri? = null,
         var smallBackground: Uri? = null,
         var thumbnail: Uri? = null) : Parcelable {
+
     fun isValid(): Boolean {
         return !TextUtils.isEmpty(name)
                 && duration > 0
