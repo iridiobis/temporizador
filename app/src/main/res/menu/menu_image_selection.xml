@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/is_action_select"
+        android:title="@string/image_selection"
+        android:icon="@drawable/ic_edit_white_24"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/is_action_crop"
+        android:title="@string/crop_background"
+        android:icon="@drawable/ic_crop_white_24"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/is_action_done"
+        android:title="@string/done"
+        android:icon="@drawable/ic_done_white_24"
+        app:showAsAction="ifRoom"/>
+</menu>

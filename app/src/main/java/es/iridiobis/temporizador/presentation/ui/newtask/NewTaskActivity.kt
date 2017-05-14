@@ -11,16 +11,15 @@ import com.theartofdev.edmodo.cropper.CropImageView
 import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.Temporizador
 import es.iridiobis.temporizador.core.di.ComponentProvider
-import es.iridiobis.temporizador.presentation.dialogs.DurationDialogListener
-import es.iridiobis.temporizador.presentation.ui.newtask.background.BackgroundFragment
-import es.iridiobis.temporizador.presentation.ui.newtask.image.ImageFragment
+import es.iridiobis.temporizador.presentation.ui.images.background.BackgroundFragment
+import es.iridiobis.temporizador.presentation.ui.images.image.ImageFragment
+import es.iridiobis.temporizador.presentation.ui.images.thumbnail.ThumbnailFragment
 import es.iridiobis.temporizador.presentation.ui.newtask.information.InformationFragment
-import es.iridiobis.temporizador.presentation.ui.newtask.thumbnail.ThumbnailFragment
+import kotlinx.android.synthetic.main.activity_container.*
 import java.io.File
 import javax.inject.Inject
 
-
-class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>, NewTask.NavigationExecutor, DurationDialogListener {
+class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>, NewTask.NavigationExecutor {
 
     @Inject lateinit var navigator: NewTask.Navigator
 
@@ -59,21 +58,21 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
 
     override fun goToImageSelection() {
         fragmentManager.beginTransaction()
-                .add(R.id.container, ImageFragment())
+                .replace(R.id.container, ImageFragment())
                 .addToBackStack(null)
                 .commit()
     }
 
     override fun goToThumbnailSelection() {
         fragmentManager.beginTransaction()
-                .add(R.id.container, ThumbnailFragment())
+                .replace(R.id.container, ThumbnailFragment())
                 .addToBackStack(null)
                 .commit()
     }
 
     override fun goToInformationInput() {
         fragmentManager.beginTransaction()
-                .add(R.id.container, InformationFragment())
+                .replace(R.id.container, InformationFragment())
                 .addToBackStack(null)
                 .commit()
     }
@@ -83,12 +82,11 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
     }
 
     override fun goToCropBackground(origin: Uri) {
-        val metrics = resources.displayMetrics
-        crop(origin, "background.jpeg", Pair(metrics.widthPixels, metrics.heightPixels))
+        crop(origin, "background.jpeg", Pair(container.width, container.height ))
     }
 
-    override fun goToCropBackgroundForImage(background: Uri) {
-        crop(background, "image.jpeg", Pair(2, 1))
+    override fun goToCropForImage(origin: Uri) {
+        crop(origin, "image.jpeg", Pair(2, 1))
     }
 
     override fun goToCropForThumbnail(origin: Uri) {
@@ -102,10 +100,6 @@ class NewTaskActivity : AppCompatActivity(), ComponentProvider<NewTaskComponent>
                 cropImage = null
             }
         }
-    }
-
-    override fun onTimeSet(duration: Long) {
-        fragmentManager.findFragmentById(R.id.container)
     }
 
     private fun crop(origin: Uri, name: String, aspectRatio: Pair<Int, Int>, shape: CropImageView.CropShape = CropImageView.CropShape.RECTANGLE) {

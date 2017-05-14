@@ -29,14 +29,6 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
         }
     }
 
-    override fun showInformationInput() {
-        if (hasView()) {
-            view!!.goToInformationInput()
-        } else {
-            navigation = Runnable { view!!.goToInformationInput() }
-        }
-    }
-
     override fun pickImage() {
         if (hasView()) {
             view!!.goToImagePicker()
@@ -45,7 +37,7 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
         }
     }
 
-    override fun cropBackground(origin: Uri) {
+    override fun cropForBackground(origin: Uri) {
         if (hasView()) {
             view!!.goToCropBackground(origin)
         } else {
@@ -53,11 +45,27 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
         }
     }
 
-    override fun cropBackgroundForImage(background: Uri) {
+    override fun backgroundSelected() {
         if (hasView()) {
-            view!!.goToCropBackgroundForImage(background)
+            view!!.goToImageSelection()
         } else {
-            navigation = Runnable { view!!.goToCropBackgroundForImage(background) }
+            navigation = Runnable { view!!.goToImageSelection() }
+        }
+    }
+
+    override fun cropForImage(origin: Uri) {
+        if (hasView()) {
+            view!!.goToCropForImage(origin)
+        } else {
+            navigation = Runnable { view!!.goToCropForImage(origin) }
+        }
+    }
+
+    override fun imageSelected() {
+        if (hasView()) {
+            view!!.goToThumbnailSelection()
+        } else {
+            navigation = Runnable { view!!.goToThumbnailSelection() }
         }
     }
 
@@ -66,6 +74,14 @@ class NewTaskNavigator @Inject constructor() : Presenter<NewTask.NavigationExecu
             view!!.goToCropForThumbnail(origin)
         } else {
             navigation = Runnable { view!!.goToCropForThumbnail(origin) }
+        }
+    }
+
+    override fun thumbnailSelected() {
+        if (hasView()) {
+            view!!.goToInformationInput()
+        } else {
+            navigation = Runnable { view!!.goToInformationInput() }
         }
     }
 

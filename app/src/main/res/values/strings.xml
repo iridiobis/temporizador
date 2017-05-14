@@ -9,6 +9,7 @@
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
     <string name="background_selection">Select a background</string>
+    <string name="thumbnail_selection">Select a thumbnail</string>
     <string name="enough_message">Let\'s call it a day</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
@@ -23,4 +24,6 @@
     <string name="crop_background">Crop background</string>
     <string name="thumbnail_description">And now the last image, the thumbnail. It will be used in notifications and in other features to come.</string>
     <string name="save">Save</string>
+    <string name="modify_background">Modify background</string>
+    <string name="image_mandatory">You must select an image before continuing</string>
 </resources>

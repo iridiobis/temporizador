@@ -2,20 +2,18 @@ package es.iridiobis.temporizador.presentation.ui.newtask
 
 import android.net.Uri
 import es.iridiobis.presenter.Attachable
+import es.iridiobis.temporizador.presentation.ui.images.ImagePicker
+import es.iridiobis.temporizador.presentation.ui.images.background.Background
+import es.iridiobis.temporizador.presentation.ui.images.image.Image
+import es.iridiobis.temporizador.presentation.ui.images.thumbnail.Thumbnail
 
 
 interface NewTask {
 
-    interface Navigator : Attachable<NavigationExecutor>, ImagePicker {
+    interface Navigator : Attachable<NavigationExecutor>, Background.Navigator, Image.Navigator, Thumbnail.Navigator {
 
         fun showImageSelection()
         fun showThumbnailSelection()
-        fun showInformationInput()
-
-        fun cropBackground(origin: Uri)
-        fun cropBackgroundForImage(background: Uri)
-        fun cropForThumbnail(origin: Uri)
-
         fun finish()
     }
 
@@ -27,7 +25,7 @@ interface NewTask {
 
         fun goToImagePicker()
         fun goToCropBackground(origin: Uri)
-        fun goToCropBackgroundForImage(background: Uri)
+        fun goToCropForImage(origin: Uri)
         fun goToCropForThumbnail(origin: Uri)
 
         fun finish()

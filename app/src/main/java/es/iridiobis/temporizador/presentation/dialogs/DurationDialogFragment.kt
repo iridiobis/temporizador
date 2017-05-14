@@ -4,7 +4,6 @@ import android.os.Bundle
 import mobi.upod.timedurationpicker.TimeDurationPicker
 import mobi.upod.timedurationpicker.TimeDurationPickerDialogFragment
 
-
 class DurationDialogFragment(var initial : Long = 0) : TimeDurationPickerDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +30,9 @@ class DurationDialogFragment(var initial : Long = 0) : TimeDurationPickerDialogF
             (targetFragment as DurationDialogListener).onTimeSet(duration)
         }
     }
-}
 
-interface DurationDialogListener {
-    fun onTimeSet(duration: Long)
+    interface DurationDialogListener {
+        fun onTimeSet(duration: Long)
+    }
+
 }
