@@ -9,6 +9,7 @@ import es.iridiobis.temporizador.R
 import es.iridiobis.temporizador.core.extensions.setBackground
 import es.iridiobis.temporizador.domain.model.Task
 import kotlinx.android.synthetic.main.view_task_item.view.*
+import mobi.upod.timedurationpicker.TimeDurationUtil
 import kotlin.properties.Delegates
 
 
@@ -39,6 +40,7 @@ class TasksAdapter(
 
         fun bind(task: Task) = with(itemView) {
             task_name.text = task.name
+            task_duration.text = TimeDurationUtil.formatHoursMinutesSeconds(task.duration)
             task_background.setBackground(task.smallBackground) { request -> request }
             task_run.setOnClickListener { runListener(task) }
             task_menu.setOnClickListener { showPopup(it, task) }

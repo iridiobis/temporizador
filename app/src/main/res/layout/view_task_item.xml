@@ -19,6 +19,14 @@
         android:layout_height="match_parent"
         android:background="@drawable/scrim"/>
 
+    <TextView
+        android:id="@+id/task_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        tools:text="00:30:00"/>
+
     <ImageButton
         android:id="@+id/task_menu"
         android:layout_width="40dp"
