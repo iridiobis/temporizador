@@ -5,7 +5,6 @@ import es.iridiobis.temporizador.domain.model.Task
 import es.iridiobis.temporizador.domain.services.TaskService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -13,7 +12,7 @@ import javax.inject.Inject
 class RunningTaskPresenter @Inject constructor(val taskService: TaskService)
     : Presenter<RunningTask.View>(), RunningTask.Presenter {
 
-    val disposables = CompositeDisposable()
+    lateinit var disposables : CompositeDisposable
 
     override fun onViewAttached() {
         taskService.getRunningTask()
@@ -23,11 +22,18 @@ class RunningTaskPresenter @Inject constructor(val taskService: TaskService)
                     view?.displayBackground(it.background)
                     view?.displayName(it.name)
                 })
+        disposables = CompositeDisposable()
         disposables.add(
                 taskService.status()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe { view?.displayStatus(it) }
+        )
+        disposables.add(
+                taskService.remaining()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe { view?.displayRemainingTime(it) }
         )
         disposables.add(
                 taskService.next()
