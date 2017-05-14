@@ -41,9 +41,7 @@ class TaskService @Inject constructor(
         } else if (preferences.contains(TASK_PREFERENCE)) {
             return tasksRepository.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
                     .map {
-                        this.task = it
-                        status = preferences.getBoolean(RUNNING_PREFERENCE, false)
-                        statusRelay.accept(status)
+                        initializeTask(it)
                         true
                     }
                     .doOnError {
@@ -65,13 +63,19 @@ class TaskService @Inject constructor(
         } else if (preferences.contains(TASK_PREFERENCE)) {
             return tasksRepository.retrieveTask(preferences.getLong(TASK_PREFERENCE, 0))
                     .map {
-                        this.task = it
-                        statusRelay.accept(preferences.getBoolean(RUNNING_PREFERENCE, false))
+                        initializeTask(it)
                         it
                     }
         } else {
             return Single.error<Task> { IllegalStateException("No running task") }
         }
+    }
+
+    private fun initializeTask(task: Task) {
+        this.task = task
+        endMillis = task.duration - preferences.getLong(ELAPSED_TIME_PREFERENCE, 0) + preferences.getLong(START_TIME_PREFERENCE, 0)
+        status.set(preferences.getBoolean(RUNNING_PREFERENCE, false))
+        statusRelay.accept(status.get())
     }
 
     fun status(): Observable<Boolean> {
