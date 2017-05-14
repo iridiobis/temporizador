@@ -25,8 +25,8 @@ class EditTaskPresenter @Inject constructor(
     }
 
     override fun save() {
-        if (task.isValid()) {
-            tasksRepository.writeTask(task.id, task.name!!, task.duration, task.background!!, task.smallBackground!!, task.thumbnail!!)
+        if (task.isComplete()) {
+            tasksRepository.editTask(task.parse())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({

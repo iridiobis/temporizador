@@ -8,7 +8,8 @@ import io.reactivex.Single
 
 interface TasksRepository {
     fun retrieveTasks() : Observable<List<Task>>
-    fun writeTask(id: Long?, name: String, duration: Long, background : Uri, smallBackground : Uri, thumbnail : Uri) : Observable<Task>
+    fun createTask(name: String, duration: Long, background : Uri, smallBackground : Uri, thumbnail : Uri) : Completable
+    fun editTask(task: Task) : Completable
     fun retrieveTask(id : Long) : Single<Task>
     fun delete(task: Task) : Completable
 }

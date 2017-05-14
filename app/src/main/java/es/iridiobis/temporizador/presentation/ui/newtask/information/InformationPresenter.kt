@@ -9,7 +9,7 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class InformationPresenter @Inject constructor(
-        val task : TaskModel,
+        val task: TaskModel,
         val tasksRepository: TasksRepository,
         val navigator: NewTask.Navigator)
     : Presenter<Information.View>(), Information.Presenter {
@@ -32,12 +32,10 @@ class InformationPresenter @Inject constructor(
 
     override fun save() {
         if (task.isValid()) {
-            tasksRepository.writeTask(task.id, task.name!!, task.duration, task.background!!, task.smallBackground!!, task.thumbnail!!)
+            tasksRepository.createTask(task.name!!, task.duration, task.background!!, task.smallBackground!!, task.thumbnail!!)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe({
-                        navigator.finish()
-                    })
+                    .subscribe { navigator.finish() }
         } else {
             view?.showErrorMessage()
         }

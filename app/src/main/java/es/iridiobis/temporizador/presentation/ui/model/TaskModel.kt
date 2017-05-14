@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.text.TextUtils
+import es.iridiobis.temporizador.domain.model.Task
 
 data class TaskModel(
         var id: Long? = null,
@@ -13,13 +14,18 @@ data class TaskModel(
         var smallBackground: Uri? = null,
         var thumbnail: Uri? = null) : Parcelable {
 
-    fun isValid(): Boolean {
-        return !TextUtils.isEmpty(name)
-                && duration > 0
-                && background != null
-                && smallBackground != null
-                && thumbnail != null
-    }
+    fun isValid() = !TextUtils.isEmpty(name)
+            && duration > 0
+            && background != null
+            && smallBackground != null
+            && thumbnail != null
+
+    fun isComplete() = id != null && isValid()
+
+    /**
+     * Converts a complete task model in a task
+     */
+    fun parse() = Task(id!!, name!!, duration, background!!, smallBackground!!, thumbnail!!)
 
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<TaskModel> = object : Parcelable.Creator<TaskModel> {

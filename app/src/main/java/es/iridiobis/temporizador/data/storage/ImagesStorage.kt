@@ -7,30 +7,29 @@ import android.util.Log
 import java.io.*
 import javax.inject.Inject
 
-
 class ImagesStorage @Inject constructor(val applicationContext: Context) {
 
-    fun getFullBackground(id: Long): Uri = Uri.fromFile(getFile(id.toString()))
+    fun getUri(name: String): Uri = Uri.fromFile(getFile(name))
 
-    fun getSmallBackground(id: Long): Uri = Uri.fromFile(getFile(id.toString() + "_small"))
+    fun setBackground(id: Long, background : Uri, oldName: String? = null) : String = saveFile(id.toString(), background, oldName)
 
-    fun getThumbnail(id: Long): Uri = Uri.fromFile(getFile(id.toString() + "_thumbnail"))
+    fun setImage(id: Long, image : Uri, oldName: String? = null) : String = saveFile(id.toString() + "_small", image, oldName)
 
-    fun setFullBackground(id: Long, background : Uri) = saveFile(id.toString(), background)
+    fun setThumbnail(id: Long, thumbnail : Uri, oldName: String? = null) : String = saveFile(id.toString() + "_thumbnail", thumbnail, oldName)
 
-    fun setSmallBackground(id: Long, smallBackground : Uri) = saveFile(id.toString() + "_small", smallBackground)
-
-    fun setThumbnail(id: Long, thumbnail : Uri) = saveFile(id.toString() + "_thumbnail", thumbnail)
+    fun deleteImage(image: Uri) = File(image.path).delete()
 
     private fun getFile(name: String) = File(applicationContext.filesDir, name + ".jpeg")
 
-    private fun saveFile(name: String, source: Uri) {
-        val destination = getFile(name)
-        if (source.toString().contains(destination.toString())) {
-            return
+    private fun saveFile(name: String, source: Uri, oldName: String?) : String {
+        if (source.toString().contains(name)) {
+            return name
         }
+        val newName = name + "_" + System.currentTimeMillis()
+        val destination = getFile(newName)
         var bis: BufferedInputStream? = null
         var bos: BufferedOutputStream? = null
+        var succesful = false
 
         try {
             if (SCHEME_CONTENT == source.scheme) {
@@ -44,6 +43,8 @@ class ImagesStorage @Inject constructor(val applicationContext: Context) {
             do {
                 bos.write(buf)
             } while (bis.read(buf) != -1)
+            succesful = true
+            if (oldName != null) getFile(oldName).delete()
         } catch (e: IOException) {
             Log.e("ASDF", e.toString())
         } finally {
@@ -53,7 +54,7 @@ class ImagesStorage @Inject constructor(val applicationContext: Context) {
             } catch (e: IOException) {
 
             }
-
+            return if(succesful) newName else oldName ?: ""
         }
     }
 }

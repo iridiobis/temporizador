@@ -23,10 +23,10 @@ class SplashActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(
-                        {
-                            if (it && taskService.hasGoneOff()) {
+                        { hasRunningTask ->
+                            if (hasRunningTask && taskService.hasGoneOff()) {
                                 startActivity(Intent(this, FinishedTaskActivity::class.java))
-                            } else if (it) {
+                            } else if (hasRunningTask) {
                                 startActivity(Intent(this, RunningTaskActivity::class.java))
                             } else {
                                 startActivity(Intent(this, MainActivity::class.java))
