@@ -27,6 +27,7 @@ android {
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 }
 
@@ -44,11 +45,8 @@ dependencies {
     compile 'mobi.upod:time-duration-picker:1.1.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton.timber:timber:4.5.1'
-
     kapt "com.google.dagger:dagger-compiler:$rootProject.versions.dagger"
-
     provided "javax.annotation:jsr250-api:$rootProject.versions.javax"
-
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
 
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -65,7 +63,8 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
-
+    androidTestCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    androidTestCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
 }
 
 kapt {

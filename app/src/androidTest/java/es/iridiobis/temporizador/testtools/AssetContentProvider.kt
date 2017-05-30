@@ -1,9 +1,8 @@
-package es.iridiobis.temporizador.test
+package es.iridiobis.temporizador.testtools
 
 import android.content.ContentProvider
 import android.content.ContentValues
 import android.content.res.AssetFileDescriptor
-import android.content.res.AssetManager
 import android.database.Cursor
 import android.net.Uri
 
